@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="风控接口测试"
+           tests="2"
+           failures="1"
+           errors="0"
+           skipped="0"
+           time="0.007">
+  <properties />
+            <testcase name="f1" time="0.001" classname="com.fkapi.utils.test">
+                <failure type="java.lang.Throwable"
+                  message="(null)"
+              >
+<![CDATA[java.lang.Throwable
+  message : expected [true] but found [false] in method : .f1(test:26)
+  com.fkapi.utils.test.f1(test.java:26)
+]]>
+      </failure>
+
+          </testcase>
+  
+  
+            <testcase name="f" time="0.006" classname="com.fkapi.utils.test" />
+      
+</testsuite>

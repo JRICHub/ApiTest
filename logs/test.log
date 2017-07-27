@@ -1,0 +1,12 @@
+2017-07-26 15:27:09.510 DEBUG org.apache.ibatis.logging.LogFactory 135 setImplementation - Logging initialized using 'class org.apache.ibatis.logging.log4j2.Log4j2Impl' adapter.
+2017-07-26 15:27:09.525 DEBUG org.apache.ibatis.datasource.pooled.PooledDataSource 316 forceCloseAll - PooledDataSource forcefully closed/removed all connections.
+2017-07-26 15:27:09.525 DEBUG org.apache.ibatis.datasource.pooled.PooledDataSource 316 forceCloseAll - PooledDataSource forcefully closed/removed all connections.
+2017-07-26 15:27:09.525 DEBUG org.apache.ibatis.datasource.pooled.PooledDataSource 316 forceCloseAll - PooledDataSource forcefully closed/removed all connections.
+2017-07-26 15:27:09.525 DEBUG org.apache.ibatis.datasource.pooled.PooledDataSource 316 forceCloseAll - PooledDataSource forcefully closed/removed all connections.
+2017-07-26 15:27:09.526 DEBUG org.apache.ibatis.datasource.pooled.PooledDataSource 316 forceCloseAll - PooledDataSource forcefully closed/removed all connections.
+2017-07-26 15:27:09.526 DEBUG org.apache.ibatis.datasource.pooled.PooledDataSource 316 forceCloseAll - PooledDataSource forcefully closed/removed all connections.
+2017-07-26 15:27:10.397 DEBUG org.apache.ibatis.transaction.jdbc.JdbcTransaction 138 openConnection - Opening JDBC Connection
+2017-07-26 15:27:10.540 DEBUG org.apache.ibatis.datasource.pooled.PooledDataSource 387 popConnection - Created connection 936739172.
+2017-07-26 15:27:10.542 DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger 142 debug - ==>  Preparing: delete from vcc_user_card_map where CARD_NO = ? 
+2017-07-26 15:27:10.570 DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger 142 debug - ==> Parameters: 6217001000000000211(String)
+2017-07-26 15:27:10.575 DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger 142 debug - <==    Updates: 22

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="风控接口测试"
+           tests="34"
+           failures="0"
+           errors="0"
+           skipped="0"
+           time="68.455">
+  <properties />
+  
+  
+            <testcase name="excute" time="1.003" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.240" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.282" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.280" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.273" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.275" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.706" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.484" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.269" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.466" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.255" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.456" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.505" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.264" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.447" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.316" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.461" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.320" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.231" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="21.399" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="2.688" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.285" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.307" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.482" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.636" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.616" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.307" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.324" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.316" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.690" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.736" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.522" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.309" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+                <testcase name="excute" time="1.305" classname="com.fkapi.vcc.ExcuteVccConsumeCase" />
+      
+</testsuite>
