@@ -23,7 +23,7 @@ public class ex_professionService {
                 ep = epMapper.selectByCollegeNameAndProfessionName(ep);
                 return ep.getId();
             }catch (Exception e){
-                Reporter.log("根据collegeName和professionName：" + json.getString("") + json.getString("") + "获取学院id时发生异常，获取失败" + e.getMessage());
+                Reporter.log("根据collegeName和professionName：" + json.getString("professionName") + json.getString("") + "获取学院id时发生异常，获取失败" + e.getMessage());
                 return null;
             }
         }else {

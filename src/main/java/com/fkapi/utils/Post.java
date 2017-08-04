@@ -65,6 +65,17 @@ public class Post {
 				"{\"cust_id\": \""+ custId + "\",\"trans_id\":\"" + transId + "\"}");
 	}
 
+	public static String postVccLimit(String custId){
+		String response = null ;
+		Reporter.log("请求虚拟信用卡额度接口的custId为： " + custId );
+		Reporter.log("请求地址为：http://" + getPostIp()
+				+ CommonUtils.getConfigValue("vccLimit"));
+		response = HttpClientUtil.sendHttpPost(
+				"http://" + getPostIp() + CommonUtils.getConfigValue("vccLimit"),
+				"{\"cust_id\": \"" + custId + "\"}");
+		return response ;
+	}
+
 	/**
 	 * 通过数据库的路径获取请求地址的Ip
 	 * 

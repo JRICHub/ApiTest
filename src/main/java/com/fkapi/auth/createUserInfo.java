@@ -83,7 +83,7 @@ public class createUserInfo {
 		pbcService.addBaseCustomer(map.get("oldCustId"), map.get("custId"), session);
 
 		// 添加身份认证
-		if (map.get("certAuth") != null) {
+		if (!map.get("certAuth").trim().isEmpty()) {
 			pbcService = new p2p_base_customerService();
 			pcacService = new p2p_cust_accountService();
 			pabService = new p2p_account_bankcardService();
@@ -112,7 +112,7 @@ public class createUserInfo {
 			}
 		}
 		// 手机号码认证
-		if (map.get("phoneAuth") != null) {
+		if (!map.get("phoneAuth").trim().isEmpty()) {
 			json = new JSONObject(map.get("phoneAuth").trim());
 			pbcService = new p2p_base_customerService();
 			if (json.getString("phoneAuthStatus") != null
@@ -125,7 +125,7 @@ public class createUserInfo {
 			}
 		}
 		// 添加学籍认证（学生）
-		if (map.get("schoolRollAuth") != null) {
+		if (!map.get("schoolRollAuth").trim().isEmpty()) {
 			pbcService = new p2p_base_customerService();
 			json = new JSONObject(map.get("schoolRollAuth").trim());
 			if (json.get("schoolRollAuthStatus") != null
@@ -148,7 +148,7 @@ public class createUserInfo {
 		}
 
 		// 添加学历认证（成人）
-		if (map.get("educationAuth") != null) {
+		if (!map.get("educationAuth").trim().isEmpty()) {
 			pbcService = new p2p_base_customerService();
 			json = new JSONObject(map.get("educationAuth").trim());
 			if (json.get("educationAuthStatus") != null
@@ -178,7 +178,7 @@ public class createUserInfo {
 		}
 
 		// 添加头像认证
-		if (map.get("photoAuth") != null) {
+		if (!map.get("photoAuth").trim().isEmpty()) {
 			pbcService = new p2p_base_customerService();
 			json = new JSONObject(map.get("photoAuth").trim());
 			if (json.getString("photoAuthStatus") != null
@@ -213,7 +213,7 @@ public class createUserInfo {
 		}
 
 		// 添加通讯认证
-		if (map.get("jxlMobileAuth") != null) {
+		if (!map.get("jxlMobileAuth").trim().isEmpty()) {
 			json = new JSONObject(map.get("jxlMobileAuth").trim());
 			if (json.getString("jxlMobileAuthStatus").equals("AS")) {
 				pjmaService = new p2p_juxinli_mobile_authService();
@@ -229,7 +229,7 @@ public class createUserInfo {
 		}
 
 		// 认证用户住宅地址
-		if (map.get("nowAddress") != null) {
+		if (!map.get("nowAddress").trim().isEmpty()) {
 			json = new JSONObject(map.get("nowAddress"));
 			pbcService = new p2p_base_customerService();
 			if (json.getString("addrAuthStatus").equals("AS")) {

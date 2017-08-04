@@ -132,7 +132,7 @@ public class ExcelUtils {
 			for (int i = 0; i < allRowNum - 1; i++) {
 				allList.add(ExcelUtils.getCellDate(i+1, isRunCol));
 			}
-			// 排除其中的状态为0的case
+			// 排除其中的状态不为1的case
 			Iterator<String> it = allList.iterator();
 			while (it.hasNext()) {
 				Object elemet = it.next();

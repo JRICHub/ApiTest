@@ -1,12 +1,8 @@
-/**
- *
- */
 package com.fkapi.vcc;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.fkapi.auth.createVccCustomer;
 import com.fkapi.utils.Assertion;
 import com.fkapi.utils.CommonUtils;
@@ -24,9 +20,9 @@ import com.fkapi.utils.ExcelUtils;
  */
 public class CreateVccApplyTestData {
 
-    String excelPath = System.getProperty("user.dir") + "\\testcase.xlsx";
+    private String excelPath = System.getProperty("user.dir") + "\\testcase.xlsx";
 
-    Map<String, String> userInfoMap ;
+    private Map<String, String> userInfoMap ;
 
     public Map<String, String> getUserInfoMap() {
         return userInfoMap;
@@ -353,7 +349,7 @@ public class CreateVccApplyTestData {
      * 获取虚拟信用卡数据生成表的信息
      *
      * @param dataNo
-     * @return
+     * @return 返回Excel的二维数据给dataprovider
      */
     public Map<String, String> getVccApplyData(Integer dataNo) {
         Map<String, String> map;

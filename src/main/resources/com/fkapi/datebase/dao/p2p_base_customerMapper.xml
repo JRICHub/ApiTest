@@ -133,7 +133,7 @@
 			NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
 			NULL, NULL, NULL, #{item.createTime}, NULL, 'NA', 'NA', 'NA',
 			'NA', 'NA', 'NA', 'NA', 'NA', 'NA', NULL, NULL, '0', NULL, NULL,
-			NULL, NULL, '0', '0', 'N', NULL, NULL, NULL, '0', '0', NULL, NULL,
+			#{item.schoolRoll}, NULL, '0', '0', 'N', NULL, NULL, NULL, '0', '0', NULL, NULL,
 			NULL, NULL, NULL, NULL)
 		</foreach>
 	</insert>

@@ -61,7 +61,7 @@ public class p2p_base_customerService {
 	}
 	
 	//更新p2p_base_customer表信息
-	public void update(String custId,JSONObject json,String option, SqlSession session){
+	public void update(String custId, JSONObject json, String option, SqlSession session){
 		pbcMapper = session.getMapper(p2p_base_customerMapper.class);
 		pcService = new p2p_customerService();
 		pmaService = new p2p_mobile_addrService();
@@ -81,6 +81,7 @@ public class p2p_base_customerService {
 			}
 		}
 		if(option.equals("educationAuth")){
+			pbc.setSchoolRoll(json.getString("clogLevel"));
 			pbc.setEducationAuth(json.getString("educationAuthStatus"));
 			try {
 				pbcMapper.updateByCustId(pbc);
@@ -117,6 +118,7 @@ public class p2p_base_customerService {
 			}
 		}
 		if(option.equals("schoolRollAuth")){
+			pbc.setSchoolRoll(json.getString("clogLevel"));
 			pbc.setSchoolRollAuth(json.getString("schoolRollAuthStatus"));
 			try {
 				pbcMapper.updateByCustId(pbc);
