@@ -4,12 +4,10 @@ import com.fkapi.datebase.dao.vcc_customerMapper;
 import com.fkapi.datebase.domain.vcc_customer;
 import com.fkapi.utils.CommonUtils;
 import com.fkapi.utils.VCCMybatisUtils;
-import com.sun.org.apache.regexp.internal.RE;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +18,7 @@ import java.util.Map;
 public class vcc_customerService {
     vcc_customerMapper vccCutomerMapper = null ;
 
-    public void addVccCustomerService(Map<String, String> userinfoMap, Boolean isDelMobileSign, SqlSession vccSession){
-        //delVccCustomerService(userinfoMap.get("loginName"), vccSession);
-        if (isDelMobileSign){
-            delVccCustomerByMobileSign(new JSONObject(userinfoMap.get("phoneAuth")).getString("mobileSign"), vccSession);
-        }
+    public void addVccCustomerService(Map<String, String> userinfoMap, SqlSession vccSession){
         vccSession = VCCMybatisUtils.getFactory().openSession(true);
         vccCutomerMapper = vccSession.getMapper(vcc_customerMapper.class);
         List<vcc_customer> list = new ArrayList<>();

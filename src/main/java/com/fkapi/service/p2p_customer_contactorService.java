@@ -22,26 +22,25 @@ public class p2p_customer_contactorService {
 	p2p_customerService pcService = null;
 	p2p_dictionaryService pdService = null;
 	
-	public void addCustomerContactor(String oldCustId, String custId,String contractor, SqlSession session){
+	public void addCustomerContactor(String oldCustId, String custId, JSONObject json, SqlSession session){
 		delCustomerContactor(oldCustId, session);
 		pccMapper = session.getMapper(p2p_customer_contactorMapper.class);
 		List<p2p_customer_contactor> list = new ArrayList<>();
 		p2p_customer_contactor pcc = new p2p_customer_contactor();
 		pcService = new p2p_customerService();
 		pdService = new p2p_dictionaryService();
-		JSONObject json = new JSONObject(contractor);
 		pcc.setCustId(Long.valueOf(custId));
 		pcc.setCreateTime(CommonUtils.getCurDate("day"));
 		pcc.setProvince(pdService.getDictCode(json.getString("province"),session));
 		pcc.setCity(pdService.getDictCode(json.getString("city"),session));
 		list.add(pcc);
-		Reporter.log("添加p2p_customer_contactor表的参数为： " + contractor.toString());
+		Reporter.log("添加p2p_customer_contactor表的参数为： " + json.toString());
 		try {
 			pccMapper.insert(list);
-			Reporter.log("添加的联系人信息为： "+ contractor);
+			Reporter.log("添加的联系人信息为： "+ json);
 			Reporter.log("添加custId为："+ custId + "的p2p_customer_contactor表的数据成功");
 		} catch (Exception e) {
-			Reporter.log("添加的联系人信息为： "+ contractor);
+			Reporter.log("添加的联系人信息为： "+ json);
 			Reporter.log("添加custId为："+ custId + "的p2p_customer_contactor表的数据时出现异常，添加失败" + e.getMessage());
 		}
 	} 

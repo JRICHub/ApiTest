@@ -1,17 +1,11 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="fkapi" verbose="1">
 	<listeners>
-		<listener class-name="com.fkapi.utils.OverrideIAnnotationTransformer"/>
 		<listener class-name="org.uncommons.reportng.HTMLReporter" />
 		<listener class-name="org.uncommons.reportng.JUnitXMLReporter" />
 	</listeners>
 	<test name="风控接口测试">
 		<classes>
-			<class name="com.fkapi.yc.ExcuteYiCaiCase">
-				<methods>
-					<include name="excute" />
-				</methods>
-			</class>
 			<class name="com.fkapi.vcc.ExcuteVccApplyCase">
 				<methods>
 					<include name="excute" />

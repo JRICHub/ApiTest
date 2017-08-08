@@ -82,14 +82,17 @@ public class Post {
 	 * @return
 	 */
 	public static String getPostIp() {
+		String excelPath = System.getProperty("user.dir")
+				+ "\\testcase.xlsx";
+		String sheetName = "config";
 		GetExcelConfig getExcelConfig = new GetExcelConfig();
-		Map<String, String> map = getExcelConfig.getConfigData("common");
+		Map<String, String> map = getExcelConfig.getConfigData(excelPath, sheetName, "common");
 		String ip = map.get("ip");
 		return ip;
 	}
 
 	@Test
 	public void test() {
-		postVccConsume("715008091", "0000001");
+		postVccLimit("715009726");
 	}
 }

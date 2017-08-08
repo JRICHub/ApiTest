@@ -38,8 +38,7 @@ public class ExcuteVccLimitCase {
 
             if (expect != null) {
                 //请求风控审批接口，并获取额度
-                String response = Post.postVccLimit(userInfoMap.get("custId"));
-                JSONObject responseJson = new JSONObject(response);
+                JSONObject responseJson = new JSONObject(Post.postVccLimit(userInfoMap.get("custId")));
                 String resultLimit = responseJson.getJSONObject("body").getString("credit_line");
                 // 向Excel中写入实际结果
                 try {

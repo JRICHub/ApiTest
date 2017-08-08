@@ -18,7 +18,7 @@ public class VCCMybatisUtils {
         Map<String, String> map ;
         Reader reader = null;
 
-        map = getExcelConfig.getConfigData("vcc");
+        map = getExcelConfig.getConfigData(CommonUtils.excelPath, CommonUtils.configSheetName, "vcc");
         Properties properties = new Properties();
         properties.setProperty("jdbc.url", "jdbc:mysql://" + map.get("ip") + "/" + map.get("db") + "?useUnicode=true&characterEncoding=utf-8");
         properties.setProperty("jdbc.username", map.get("username"));

@@ -29,6 +29,12 @@ import com.fkapi.utils.ExcelUtils;
  */
 public class CreateYcTestData {
 
+	String excelPath = System.getProperty("user.dir") + "\\testcase.xlsx";
+
+	String ycDataSheetName = "易才数据生成";
+
+	private String authSheetName = "易才认证";
+
 	Map<String, String> userInfoMap ;
 	Map<String, String> ycAuthMap ;
 
@@ -42,7 +48,7 @@ public class CreateYcTestData {
 
 	public void creditYCTestData(String ycAuthNo, String userInfoNo,
 								 Integer dataNo, SqlSession session, SqlSession vccSession) {
-		String excelPath = System.getProperty("user.dir") + "\\testcase.xlsx";
+
 
 		p2p_base_customerService pbcService ;
 		p2p_cert_authService pcaService ;
@@ -52,10 +58,10 @@ public class CreateYcTestData {
 		risk_auth_jobService rajService ;
 		p2p_loan_claimService plcService ;
 		createUserInfo cui ;
-		YcAuthInfo yac ;
+		YcAuthInfo yai ;
 		JSONObject json = null;
 		cui = new createUserInfo();
-		yac = new YcAuthInfo();
+		yai = new YcAuthInfo();
 
 		Map<String, String> map = getYCData(dataNo);
 		// 判断用户基础信息和易才认证信息是否有数据，有则根据对应的名称新增数据
@@ -64,8 +70,8 @@ public class CreateYcTestData {
 			setUserInfoMap(cui.create(ExcelUtils.getRowNoByValue(excelPath, "userInfo",
 					userInfoNo), session, vccSession));
 			// 根据ycAuthNo创建用户的易才认证信息
-			ycAuthMap = yac.creditYCAuth(
-					ExcelUtils.getRowNoByValue(excelPath, "易才认证", ycAuthNo),
+			ycAuthMap = yai.creditYCAuth(
+					ExcelUtils.getRowNoByValue(excelPath, authSheetName, ycAuthNo),
 					userInfoNo, session);
 		} catch (Exception e1) {
 			Reporter.log("创建用户信息时出现异常" + e1.getMessage());
@@ -167,8 +173,8 @@ public class CreateYcTestData {
 		}
 		map = new HashMap<>();
 		for (int j = 0; j < allColNum; j++) {
-			map.put(ExcelUtils.getCellDate(0, j),
-					ExcelUtils.getCellDate(dataNo, j));
+			map.put(ExcelUtils.getCellDate(excelPath, ycDataSheetName, 0, j),
+					ExcelUtils.getCellDate(excelPath, ycDataSheetName, dataNo, j));
 		}
 		return map;
 	}

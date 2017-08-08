@@ -30,6 +30,8 @@ public class CreateVccConsumeTestData {
 
     String excelPath = System.getProperty("user.dir") + "\\testcase.xlsx";
 
+    String consumeSheetname = "虚拟信用卡消费数据生成";
+
     Map<String, String> userInfoMap;
 
     public Map<String, String> getUserInfoMap() {
@@ -55,7 +57,7 @@ public class CreateVccConsumeTestData {
         vucmService.addVccUserCardMap(userInfoMap, vccSession);
 
         if (!dataName.trim().isEmpty()) {
-            Map<String, String> map = getVccConsumeData(ExcelUtils.getRowNoByValue(excelPath, "虚拟信用卡消费数据生成", dataName));
+            Map<String, String> map = getVccConsumeData(ExcelUtils.getRowNoByValue(excelPath, consumeSheetname, dataName));
             if (!map.get("VPT_F001_F002").trim().isEmpty()) {
                 json = new JSONObject(map.get("VPT_F001_F002"));
                 JSONObject vccJson ;
@@ -177,8 +179,8 @@ public class CreateVccConsumeTestData {
         }
         map = new HashMap<>();
         for (int j = 0; j < allColNum; j++) {
-            map.put(ExcelUtils.getCellDate(0, j),
-                    ExcelUtils.getCellDate(dataNo, j));
+            map.put(ExcelUtils.getCellDate(excelPath, consumeSheetname, 0, j),
+                    ExcelUtils.getCellDate(excelPath, consumeSheetname, dataNo, j));
         }
         return map;
     }

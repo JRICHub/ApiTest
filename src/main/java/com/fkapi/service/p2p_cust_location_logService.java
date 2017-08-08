@@ -66,7 +66,17 @@ public class p2p_cust_location_logService {
 
         if (option.equals("VA_F014")){
             List<String> cityList = new ArrayList<>();
-            Map<Object, Object> schoolCityMap = ecService.getCollegesDate(new JSONObject(userInfoMap.get("schoolRollAuth").toString()).getString("collegeName"), session);
+            Map<Object, Object> schoolCityMap = null;
+            if (!userInfoMap.get("educationAuth").isEmpty()){
+                if (new JSONObject(userInfoMap.get("educationAuth")).getString("educationAuthStatus").equals("AS")){
+                    schoolCityMap = ecService.getCollegesDate(new JSONObject(userInfoMap.get("educationAuth")).getString("collegeName"), session);
+                }
+            }
+            if (!userInfoMap.get("schoolRollAuth").isEmpty()){
+                if (new JSONObject(userInfoMap.get("schoolRollAuth")).getString("schoolRollAuthStatus").equals("AS")){
+                    schoolCityMap = ecService.getCollegesDate(new JSONObject(userInfoMap.get("schoolRollAuth")).getString("collegeName"), session);
+                }
+            }
             String parentCity = pdService.getDictCode(new JSONObject(userInfoMap.get("contractor").toString()).getString("city"), session);
             if(json.getString("isSchool").toUpperCase().equals("Y") || json.getString("isParent").toUpperCase().equals("Y") || json.getString("isHome").toUpperCase().equals("Y")){
                 for (int i=0;i<json.getInt("effectiveNum");i++){

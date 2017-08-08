@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
  * 
  */
 public class GetExcelConfig {
-	public Map<String, String> getConfigData(String type) {
+	public Map<String, String> getConfigData(String path, String sheetName, String type) {
 		Map<String, String> map = new HashMap<>();
 		int allRowNum = 0, allColNum = 0;
 		try {
@@ -26,9 +26,9 @@ public class GetExcelConfig {
 		}
 		for (int i = 0; i < allRowNum-1; i++) {
 			for (int j = 0; j < allColNum; j++) {
-				if(ExcelUtils.getCellDate(i+1, 0).equals("1") && ExcelUtils.getCellDate(i+1, allColNum-1).equals(type)){
-					map.put(ExcelUtils.getCellDate(0, j),
-							ExcelUtils.getCellDate(i+1, j));
+				if(ExcelUtils.getCellDate(path, sheetName, i+1, 0).equals("1") && ExcelUtils.getCellDate(path, sheetName, i+1, allColNum-1).equals(type)){
+					map.put(ExcelUtils.getCellDate(path, sheetName, 0, j),
+							ExcelUtils.getCellDate(path, sheetName, i+1, j));
 				}
 			}
 		}
@@ -37,6 +37,6 @@ public class GetExcelConfig {
 	
 	@Test
 	public void test(){
-		getConfigData("");
+
 	}
 }

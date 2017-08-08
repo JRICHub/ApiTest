@@ -25,6 +25,7 @@ public class ExcuteYiCaiCase {
 	private String excelPath = System.getProperty("user.dir")
 			+ "\\testcase.xlsx";
 	private String sheetName = "信用审批case";
+	static String userInfoSheetName = "userInfo";
 	private String result = null;
 
 	@Test(dataProvider = "getData")
@@ -48,7 +49,7 @@ public class ExcuteYiCaiCase {
 		Reporter.log("               ");
 		try {
 			// 获取userinfo表的基础信息
-			userInfoMap = cui.getUserInfoMap(ExcelUtils.getRowNoByValue(
+			userInfoMap = cui.getUserInfoMap(excelPath, userInfoSheetName, ExcelUtils.getRowNoByValue(
 					excelPath, "userInfo", userInfoNo));
 		} catch (Exception e2) {
 			Reporter.log("获取用户基础信息或易才认证信息时出现异常" + e2.getMessage());

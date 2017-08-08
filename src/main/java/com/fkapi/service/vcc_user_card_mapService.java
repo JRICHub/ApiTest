@@ -24,16 +24,18 @@ public class vcc_user_card_mapService {
     String excelPath = System.getProperty("user.dir") + "\\testcase.xlsx";
     vcc_user_card_mapMapper vucmMapper ;
     createUserInfo cui ;
-    vcc_customerService vcService = new vcc_customerService();
+    vcc_customerService vcService ;
     createVccCustomer cvc = new createVccCustomer();
 
-    public void addVccUserCardMap(Map<String, String> userinfoMap, JSONObject json, SqlSession session, SqlSession vccSession){
+    public void addVccUserCardMap(Map<String, String> userinfoMap, JSONObject json, Boolean isDelMobileSign, SqlSession session, SqlSession vccSession){
+        if (isDelMobileSign){
+            vcService.delVccCustomerByMobileSign(new JSONObject(userinfoMap.get("phoneAuth")).getString("mobileSign"), vccSession);
+        }
         vucmMapper = vccSession.getMapper(vcc_user_card_mapMapper.class);
         cui = new createUserInfo();
         vcc_user_card_map vucm = new vcc_user_card_map();
         List<vcc_user_card_map> list ;
         delVccUserCardMap(new JSONObject(userinfoMap.get("certAuth")).getString("cardNo"), vccSession);
-        vcService.delVccCustomerByMobileSign(new JSONObject(userinfoMap.get("phoneAuth")).getString("mobileSign"), vccSession);
         for (int i = 0; i < json.getInt("allCount"); i++) {
             JSONArray jsonArray = json.getJSONArray("orders");
             JSONObject orderStatusJson = jsonArray.getJSONObject(i);

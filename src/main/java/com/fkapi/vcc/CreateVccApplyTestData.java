@@ -22,6 +22,8 @@ public class CreateVccApplyTestData {
 
     private String excelPath = System.getProperty("user.dir") + "\\testcase.xlsx";
 
+    static String applyDataSheetName = "虚拟信用卡准入数据生成";
+
     private Map<String, String> userInfoMap ;
 
     public Map<String, String> getUserInfoMap() {
@@ -62,7 +64,7 @@ public class CreateVccApplyTestData {
         cvc.create(userInfoMap, true, vccSession);
 
         if (!dataName.trim().isEmpty()) {
-            Map<String, String> map = getVccApplyData(ExcelUtils.getRowNoByValue(excelPath, "虚拟信用卡准入数据生成", dataName));
+            Map<String, String> map = getVccApplyData(ExcelUtils.getRowNoByValue(excelPath, applyDataSheetName, dataName));
 
             if (!map.get("上笔订单").trim().isEmpty()) {
                 json = new JSONObject(map.get("上笔订单"));
@@ -216,7 +218,7 @@ public class CreateVccApplyTestData {
                 vucmService = new vcc_user_card_mapService();
                 json = new JSONObject(map.get("VA_F009/VA_F010"));
                 if(json.getString("isApply").toUpperCase().equals("Y")){
-                    vucmService.addVccUserCardMap(userInfoMap, json, session, vccSession);
+                    vucmService.addVccUserCardMap(userInfoMap, json, false, session, vccSession);
                 } else {
                     vucmService.delVccUserCardMap(new JSONObject(userInfoMap.get("phoneAuth")).getString("mobileSign"), vccSession);
                 }
@@ -362,8 +364,8 @@ public class CreateVccApplyTestData {
         }
         map = new HashMap<>();
         for (int j = 0; j < allColNum; j++) {
-            map.put(ExcelUtils.getCellDate(0, j),
-                    ExcelUtils.getCellDate(dataNo, j));
+            map.put(ExcelUtils.getCellDate(excelPath, applyDataSheetName, 0, j),
+                    ExcelUtils.getCellDate(excelPath, applyDataSheetName, dataNo, j));
         }
         return map;
     }

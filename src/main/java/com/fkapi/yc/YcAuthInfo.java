@@ -24,7 +24,10 @@ import com.fkapi.utils.ExcelUtils;
  * 
  */
 public class YcAuthInfo {
-	
+
+	private String excelPath = System.getProperty("user.dir")
+			+ "\\testcase.xlsx";
+	private String sheetName = "易才认证";
 
 	public Map<String, String> creditYCAuth(Integer ycAuthNo, String userInfoNo,SqlSession session) {
 		CreateYcTestData cytd ;
@@ -47,8 +50,8 @@ public class YcAuthInfo {
 		}
 		ycAuthMap = new HashMap<>();
 		for (int j = 0; j < allColNum; j++) {
-			ycAuthMap.put(ExcelUtils.getCellDate(0, j),
-					ExcelUtils.getCellDate(ycAuthNo, j));
+			ycAuthMap.put(ExcelUtils.getCellDate(excelPath, sheetName, 0, j),
+					ExcelUtils.getCellDate(excelPath, sheetName, ycAuthNo, j));
 		}
 		cytd = new CreateYcTestData();
 		// 创建用户，并获取所创建用户的信息
@@ -105,8 +108,8 @@ public class YcAuthInfo {
 		}
 		ycAuthMap = new HashMap<>();
 		for (int j = 0; j < allColNum; j++) {
-			ycAuthMap.put(ExcelUtils.getCellDate(0, j),
-					ExcelUtils.getCellDate(ycAuthNo, j));
+			ycAuthMap.put(ExcelUtils.getCellDate(excelPath, sheetName, 0, j),
+					ExcelUtils.getCellDate(excelPath, sheetName, ycAuthNo, j));
 		}
 
 		return ycAuthMap;

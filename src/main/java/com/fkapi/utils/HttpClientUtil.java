@@ -31,8 +31,9 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.testng.Reporter;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-
+@Listeners({AssertionListener.class})
 public class HttpClientUtil {
 	private static Logger logger = Logger.getLogger(HttpClientUtil.class);
 	private static RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(15000).setConnectTimeout(15000)
@@ -237,7 +238,7 @@ public class HttpClientUtil {
 	/**
 	 * 发送Get请求
 	 * 
-	 * @param httpPost
+	 * @param httpGet
 	 * @return
 	 */
 	private static String sendHttpGet(HttpGet httpGet) {
@@ -281,7 +282,7 @@ public class HttpClientUtil {
 	/**
 	 * 发送Get请求Https
 	 * 
-	 * @param httpPost
+	 * @param httpGet
 	 * @return
 	 */
 	private static String sendHttpsGet(HttpGet httpGet) {

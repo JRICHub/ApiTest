@@ -37,11 +37,12 @@ public class p2p_customer_educationService {
 		pce.setCustId(Long.valueOf(custId));
 		pce.setEducation(educationAuth.getString("clogLevel") == null?"":educationAuth.getString("clogLevel"));
 		pce.setSchoolName(educationAuth.getString("collegeName") == null?"":educationAuth.getString("collegeName"));
-		pce.setEntranceTime(educationAuth.getString("entranceTime") == null?null:CommonUtils.StringToDate(educationAuth.getString("entranceTime"), "day"));
 		if(educationAuth.getString("clogLevel") != null && educationAuth.getString("clogLevel").equals("本科")){
-			pce.setGraduationTime(CommonUtils.subYear(CommonUtils.StringToDate(educationAuth.getString("entranceTime"), "day"), 4));
+			pce.setEntranceTime(CommonUtils.subYear(CommonUtils.subYear(CommonUtils.getCurDate("day"), educationAuth.getInt("graduateTime")), 4));
+			pce.setGraduationTime(CommonUtils.subYear(CommonUtils.getCurDate("day"), educationAuth.getInt("graduateTime")));
 		}else if(educationAuth.getString("clogLevel") != null && educationAuth.getString("clogLevel").equals("专科")){
-			pce.setGraduationTime(CommonUtils.subYear(CommonUtils.StringToDate(educationAuth.getString("entranceTime"), "day"), 4));
+			pce.setEntranceTime(CommonUtils.subYear(CommonUtils.subYear(CommonUtils.getCurDate("day"), educationAuth.getInt("graduateTime")), 3));
+			pce.setGraduationTime(CommonUtils.subYear(CommonUtils.getCurDate("day"), educationAuth.getInt("graduateTime")));
 		}else{
 			pce.setGraduationTime(null);
 		}

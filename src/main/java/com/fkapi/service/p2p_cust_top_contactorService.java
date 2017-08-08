@@ -21,15 +21,13 @@ import com.fkapi.utils.CommonUtils;
 public class p2p_cust_top_contactorService {
 	p2p_cust_top_contactorMapper pctcMapper = null;
 	p2p_customerService pcService = null;
-	JSONObject json = null;
 	
-	public void addCustTopContactor(String oldCustId, String custId,String contactor, SqlSession session){
+	public void addCustTopContactor(String oldCustId, String custId, JSONObject json, SqlSession session){
 		delCustTopContactor(oldCustId, session);
 		pctcMapper = session.getMapper(p2p_cust_top_contactorMapper.class);
 		List<p2p_cust_top_contactor> list ;
 		pcService = new p2p_customerService();
 		p2p_cust_top_contactor pctc = new p2p_cust_top_contactor();
-		json = new JSONObject(contactor);
 		String relation ;
 		JSONArray jsonArray = (JSONArray) json.get("contractor");
 		for(int i=0;i<jsonArray.length();i++){
@@ -56,7 +54,7 @@ public class p2p_cust_top_contactorService {
 			pctc.setCreateTime(CommonUtils.getCurDate("day"));
 			pctc.setUpdateTime(CommonUtils.getCurDate("day"));
 			list.add(pctc);
-			Reporter.log("添加p2p_cust_top_contactor表的参数为： " + contactor);
+			Reporter.log("添加p2p_cust_top_contactor表的参数为： " + json);
 			try {
 				pctcMapper.insert(list);
 				Reporter.log("添加custId为："+ custId + "的p2p_cust_top_contactor表的数据成功");

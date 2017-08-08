@@ -21,7 +21,6 @@ public class py_educationService {
 	py_educationMapper peMapper = null;
 	p2p_customerService pcService = null;
 	
-	@SuppressWarnings("deprecation")
 	public void addPyEducation(String oldCustId, String custId,String reqName,String reqDocumentNo,JSONObject json, SqlSession session){
 		delPyEducation(oldCustId, session);
 		peMapper = session.getMapper(py_educationMapper.class);
@@ -32,13 +31,13 @@ public class py_educationService {
 		pe.setReqName(reqName == null?"":reqName);
 		pe.setReqDocumentNo(reqDocumentNo == null?"":reqDocumentNo);
 		pe.setCollege(json.getString("collegeName") == null?"":json.getString("collegeName"));
-		pe.setStartTime(json.getString("entranceTime") == null?"":json.getString("entranceTime"));
+		pe.setGraduateTime(CommonUtils.subYear(CommonUtils.getCurDate("day"), json.getInt("graduateTime")).toString());
 		if(json.getString("clogLevel") != null && json.getString("clogLevel").equals("本科")){
-			pe.setGraduateTime(CommonUtils.subYear(CommonUtils.StringToDate(json.getString("entranceTime"), "day"), 4).toLocaleString());
+			pe.setStartTime(CommonUtils.subYear(CommonUtils.subYear(CommonUtils.getCurDate("day"), json.getInt("graduateTime")), 4).toString());
 		}else if(json.getString("clogLevel") != null && json.getString("clogLevel").equals("专科")){
-			pe.setGraduateTime(CommonUtils.subYear(CommonUtils.StringToDate(json.getString("entranceTime"), "day"), 4).toLocaleString());
+			pe.setStartTime(CommonUtils.subYear(CommonUtils.subYear(CommonUtils.getCurDate("day"), json.getInt("graduateTime")), 3).toString());
 		}else{
-			pe.setGraduateTime(null);
+			pe.setStartTime(null);
 		}
 		pe.setSpecialty(json.getString("professionName"));
 		pe.setDegree(json.getString("clogLevel"));

@@ -29,6 +29,11 @@ public class CommonUtils {
 	 * @param key
 	 * @return
 	 */
+
+	static String excelPath = System.getProperty("user.dir")
+			+ "\\testcase.xlsx";
+
+	static String configSheetName = "config";
 	
 	public static String getConfigValue(String key) {
 		Properties props = new Properties();
@@ -150,7 +155,7 @@ public class CommonUtils {
 		}
 		Calendar rightNow = Calendar.getInstance();
 		rightNow.setTime(dt);
-		rightNow.add(Calendar.YEAR, year);
+		rightNow.add(Calendar.YEAR, -year);
 		Date dt1 = rightNow.getTime();
 		return dt1;
 	}
@@ -173,6 +178,22 @@ public class CommonUtils {
 		Calendar rightNow = Calendar.getInstance();
 		rightNow.setTime(dt);
 		rightNow.set(Calendar.DATE, rightNow.get(Calendar.DATE) - day);
+		Date dt1 = rightNow.getTime();
+		return dt1;
+	}
+
+	public static Date subMin(Date date, int min) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date dt = null;
+		try {
+			dt = sdf.parse(sdf.format(date));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			Reporter.log("出现异常" + e.getMessage());
+		}
+		Calendar rightNow = Calendar.getInstance();
+		rightNow.setTime(dt);
+		rightNow.set(Calendar.MINUTE, rightNow.get(Calendar.MINUTE) - min);
 		Date dt1 = rightNow.getTime();
 		return dt1;
 	}
@@ -218,6 +239,6 @@ public class CommonUtils {
 	
 	@Test
 	public void f() throws ParseException{
-		
+
 	}
 }

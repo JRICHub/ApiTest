@@ -82,7 +82,14 @@ public class ExcelUtils {
 	 * @param CloNum
 	 * @return
 	 */
-	public static String getCellDate(int RowNum, int CloNum) {
+	public static String getCellDate(String path, String sheetName, int RowNum, int CloNum) {
+		try {
+			FileInputStream ExcelFile = new FileInputStream(path);
+			ExcelBook = new XSSFWorkbook(ExcelFile);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		ExcelSheet = ExcelBook.getSheet(sheetName);
 		String cellData = "";
 		DecimalFormat df = new DecimalFormat("#");
 		Cell = ExcelSheet.getRow(RowNum).getCell(CloNum);
@@ -130,7 +137,7 @@ public class ExcelUtils {
 			isRunCol = ExcelUtils.getColNoByValue(path, sheetName, "isRun");
 			// 将所有的isRun状态加入到list中
 			for (int i = 0; i < allRowNum - 1; i++) {
-				allList.add(ExcelUtils.getCellDate(i+1, isRunCol));
+				allList.add(ExcelUtils.getCellDate(path, sheetName, i+1, isRunCol));
 			}
 			// 排除其中的状态不为1的case
 			Iterator<String> it = allList.iterator();
@@ -146,9 +153,9 @@ public class ExcelUtils {
 			Object dateMap[][] = new Object[mapNum][allColNum-2];
 			int k = 0;
 			for (int i = 0; i < allRowNum - 1; i++) {
-				if (ExcelUtils.getCellDate(i + 1, isRunCol).equals("1")) {
+				if (ExcelUtils.getCellDate(path, sheetName, i + 1, isRunCol).equals("1")) {
 					for (int j = 0; j < allColNum-2; j++) {
-						dateMap[k][j] = ExcelUtils.getCellDate(i + 1, j);
+						dateMap[k][j] = ExcelUtils.getCellDate(path, sheetName, i + 1, j);
 					}
 					k++;
 				}

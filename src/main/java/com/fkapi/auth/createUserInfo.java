@@ -34,6 +34,11 @@ import com.fkapi.utils.ExcelUtils;
 
 public class createUserInfo {
 
+	static String excelPath = System.getProperty("user.dir")
+			+ "\\testcase.xlsx";
+	static String dataSheetName = "元数据表";
+	static String userInfoSheetName = "userInfo";
+
 	Map<String, String> map ;
 
 	public Map<String, String> getMap() {
@@ -70,7 +75,7 @@ public class createUserInfo {
 		jxl_primary_infoService jpiService ;
 		JSONObject json ;
 
-		setMap(getUserInfoMap(userInfoNo));
+		setMap(getUserInfoMap(excelPath, userInfoSheetName, userInfoNo));
 		pcService = new p2p_customerService();
 		pbcService = new p2p_base_customerService();
 
@@ -84,6 +89,7 @@ public class createUserInfo {
 
 		// 添加身份认证
 		if (!map.get("certAuth").trim().isEmpty()) {
+			map.put("certAuth", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("certAuth")), 1));
 			pbcService = new p2p_base_customerService();
 			pcacService = new p2p_cust_accountService();
 			pabService = new p2p_account_bankcardService();
@@ -92,7 +98,7 @@ public class createUserInfo {
 			ptaService = new p2p_third_accountService();
 			pacService = new p2p_account_checkService();
 			pcciService = new p2p_cust_credit_infoService();
-			json = new JSONObject(map.get("certAuth").trim());
+			json = new JSONObject(map.get("certAuth"));
 			if (json.getString("certAuthStatus") != null
 					&& json.getString("certAuthStatus").equals("AS")) {
 				pcaService = new p2p_cert_authService();
@@ -113,7 +119,8 @@ public class createUserInfo {
 		}
 		// 手机号码认证
 		if (!map.get("phoneAuth").trim().isEmpty()) {
-			json = new JSONObject(map.get("phoneAuth").trim());
+			map.put("phoneAuth", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("phoneAuth")), 1));
+			json = new JSONObject(map.get("phoneAuth"));
 			pbcService = new p2p_base_customerService();
 			if (json.getString("phoneAuthStatus") != null
 					&& json.getString("phoneAuthStatus").equals("AS")) {
@@ -126,8 +133,9 @@ public class createUserInfo {
 		}
 		// 添加学籍认证（学生）
 		if (!map.get("schoolRollAuth").trim().isEmpty()) {
+			map.put("schoolRollAuth", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("schoolRollAuth")), 1));
 			pbcService = new p2p_base_customerService();
-			json = new JSONObject(map.get("schoolRollAuth").trim());
+			json = new JSONObject(map.get("schoolRollAuth"));
 			if (json.get("schoolRollAuthStatus") != null
 					&& json.getString("schoolRollAuthStatus").equals("AS")) {
 				pscService = new p2p_student_custService();
@@ -149,8 +157,9 @@ public class createUserInfo {
 
 		// 添加学历认证（成人）
 		if (!map.get("educationAuth").trim().isEmpty()) {
+			map.put("educationAuth", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("educationAuth")), 1));
 			pbcService = new p2p_base_customerService();
-			json = new JSONObject(map.get("educationAuth").trim());
+			json = new JSONObject(map.get("educationAuth"));
 			if (json.get("educationAuthStatus") != null
 					&& json.get("educationAuthStatus").equals("AS")) {
 				pceService = new p2p_customer_educationService();
@@ -164,7 +173,6 @@ public class createUserInfo {
 						map.get("certAuth")).getString("custName"),
 						new JSONObject(map.get("certAuth")).getString("idNo"),
 						json, session);
-
 				pbcService.update(map.get("custId"), json, "educationAuth",
 						session);
 			} else if (json.get("educationAuthStatus") != null
@@ -179,8 +187,9 @@ public class createUserInfo {
 
 		// 添加头像认证
 		if (!map.get("photoAuth").trim().isEmpty()) {
+			map.put("photoAuth", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("photoAuth")), 1));
 			pbcService = new p2p_base_customerService();
-			json = new JSONObject(map.get("photoAuth").trim());
+			json = new JSONObject(map.get("photoAuth"));
 			if (json.getString("photoAuthStatus") != null
 					&& json.getString("photoAuthStatus").equals("AS")) {
 				plaService = new p2p_linkface_authService();
@@ -204,17 +213,20 @@ public class createUserInfo {
 
 		// 添加常用联系人认证
 		if (!map.get("contractor").isEmpty()) {
+			map.put("contractor", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("contractor")), 1));
+			json = new JSONObject(map.get("contractor"));
 			pccService = new p2p_customer_contactorService();
 			pccService.addCustomerContactor(map.get("oldCustId"), map.get("custId"),
-					map.get("contractor"), session);
+					json, session);
 			pctcService = new p2p_cust_top_contactorService();
 			pctcService.addCustTopContactor(map.get("oldCustId"), map.get("custId"),
-					map.get("contractor"), session);
+					json, session);
 		}
 
 		// 添加通讯认证
 		if (!map.get("jxlMobileAuth").trim().isEmpty()) {
-			json = new JSONObject(map.get("jxlMobileAuth").trim());
+			map.put("jxlMobileAuth", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("jxlMobileAuth")), 1));
+			json = new JSONObject(map.get("jxlMobileAuth"));
 			if (json.getString("jxlMobileAuthStatus").equals("AS")) {
 				pjmaService = new p2p_juxinli_mobile_authService();
 				pjmaService.addJuxinliMobileAuth(map.get("custId"), json,
@@ -230,6 +242,7 @@ public class createUserInfo {
 
 		// 认证用户住宅地址
 		if (!map.get("nowAddress").trim().isEmpty()) {
+			map.put("nowAddress", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("nowAddress")), 1));
 			json = new JSONObject(map.get("nowAddress"));
 			pbcService = new p2p_base_customerService();
 			if (json.getString("addrAuthStatus").equals("AS")) {
@@ -247,7 +260,7 @@ public class createUserInfo {
 	 *            ：userinfo表中的userInfoNo
 	 * @return
 	 */
-	public Map<String, String> getUserInfoMap(Integer userInfoNo) {
+	public Map<String, String> getUserInfoMap(String path, String sheetName, Integer userInfoNo) {
 		Map<String, String> map ;
 		int allColNum = 0;
 		try {
@@ -258,8 +271,8 @@ public class createUserInfo {
 		}
 		map = new HashMap<>();
 		for (int j = 0; j < allColNum; j++) {
-			map.put(ExcelUtils.getCellDate(0, j),
-					ExcelUtils.getCellDate(userInfoNo, j));
+			map.put(ExcelUtils.getCellDate(path, sheetName, 0, j),
+					ExcelUtils.getCellDate(path, sheetName, userInfoNo, j));
 		}
 		return map;
 	}
