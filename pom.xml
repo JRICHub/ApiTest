@@ -178,6 +178,7 @@
 				<configuration>
 					<verbose>true</verbose>
 					<overwrite>true</overwrite>
+					<outputDirectory></outputDirectory>
 				</configuration>
 			</plugin>
 		</plugins>

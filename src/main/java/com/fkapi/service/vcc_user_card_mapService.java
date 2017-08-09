@@ -28,7 +28,7 @@ public class vcc_user_card_mapService {
     createVccCustomer cvc = new createVccCustomer();
 
     public void addVccUserCardMap(Map<String, String> userinfoMap, JSONObject json, Boolean isDelMobileSign, SqlSession session, SqlSession vccSession){
-        if (isDelMobileSign){
+        if (isDelMobileSign || new JSONObject(userinfoMap.get("phoneAuth")).getString("mobileSign").equals("888888888")){
             vcService.delVccCustomerByMobileSign(new JSONObject(userinfoMap.get("phoneAuth")).getString("mobileSign"), vccSession);
         }
         vucmMapper = vccSession.getMapper(vcc_user_card_mapMapper.class);

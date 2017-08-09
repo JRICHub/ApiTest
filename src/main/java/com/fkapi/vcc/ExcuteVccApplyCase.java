@@ -4,14 +4,16 @@
 package com.fkapi.vcc;
 
 import java.util.Map;
+
+import com.fkapi.service.p2p_cust_addr_listService;
+import com.fkapi.service.vcc_customerService;
+import com.fkapi.service.vcc_user_card_mapService;
 import com.fkapi.utils.*;
 import javafx.geometry.Pos;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import org.testng.Reporter;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import com.fkapi.service.p2p_loan_claim_auditService;
 
 /**
@@ -23,6 +25,12 @@ public class ExcuteVccApplyCase {
 	static String excelPath = System.getProperty("user.dir")
 			+ "\\testcase.xlsx";
 	static String sheetName = "虚拟信用卡准入case";
+
+	vcc_user_card_mapService vucmService ;
+
+	vcc_customerService vcService ;
+
+	p2p_cust_addr_listService pcalService ;
 
 	@Test(dataProvider = "getData")
 	public void excute(String caseName, String isRun, String userInfoNo, String dataName,
@@ -97,6 +105,17 @@ public class ExcuteVccApplyCase {
 			Reporter.log("请选择要创建的用户信息");
 			Assertion.verifyTure(false);
 		}
+	}
+
+	@AfterMethod
+	public void clearTestData(){
+		SqlSession vccSession = VCCMybatisUtils.getFactory().openSession(true);
+		vucmService = new vcc_user_card_mapService();
+		vcService = new vcc_customerService();
+
+		vucmService.delVccUserCardMap("62170010000000002%", vccSession);
+		vcService.delVccCustomerByMobileSign("999999999", vccSession);
+
 	}
 
 	@DataProvider
