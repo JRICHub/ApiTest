@@ -4,6 +4,7 @@ import com.fkapi.auth.createUserInfo;
 import com.fkapi.auth.createVccCustomer;
 import com.fkapi.service.*;
 import com.fkapi.utils.Assertion;
+import com.fkapi.utils.CommonUtils;
 import com.fkapi.utils.ExcelUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
@@ -25,12 +26,7 @@ public class CreateVccConsumeTestData {
     p2p_black_deviceService pbdService;
     p2p_loan_claimService plcService;
     vcc_repay_planService vrpService ;
-
     p2p_repay_planService prpService ;
-
-    String excelPath = System.getProperty("user.dir") + "\\testcase.xlsx";
-
-    String consumeSheetname = "虚拟信用卡消费数据生成";
 
     Map<String, String> userInfoMap;
 
@@ -46,7 +42,7 @@ public class CreateVccConsumeTestData {
         JSONObject json = null;
         //创建基础用户信息，并将基础用户信息保存到userInfoMap中
         createUserInfo cui = new createUserInfo();
-        setUserInfoMap(cui.create(ExcelUtils.getRowNoByValue(excelPath, "userInfo",
+        setUserInfoMap(cui.create(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, "userInfo",
                 userInfoNo), session, vccSession));
 
         //添加虚拟信用卡用户表信息
@@ -57,7 +53,7 @@ public class CreateVccConsumeTestData {
         vucmService.addVccUserCardMap(userInfoMap, vccSession);
 
         if (!dataName.trim().isEmpty()) {
-            Map<String, String> map = getVccConsumeData(ExcelUtils.getRowNoByValue(excelPath, consumeSheetname, dataName));
+            Map<String, String> map = getVccConsumeData(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.consumeSheetname, dataName));
             if (!map.get("VPT_F001_F002").trim().isEmpty()) {
                 json = new JSONObject(map.get("VPT_F001_F002"));
                 JSONObject vccJson ;
@@ -179,8 +175,8 @@ public class CreateVccConsumeTestData {
         }
         map = new HashMap<>();
         for (int j = 0; j < allColNum; j++) {
-            map.put(ExcelUtils.getCellDate(excelPath, consumeSheetname, 0, j),
-                    ExcelUtils.getCellDate(excelPath, consumeSheetname, dataNo, j));
+            map.put(ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.consumeSheetname, 0, j),
+                    ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.consumeSheetname, dataNo, j));
         }
         return map;
     }

@@ -78,6 +78,6 @@ public class p2p_mobile_addrService {
 
 	@Test
 	public void test(){
-		
+		System.out.println();
 	}
 }

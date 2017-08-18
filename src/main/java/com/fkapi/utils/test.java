@@ -3,11 +3,6 @@
  */
 package com.fkapi.utils;
 
-import java.util.Random;
-
-import com.fkapi.reTry.RetryListener;
-import com.fkapi.reTry.TestngListener;
-import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;

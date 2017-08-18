@@ -30,10 +30,21 @@ public class CommonUtils {
 	 * @return
 	 */
 
-	static String excelPath = System.getProperty("user.dir")
-			+ "\\testcase.xlsx";
+	public static String excelPath = System.getProperty("user.dir") + "\\testcase.xlsx";
 
-	static String configSheetName = "config";
+	public static String configSheetName = "config";
+
+	public static String applyDataSheetName = "虚拟信用卡准入数据生成";
+
+	public static String consumeSheetname = "虚拟信用卡消费数据生成";
+
+	public static String applyCaseSheetName = "虚拟信用卡准入case";
+
+	public static String consumeCasesheetName = "虚拟信用卡消费case";
+
+	public static String dataSheetName = "元数据表";
+
+	public static String userInfoSheetName = "userInfo";
 	
 	public static String getConfigValue(String key) {
 		Properties props = new Properties();
@@ -239,6 +250,8 @@ public class CommonUtils {
 	
 	@Test
 	public void f() throws ParseException{
-
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		String value="2017-10-17 10:08:00";
+		System.out.println(df.parse(value).getTime());
 	}
 }

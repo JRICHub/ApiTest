@@ -3,41 +3,16 @@ package com.fkapi.auth;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fkapi.service.*;
+import com.fkapi.utils.CommonUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
-import com.fkapi.service.ex_StudentCreditInfoService;
-import com.fkapi.service.jxl_primary_infoService;
-import com.fkapi.service.p2p_account_bankcardService;
-import com.fkapi.service.p2p_account_bankcard_logService;
-import com.fkapi.service.p2p_account_checkService;
-import com.fkapi.service.p2p_base_accountService;
-import com.fkapi.service.p2p_base_customerService;
-import com.fkapi.service.p2p_cert_authService;
-import com.fkapi.service.p2p_cust_accountService;
-import com.fkapi.service.p2p_cust_credit_infoService;
-import com.fkapi.service.p2p_cust_top_contactorService;
-import com.fkapi.service.p2p_customerService;
-import com.fkapi.service.p2p_customer_contactorService;
-import com.fkapi.service.p2p_customer_educationService;
-import com.fkapi.service.p2p_customer_education_logService;
-import com.fkapi.service.p2p_juxinli_mobile_authService;
-import com.fkapi.service.p2p_juxinli_mobile_logService;
-import com.fkapi.service.p2p_linkface_authService;
-import com.fkapi.service.p2p_linkface_msgService;
-import com.fkapi.service.p2p_student_custService;
-import com.fkapi.service.p2p_student_infoService;
-import com.fkapi.service.p2p_third_accountService;
-import com.fkapi.service.py_educationService;
 import com.fkapi.utils.ExcelUtils;
 
 public class createUserInfo {
-
-	static String excelPath = System.getProperty("user.dir")
-			+ "\\testcase.xlsx";
-	static String dataSheetName = "元数据表";
-	static String userInfoSheetName = "userInfo";
 
 	Map<String, String> map ;
 
@@ -73,9 +48,11 @@ public class createUserInfo {
 		p2p_account_checkService pacService ;
 		p2p_cust_credit_infoService pcciService ;
 		jxl_primary_infoService jpiService ;
+		p2p_loan_claimService plcService ;
+		p2p_repay_planService prpService ;
 		JSONObject json ;
 
-		setMap(getUserInfoMap(excelPath, userInfoSheetName, userInfoNo));
+		setMap(getUserInfoMap(CommonUtils.excelPath, CommonUtils.userInfoSheetName, userInfoNo));
 		pcService = new p2p_customerService();
 		pbcService = new p2p_base_customerService();
 
@@ -89,7 +66,7 @@ public class createUserInfo {
 
 		// 添加身份认证
 		if (!map.get("certAuth").trim().isEmpty()) {
-			map.put("certAuth", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("certAuth")), 1));
+			map.put("certAuth", ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.dataSheetName, ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.dataSheetName, map.get("certAuth")), 1));
 			pbcService = new p2p_base_customerService();
 			pcacService = new p2p_cust_accountService();
 			pabService = new p2p_account_bankcardService();
@@ -119,7 +96,7 @@ public class createUserInfo {
 		}
 		// 手机号码认证
 		if (!map.get("phoneAuth").trim().isEmpty()) {
-			map.put("phoneAuth", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("phoneAuth")), 1));
+			map.put("phoneAuth", ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.dataSheetName, ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.dataSheetName, map.get("phoneAuth")), 1));
 			json = new JSONObject(map.get("phoneAuth"));
 			pbcService = new p2p_base_customerService();
 			if (json.getString("phoneAuthStatus") != null
@@ -133,7 +110,7 @@ public class createUserInfo {
 		}
 		// 添加学籍认证（学生）
 		if (!map.get("schoolRollAuth").trim().isEmpty()) {
-			map.put("schoolRollAuth", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("schoolRollAuth")), 1));
+			map.put("schoolRollAuth", ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.dataSheetName, ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.dataSheetName, map.get("schoolRollAuth")), 1));
 			pbcService = new p2p_base_customerService();
 			json = new JSONObject(map.get("schoolRollAuth"));
 			if (json.get("schoolRollAuthStatus") != null
@@ -157,7 +134,7 @@ public class createUserInfo {
 
 		// 添加学历认证（成人）
 		if (!map.get("educationAuth").trim().isEmpty()) {
-			map.put("educationAuth", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("educationAuth")), 1));
+			map.put("educationAuth", ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.dataSheetName, ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.dataSheetName, map.get("educationAuth")), 1));
 			pbcService = new p2p_base_customerService();
 			json = new JSONObject(map.get("educationAuth"));
 			if (json.get("educationAuthStatus") != null
@@ -187,7 +164,7 @@ public class createUserInfo {
 
 		// 添加头像认证
 		if (!map.get("photoAuth").trim().isEmpty()) {
-			map.put("photoAuth", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("photoAuth")), 1));
+			map.put("photoAuth", ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.dataSheetName, ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.dataSheetName, map.get("photoAuth")), 1));
 			pbcService = new p2p_base_customerService();
 			json = new JSONObject(map.get("photoAuth"));
 			if (json.getString("photoAuthStatus") != null
@@ -213,7 +190,7 @@ public class createUserInfo {
 
 		// 添加常用联系人认证
 		if (!map.get("contractor").isEmpty()) {
-			map.put("contractor", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("contractor")), 1));
+			map.put("contractor", ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.dataSheetName, ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.dataSheetName, map.get("contractor")), 1));
 			json = new JSONObject(map.get("contractor"));
 			pccService = new p2p_customer_contactorService();
 			pccService.addCustomerContactor(map.get("oldCustId"), map.get("custId"),
@@ -225,7 +202,7 @@ public class createUserInfo {
 
 		// 添加通讯认证
 		if (!map.get("jxlMobileAuth").trim().isEmpty()) {
-			map.put("jxlMobileAuth", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("jxlMobileAuth")), 1));
+			map.put("jxlMobileAuth", ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.dataSheetName, ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.dataSheetName, map.get("jxlMobileAuth")), 1));
 			json = new JSONObject(map.get("jxlMobileAuth"));
 			if (json.getString("jxlMobileAuthStatus").equals("AS")) {
 				pjmaService = new p2p_juxinli_mobile_authService();
@@ -242,12 +219,63 @@ public class createUserInfo {
 
 		// 认证用户住宅地址
 		if (!map.get("nowAddress").trim().isEmpty()) {
-			map.put("nowAddress", ExcelUtils.getCellDate(excelPath, dataSheetName, ExcelUtils.getRowNoByValue(excelPath, dataSheetName, map.get("nowAddress")), 1));
+			map.put("nowAddress", ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.dataSheetName, ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.dataSheetName, map.get("nowAddress")), 1));
 			json = new JSONObject(map.get("nowAddress"));
 			pbcService = new p2p_base_customerService();
 			if (json.getString("addrAuthStatus").equals("AS")) {
 				pbcService.update(map.get("custId"), json, "addrAuth",
 						session);
+			}
+		}
+
+		//添加用户的历史订单（是否存在逾期的订单）,如果为空则表示用户没有历史订单为首次借款
+		if (!map.get("hasOverdueOrder").trim().isEmpty()){
+			plcService = new p2p_loan_claimService();
+			prpService = new p2p_repay_planService();
+			//Y则表示用户近三笔订单中存在逾期的订单
+			if(map.get("hasOverdueOrder").toUpperCase().equals("Y")){
+				json = new JSONObject();
+				//构建历史订单数据
+				json.put("projectName","牛大咖");
+				json.put("loanSubSrc","NDK");
+				json.put("loanTerm","1");
+				json.put("status","SETTLED");
+				json.put("deviceCode","999999999");
+				json.put("time","1");
+				plcService.addProject(map, json, false, session);
+				//构建repay_plan表中的数据
+				json.put("allTerm","1");
+				json.put("repayPlan","[ { \"status\": \"OVERDUE_REPAID\", \"time\":\"-1\" } ]");
+				prpService.addRepayPlan(map, plcService.getProjectNo(), json, session);
+			}
+			//N则表示用户近三笔订单中没有逾期的订单
+			if(map.get("hasOverdueOrder").toUpperCase().equals("N")){
+				json = new JSONObject();
+				//先添加一笔逾期的订单，再添加三笔未逾期的订单,保证近三笔订单为未逾期订单
+				json.put("projectName","牛大咖");
+				json.put("loanSubSrc","NDK");
+				json.put("loanTerm","1");
+				json.put("status","SETTLED");
+				json.put("deviceCode","999999999");
+				json.put("time","30");
+				plcService.addProject(map, json, false, session);
+				json.put("allTerm","1");
+				json.put("repayPlan","[ { \"status\": \"OVERDUE_REPAID\", \"time\":\"10\" } ]");
+				prpService.addRepayPlan(map, plcService.getProjectNo(), json, session);
+
+				for(int i=0; i<3; i++){
+					json = new JSONObject();
+					json.put("projectName","牛大咖");
+					json.put("loanSubSrc","NDK");
+					json.put("loanTerm","1");
+					json.put("status","SETTLED");
+					json.put("deviceCode","999999999");
+					json.put("time","2");
+					plcService.addProject(map, json, false, session);
+					json.put("allTerm","1");
+					json.put("repayPlan","[ { \"status\": \"NORMAL\", \"time\":\"1\" } ]");
+					prpService.addRepayPlan(map, plcService.getProjectNo(), json, session);
+				}
 			}
 		}
 		return map;

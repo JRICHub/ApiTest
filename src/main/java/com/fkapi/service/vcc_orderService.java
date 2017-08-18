@@ -26,8 +26,7 @@ public class vcc_orderService {
         vcc_order vo = new vcc_order();
         delVccOrder(new JSONObject(userInfoMap.get("certAuth")).getString("cardNo"), vccSession);
         vliService = new vcc_loan_infoService();
-        List<vcc_loan_info> successOrderNoList = vliService.getVccLonaInfo(userInfoMap.get("custId"),"1", vccSession);
-        List<vcc_loan_info> failOrderNoList = vliService.getVccLonaInfo(userInfoMap.get("custId"),"2", vccSession);
+        List<vcc_loan_info> successOrderNoList = vliService.getVccLonaInfo(userInfoMap.get("custId"), vccSession);
         //添加成功的订单
         for (int i = 0; i < json.getInt("sucessOrders"); i++) {
             list = new ArrayList<>();
@@ -40,7 +39,7 @@ public class vcc_orderService {
             vo.setCardNo(new JSONObject(userInfoMap.get("certAuth")).getString("cardNo"));
             if (json.getString("isSameTime").toUpperCase().equals("Y")) {
                 vo.setSubmitTime(CommonUtils.getCurDate("second"));
-                vo.setTransTime(CommonUtils.getCurDate("second"));
+                vo.setTransTime(CommonUtils.subMin(CommonUtils.getCurDate("second"), 10));
                 vo.setCreateTime(CommonUtils.getCurDate("second"));
                 vo.setUpdateTime(CommonUtils.getCurDate("second"));
             } else {
@@ -75,7 +74,7 @@ public class vcc_orderService {
                 } else {
                     vo.setMerchantNo("000000002");
                 }
-                vo.setOrderNo(failOrderNoList.get(i).getOrderNo());
+                vo.setOrderNo(UUID.randomUUID().toString().replace("-",""));
                 vo.setCardNo(new JSONObject(userInfoMap.get("certAuth")).getString("cardNo"));
                 if (json.getString("isSameTime").toUpperCase().equals("Y")) {
                     vo.setSubmitTime(CommonUtils.getCurDate("second"));

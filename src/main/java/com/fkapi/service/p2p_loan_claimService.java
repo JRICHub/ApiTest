@@ -72,8 +72,8 @@ public class p2p_loan_claimService {
 			plc.setProjectChannel("朗顿");
 		}else if(json.getString("loanSubSrc").contains("YHJ")){
 			plc.setProjectChannel("壹加众达网络科技（北京）有限公司");
-		}else{
-			plc.setProjectChannel(null);
+		}else if(json.getString("loanSubSrc").contains("NDK")){
+			plc.setProjectChannel("牛大咖");
 		}
 		plc.setCreateTime(CommonUtils.getCurDate("second"));
 		plc.setLoanTerm(json.getInt("loanTerm"));

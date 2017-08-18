@@ -25,7 +25,7 @@ public class vcc_repay_planService {
         List<vcc_repay_plan> list ;
         vcc_repay_plan vrp = new vcc_repay_plan();
         delVccRepalyPlan(userinfoMap.get("oldCustId"), vccSession);
-        List<vcc_loan_info> successOrderNoList = vliService.getVccLonaInfo(userinfoMap.get("custId"), "1", vccSession);
+        List<vcc_loan_info> successOrderNoList = vliService.getVccLonaInfo(userinfoMap.get("custId"), vccSession);
         if (!isCreditOrder){
             for (int i = 0; i < successOrderNoList.size(); i++) {
                 list = new ArrayList<>();

@@ -19,9 +19,6 @@ public class ExcuteVccConsumeCase {
 
     risk_virtual_credit_cardService rvccService ;
 
-    static String excelPath = System.getProperty("user.dir")
-            + "\\testcase.xlsx";
-    static String sheetName = "虚拟信用卡消费case";
     @Test(dataProvider = "getData")
     public void excute(String caseName, String isRun, String userInfoNo, String dataName,
                        String remark, String expect){
@@ -55,9 +52,9 @@ public class ExcuteVccConsumeCase {
                 // 向Excel中写入实际结果
                 try {
                     ExcelUtils.setCellData(result, ExcelUtils.getRowNoByValue(
-                            excelPath, sheetName, caseName), ExcelUtils
-                                    .getColNoByValue(excelPath, sheetName, "实际结果"),
-                            excelPath, sheetName);
+                            CommonUtils.excelPath, CommonUtils.consumeCasesheetName, caseName), ExcelUtils
+                                    .getColNoByValue(CommonUtils.excelPath, CommonUtils.consumeCasesheetName, "实际结果"),
+                            CommonUtils.excelPath, CommonUtils.consumeCasesheetName);
                     Reporter.log("期望结果为：" + expect);
                     Reporter.log("实际结果为：" + result);
                 } catch (Exception e1) {
@@ -68,9 +65,9 @@ public class ExcuteVccConsumeCase {
                 // //向Excel中写入是否通过
                 try {
                     ExcelUtils.setCellData(finalResult, ExcelUtils
-                                    .getRowNoByValue(excelPath, sheetName, caseName),
-                            ExcelUtils.getColNoByValue(excelPath, sheetName,
-                                    "是否通过"), excelPath, sheetName);
+                                    .getRowNoByValue(CommonUtils.excelPath, CommonUtils.consumeCasesheetName, caseName),
+                            ExcelUtils.getColNoByValue(CommonUtils.excelPath, CommonUtils.consumeCasesheetName,
+                                    "是否通过"), CommonUtils.excelPath, CommonUtils.consumeCasesheetName);
                     Reporter.log("用例执行结果为：" + finalResult);
                 } catch (Exception e) {
                     Reporter.log("插入执行结果时发生异常，插入失败");
@@ -92,6 +89,6 @@ public class ExcuteVccConsumeCase {
 
     @DataProvider
     public Object[][] getData() throws Exception {
-        return ExcelUtils.excelToDateMap(excelPath, sheetName);
+        return ExcelUtils.excelToDateMap(CommonUtils.excelPath, CommonUtils.consumeCasesheetName);
     }
 }

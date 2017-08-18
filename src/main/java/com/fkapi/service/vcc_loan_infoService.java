@@ -60,58 +60,6 @@ public class vcc_loan_infoService {
                 Reporter.log("根据custId: " + userInfoMap.get("custId") + "添加vcc_loan_info表中的数据时发生异常，添加失败" + e.getMessage());
             }
         }
-
-        if (json.getInt("allOrders") - json.getInt("sucessOrders") > 0){
-            for (int i = 0; i < json.getInt("allOrders") - json.getInt("sucessOrders"); i++) {
-                list = new ArrayList<>();
-                vli.setLoanNo(UUID.randomUUID().toString().replace("-", ""));
-                vli.setOrderNo(UUID.randomUUID().toString().replace("-", ""));
-                vli.setCardNo(new JSONObject(userInfoMap.get("certAuth")).getString("cardNo"));
-                vli.setCustId(Long.valueOf(userInfoMap.get("custId")));
-                vli.setStatus("2");
-                if (json.getString("isSameTime").toUpperCase().equals("Y")) {
-                    vli.setLoanDate(CommonUtils.getCurDate("second"));
-                    vli.setCreateTime(CommonUtils.getCurDate("second"));
-                    vli.setUpdateTime(CommonUtils.getCurDate("second"));
-                } else {
-                    if (json.getString("timeType").toUpperCase().equals("D")) {
-                        vli.setLoanDate(CommonUtils.subDay(CommonUtils.getCurDate("second"), json.getInt("time")));
-                        vli.setCreateTime(CommonUtils.subDay(CommonUtils.getCurDate("second"), json.getInt("time")));
-                        vli.setUpdateTime(CommonUtils.subDay(CommonUtils.getCurDate("second"), json.getInt("time")));
-                    }
-                    if (json.getString("timeType").toUpperCase().equals("M")) {
-                        vli.setLoanDate(CommonUtils.subMonth(CommonUtils.getCurDate("second"), json.getInt("time")));
-                        vli.setCreateTime(CommonUtils.subMonth(CommonUtils.getCurDate("second"), json.getInt("time")));
-                        vli.setUpdateTime(CommonUtils.subMonth(CommonUtils.getCurDate("second"), json.getInt("time")));
-                    }
-                }
-                list.add(vli);
-                try{
-                    vliMapper.insert(list);
-                    Reporter.log("根据custId: " + userInfoMap.get("custId") + "添加vcc_loan_info表中的数据成功");
-                }catch (Exception e){
-                    Reporter.log("根据custId: " + userInfoMap.get("custId") + "添加vcc_loan_info表中的数据时发生异常，添加失败" + e.getMessage());
-                }
-            }
-        }
-
-        list = new ArrayList<>();
-        vli.setLoanNo(UUID.randomUUID().toString().replace("-", ""));
-        vli.setOrderNo("000000000");
-        vli.setCardNo(new JSONObject(userInfoMap.get("certAuth")).getString("cardNo"));
-        vli.setCustId(Long.valueOf(userInfoMap.get("custId")));
-        vli.setStatus("0");
-        vli.setOverdueFlag(null);
-        vli.setLoanDate(CommonUtils.getCurDate("second"));
-        vli.setCreateTime(CommonUtils.getCurDate("second"));
-        vli.setUpdateTime(CommonUtils.getCurDate("second"));
-        list.add(vli);
-        try{
-            vliMapper.insert(list);
-            Reporter.log("根据custId: " + userInfoMap.get("custId") + "添加vcc_loan_info表中的数据成功");
-        }catch (Exception e){
-            Reporter.log("根据custId: " + userInfoMap.get("custId") + "添加vcc_loan_info表中的数据时发生异常，添加失败" + e.getMessage());
-        }
     }
 
     public void delVccLoanInfo(String custId, SqlSession vccSession){
@@ -123,18 +71,17 @@ public class vcc_loan_infoService {
         }
     }
 
-    public List<vcc_loan_info> getVccLonaInfo(String custId, String orderStatus, SqlSession vccSession){
+    public List<vcc_loan_info> getVccLonaInfo(String custId, SqlSession vccSession){
         vliMapper = vccSession.getMapper(vcc_loan_infoMapper.class);
         vcc_loan_info vli = new vcc_loan_info();
         vli.setCustId(Long.valueOf(custId));
-        vli.setStatus(orderStatus);
-        List<vcc_loan_info> list = vliMapper.selectByCustIdAndStatus(vli);
+        List<vcc_loan_info> list = vliMapper.selectByCustId(vli);
         return list;
     }
 
     @Test
     public void test(){
         SqlSession session = VCCMybatisUtils.getFactory().openSession(true);
-        getVccLonaInfo("1","1", session);
+        getVccLonaInfo("1", session);
     }
 }

@@ -22,15 +22,9 @@ import com.fkapi.service.p2p_loan_claim_auditService;
  */
 @Listeners({ AssertionListener.class })
 public class ExcuteVccApplyCase {
-	static String excelPath = System.getProperty("user.dir")
-			+ "\\testcase.xlsx";
-	static String sheetName = "虚拟信用卡准入case";
 
 	vcc_user_card_mapService vucmService ;
-
 	vcc_customerService vcService ;
-
-	p2p_cust_addr_listService pcalService ;
 
 	@Test(dataProvider = "getData")
 	public void excute(String caseName, String isRun, String userInfoNo, String dataName,
@@ -71,9 +65,9 @@ public class ExcuteVccApplyCase {
 				// 向Excel中写入实际结果
 				try {
 					ExcelUtils.setCellData(result, ExcelUtils.getRowNoByValue(
-							excelPath, sheetName, caseName), ExcelUtils
-							.getColNoByValue(excelPath, sheetName, "实际结果"),
-							excelPath, sheetName);
+							CommonUtils.excelPath, CommonUtils.applyCaseSheetName, caseName), ExcelUtils
+							.getColNoByValue(CommonUtils.excelPath, CommonUtils.applyCaseSheetName, "实际结果"),
+							CommonUtils.excelPath, CommonUtils.applyCaseSheetName);
 					Reporter.log("期望结果为：" + expect);
 					Reporter.log("实际结果为：" + result);
 				} catch (Exception e1) {
@@ -85,9 +79,9 @@ public class ExcuteVccApplyCase {
 				// //向Excel中写入是否通过
 				try {
 					ExcelUtils.setCellData(finalResult, ExcelUtils
-							.getRowNoByValue(excelPath, sheetName, caseName),
-							ExcelUtils.getColNoByValue(excelPath, sheetName,
-									"是否通过"), excelPath, sheetName);
+							.getRowNoByValue(CommonUtils.excelPath, CommonUtils.applyCaseSheetName, caseName),
+							ExcelUtils.getColNoByValue(CommonUtils.excelPath, CommonUtils.applyCaseSheetName,
+									"是否通过"), CommonUtils.excelPath, CommonUtils.applyCaseSheetName);
 					Reporter.log("用例执行结果为：" + finalResult);
 				} catch (Exception e) {
 					Reporter.log("插入执行结果时发生异常，插入失败");
@@ -107,7 +101,7 @@ public class ExcuteVccApplyCase {
 		}
 	}
 
-	@AfterMethod
+	@BeforeMethod
 	public void clearTestData(){
 		SqlSession vccSession = VCCMybatisUtils.getFactory().openSession(true);
 		vucmService = new vcc_user_card_mapService();
@@ -120,6 +114,6 @@ public class ExcuteVccApplyCase {
 
 	@DataProvider
 	public Object[][] getData() throws Exception {
-		return ExcelUtils.excelToDateMap(excelPath, sheetName);
+		return ExcelUtils.excelToDateMap(CommonUtils.excelPath, CommonUtils.applyCaseSheetName);
 	}
 }

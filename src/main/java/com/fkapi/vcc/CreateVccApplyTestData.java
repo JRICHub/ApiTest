@@ -20,10 +20,6 @@ import com.fkapi.utils.ExcelUtils;
  */
 public class CreateVccApplyTestData {
 
-    private String excelPath = System.getProperty("user.dir") + "\\testcase.xlsx";
-
-    static String applyDataSheetName = "虚拟信用卡准入数据生成";
-
     private Map<String, String> userInfoMap ;
 
     public Map<String, String> getUserInfoMap() {
@@ -56,7 +52,7 @@ public class CreateVccApplyTestData {
         createUserInfo cui = new createUserInfo();
 
         //创建基础用户信息并获取用户基础信息，并转成map形式存储（userinfo表）
-        setUserInfoMap(cui.create(ExcelUtils.getRowNoByValue(excelPath, "userInfo",
+        setUserInfoMap(cui.create(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, "userInfo",
                 userInfoNo), session, vccSession));
 
         //添加虚拟信用卡用户表信息
@@ -64,7 +60,7 @@ public class CreateVccApplyTestData {
         cvc.create(userInfoMap, true, vccSession);
 
         if (!dataName.trim().isEmpty()) {
-            Map<String, String> map = getVccApplyData(ExcelUtils.getRowNoByValue(excelPath, applyDataSheetName, dataName));
+            Map<String, String> map = getVccApplyData(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.applyDataSheetName, dataName));
 
             if (!map.get("上笔订单").trim().isEmpty()) {
                 json = new JSONObject(map.get("上笔订单"));
@@ -230,7 +226,7 @@ public class CreateVccApplyTestData {
                 JSONArray jsonArray = json.getJSONArray("addrList");
                 JSONObject addrListJson = jsonArray.getJSONObject(0);
                 pcalService = new p2p_cust_addr_listService();
-                Map<String, String> otherUserInfoMap = cui.create(ExcelUtils.getRowNoByValue(excelPath, "userInfo",
+                Map<String, String> otherUserInfoMap = cui.create(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, "userInfo",
                         json.getString("userinfoNo")), session, vccSession);
                 cvc.create(otherUserInfoMap, false, vccSession);
                 vucmService.addVccUserCardMap(otherUserInfoMap, vccSession);
@@ -267,7 +263,7 @@ public class CreateVccApplyTestData {
                         JSONArray jsonArray = jsonObject.getJSONArray("userinfo");
                         JSONObject userJson = jsonArray.getJSONObject(i);
                         //创建用户信息
-                        Map<String, String> classmateUserInfoMap = cui.create(ExcelUtils.getRowNoByValue(excelPath, "userInfo",
+                        Map<String, String> classmateUserInfoMap = cui.create(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, "userInfo",
                                 userJson.getString("userinfoNo")), session, vccSession);
                         if (userJson.getString("inAddrListNum").equals("1")) {
                             pcalService.addCustAddrListForAddress(userInfoMap.get("oldCustId"), classmateUserInfoMap.get("custId"), new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"), session);
@@ -364,8 +360,8 @@ public class CreateVccApplyTestData {
         }
         map = new HashMap<>();
         for (int j = 0; j < allColNum; j++) {
-            map.put(ExcelUtils.getCellDate(excelPath, applyDataSheetName, 0, j),
-                    ExcelUtils.getCellDate(excelPath, applyDataSheetName, dataNo, j));
+            map.put(ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.applyDataSheetName, 0, j),
+                    ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.applyDataSheetName, dataNo, j));
         }
         return map;
     }
