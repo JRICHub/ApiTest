@@ -45,6 +45,12 @@ public class CommonUtils {
 	public static String dataSheetName = "元数据表";
 
 	public static String userInfoSheetName = "userInfo";
+
+	public static String ndkExcelPath = System.getProperty("user.dir") + "\\NDK.xlsx";
+
+	public static String ndkDataSheetName = "NDK数据生成";
+
+	public static String ndkCaseSheetName = "NDKCase";
 	
 	public static String getConfigValue(String key) {
 		Properties props = new Properties();

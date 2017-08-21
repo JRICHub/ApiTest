@@ -101,7 +101,7 @@ public class ExcuteVccApplyCase {
 		}
 	}
 
-	@BeforeMethod
+	//@BeforeMethod
 	public void clearTestData(){
 		SqlSession vccSession = VCCMybatisUtils.getFactory().openSession(true);
 		vucmService = new vcc_user_card_mapService();

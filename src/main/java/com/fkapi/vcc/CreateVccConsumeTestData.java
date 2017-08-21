@@ -9,7 +9,7 @@ import com.fkapi.utils.ExcelUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import org.testng.Reporter;
-
+import com.fkapi.rule.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +27,8 @@ public class CreateVccConsumeTestData {
     p2p_loan_claimService plcService;
     vcc_repay_planService vrpService ;
     p2p_repay_planService prpService ;
+
+    rule rule = new rule();
 
     Map<String, String> userInfoMap;
 
@@ -109,39 +111,10 @@ public class CreateVccConsumeTestData {
             }
 
             // 根据输入的信息判断是否将用户添加进黑名单
-            if (map.get("内部黑名单") != null && map.get("内部黑名单").equals("Y")) {
-                pnbService = new p2p_nw_blacklistService();
-                pnbService.delNwBlackList(userInfoMap.get("oldCustId"), session);
-                pnbService.addNwBlackList(userInfoMap.get("oldCustId"), userInfoMap.get("custId"), session);
-            } else if (map.get("内部黑名单") != null && map.get("内部黑名单").equals("N")) {
-                pnbService = new p2p_nw_blacklistService();
-                pnbService.delNwBlackList(userInfoMap.get("oldCustId"), session);
-            }
+            rule.createInBlackList(userInfoMap, map.get("内部黑名单"), session);
 
             // 将用户输入的身份信息加入到黑名单中
-            if (!map.get("外部黑名单").trim().isEmpty()) {
-                pbsService = new p2p_blacklist_storeService();
-                JSONObject inputJson = null;
-                try {
-                    inputJson = new JSONObject(map.get("外部黑名单"));
-                    json = new JSONObject(userInfoMap.get("certAuth"));
-                } catch (Exception e) {
-                    Reporter.log("参数转json时出错，参数为：" + map.get("外部黑名单")
-                            + userInfoMap.get("certAuth"));
-                    Assertion.verifyTure(false);
-                }
-                // 删除使用的基础用户的黑名单信息
-                pbsService.delBlackListStore(json, session);
-                // 删除case中用户输入的信息
-                pbsService.delBlackListStore(inputJson, session);
-                // 将用户输入的身份信息添加到外部黑名单中
-                pbsService.addBlackListStore(inputJson, session);
-            } else {
-                // 如果为空则表示不添加用户进入黑名单
-                pbsService = new p2p_blacklist_storeService();
-                json = new JSONObject(userInfoMap.get("certAuth"));
-                pbsService.delBlackListStore(json, session);
-            }
+            rule.createOutBlackList(userInfoMap, map.get("外部黑名单"), session);
 
             // 根据输入的信息判断是否将设备加入到黑名单
             if (!map.get("设备黑名单").trim().isEmpty()) {
