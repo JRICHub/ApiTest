@@ -41,7 +41,7 @@ public class vcc_user_card_mapService {
             JSONObject orderStatusJson = jsonArray.getJSONObject(i);
             list = new ArrayList<>();
             Map<String, String> map = cui.create(ExcelUtils.getRowNoByValue(
-                    excelPath, "userInfo", orderStatusJson.getString("userinfoNo")), session, vccSession);
+                    excelPath, "userInfo", orderStatusJson.getString("userinfoNo")), false, session);
             cvc.create(map, false, vccSession);
             vucm.setCustId(Long.valueOf(map.get("custId")));
             vucm.setCardNo(new JSONObject(map.get("certAuth")).getString("cardNo"));

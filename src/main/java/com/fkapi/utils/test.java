@@ -22,7 +22,7 @@ public class test {
 
 	@Test
 	public void f1(){
-		System.out.print("11111111111111");
-		Assert.assertTrue(false);
+		System.out.print("[ { \"status\": \"OVERDUE_REPAID\", \"time\": \"-1\" } ]");
+		//Assert.assertTrue(false);
 	}
 }

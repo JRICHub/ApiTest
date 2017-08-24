@@ -5,7 +5,7 @@ import java.util.List;
 import com.fkapi.datebase.domain.p2p_loan_claim_relative_app;
 
 public interface p2p_loan_claim_relative_appMapper {
-    int deleteByPrimaryKey(Long id);
+    int deleteByMobileSign(String mobileSign);
 
     int insert(List<p2p_loan_claim_relative_app> list);
 

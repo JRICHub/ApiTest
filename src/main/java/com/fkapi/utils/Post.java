@@ -13,6 +13,11 @@ import org.testng.annotations.Test;
  * 
  */
 public class Post {
+	/**
+	 * 请求易才风控审批接口
+	 * @param projectNo
+	 * @param prodName
+	 */
 	public static void postYcCredit(String projectNo, String prodName) {
 		Reporter.log("请求风控审批接口的projectNo为：" + projectNo + "prodName为  ："
 				+ prodName);
@@ -25,6 +30,12 @@ public class Post {
 						+ prodName + "\"}");
 	}
 
+	/**
+	 * 请求易才额度计算接口
+	 * @param custId
+	 * @param custName
+	 * @param idNo
+	 */
 	public static void postYcLimit(String custId, String custName, String idNo) {
 		Reporter.log("请求额度计算接口的custId为： " + custId + "custName为 ：" + custName
 				+ "idNo为： " + idNo);
@@ -37,6 +48,11 @@ public class Post {
 						+ "\",\"idCardNo\":\"" + idNo + "\"}");
 	}
 
+	/**
+	 * 请求虚拟信用卡准入接口
+	 * @param custId
+	 * @param mobileSign
+	 */
 	public static void postVccApply(String custId, String mobileSign){
 		Reporter.log("请求虚拟信用卡准入接口的custId为： " + custId + "mobileSign为 ：" + mobileSign );
 		Reporter.log("请求地址为：http://" + getPostIp()
@@ -47,6 +63,10 @@ public class Post {
 						+ mobileSign + "\"}");
 	}
 
+	/**
+	 * 请求虚拟信用卡准入前置接口
+	 * @param custId
+	 */
 	public static void postVccApplyPre(String custId){
 		Reporter.log("请求虚拟信用卡准入前置接口的custId为： " + custId );
 		Reporter.log("请求地址为：http://" + getPostIp()
@@ -56,6 +76,11 @@ public class Post {
 				"{\"cust_id\": \"" + custId + "\"}");
 	}
 
+	/**
+	 * 请求虚拟信用卡消费审批接口
+	 * @param custId
+	 * @param transId
+	 */
 	public static void postVccConsume(String custId, String transId){
 		Reporter.log("请求虚拟信用卡准入接口的custId为： " + custId + "transId ：" + transId );
 		Reporter.log("请求地址为：http://" + getPostIp()
@@ -63,6 +88,19 @@ public class Post {
 		HttpClientUtil.sendHttpPost(
 				"http://" + getPostIp() + CommonUtils.getConfigValue("vccConsume"),
 				"{\"cust_id\": \""+ custId + "\",\"trans_id\":\"" + transId + "\"}");
+	}
+
+	/**
+	 * 请求牛大咖风控审批接口
+	 * @param custId
+	 * @param transId
+	 */
+	public static void postNDK(String custId, String transId, String strategyId){
+		Reporter.log("请求牛大咖风控审批接口的custId为： " + custId + "transId ：" + transId );
+		Reporter.log("请求地址为：http://" + getPostIp()
+				+ CommonUtils.getConfigValue("ndk"));
+		HttpClientUtil.sendHttpPost("http://" + getPostIp() + CommonUtils.getConfigValue("ndk"),
+				"{\"cust_id\": \""+ custId + "\",\"trans_id\":\"" + transId + "\",\"strategy_id\":\"" + strategyId + "\"}");
 	}
 
 	public static String postVccLimit(String custId){
@@ -93,6 +131,6 @@ public class Post {
 
 	@Test
 	public void test() {
-		postVccLimit("715009726");
+		postNDK("330001074","JKM373731253A2","NDK_LOAN_AUDIT");
 	}
 }

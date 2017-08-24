@@ -7,6 +7,7 @@ import java.util.Map;
 import com.fkapi.service.*;
 import com.fkapi.utils.CommonUtils;
 import org.apache.ibatis.session.SqlSession;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
@@ -24,7 +25,7 @@ public class createUserInfo {
 		this.map = map;
 	}
 
-	public Map<String, String> create(Integer userInfoNo, SqlSession session, SqlSession vccSession) {
+	public Map<String, String> create(Integer userInfoNo, Boolean delHistoryOrder, SqlSession session) {
 		p2p_customerService pcService;
 		p2p_base_customerService pbcService ;
 		p2p_cert_authService pcaService ;
@@ -229,53 +230,35 @@ public class createUserInfo {
 		}
 
 		//添加用户的历史订单（是否存在逾期的订单）,如果为空则表示用户没有历史订单为首次借款
-		if (!map.get("hasOverdueOrder").trim().isEmpty()){
+		if (!map.get("historyOrder").trim().isEmpty()){
+			map.put("historyOrder", ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.dataSheetName, ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.dataSheetName, map.get("historyOrder")), 1));
 			plcService = new p2p_loan_claimService();
 			prpService = new p2p_repay_planService();
-			//Y则表示用户近三笔订单中存在逾期的订单
-			if(map.get("hasOverdueOrder").toUpperCase().equals("Y")){
-				json = new JSONObject();
+			JSONObject historyOrderJson ;
+			//若状态为OVERDUE_REPAID则标识历史订单中有逾期的订单
+			if(new JSONObject(map.get("historyOrder")).getString("repayStatus").equals("OVERDUE_REPAID")){
 				//构建历史订单数据
-				json.put("projectName","牛大咖");
-				json.put("loanSubSrc","NDK");
-				json.put("loanTerm","1");
-				json.put("status","SETTLED");
-				json.put("deviceCode","999999999");
-				json.put("time","1");
-				plcService.addProject(map, json, false, session);
+ 				historyOrderJson = new JSONObject(map.get("historyOrder"));
+				historyOrderJson.put("status","SETTLED");
+				historyOrderJson.put("deviceCode",new JSONObject(map.get("phoneAuth")).getString("mobileSign"));
+				plcService.addProject(map, historyOrderJson, false, delHistoryOrder, session);
 				//构建repay_plan表中的数据
-				json.put("allTerm","1");
-				json.put("repayPlan","[ { \"status\": \"OVERDUE_REPAID\", \"time\":\"-1\" } ]");
-				prpService.addRepayPlan(map, plcService.getProjectNo(), json, session);
-			}
-			//N则表示用户近三笔订单中没有逾期的订单
-			if(map.get("hasOverdueOrder").toUpperCase().equals("N")){
-				json = new JSONObject();
-				//先添加一笔逾期的订单，再添加三笔未逾期的订单,保证近三笔订单为未逾期订单
-				json.put("projectName","牛大咖");
-				json.put("loanSubSrc","NDK");
-				json.put("loanTerm","1");
-				json.put("status","SETTLED");
-				json.put("deviceCode","999999999");
-				json.put("time","30");
-				plcService.addProject(map, json, false, session);
-				json.put("allTerm","1");
-				json.put("repayPlan","[ { \"status\": \"OVERDUE_REPAID\", \"time\":\"10\" } ]");
-				prpService.addRepayPlan(map, plcService.getProjectNo(), json, session);
-
-				for(int i=0; i<3; i++){
-					json = new JSONObject();
-					json.put("projectName","牛大咖");
-					json.put("loanSubSrc","NDK");
-					json.put("loanTerm","1");
-					json.put("status","SETTLED");
-					json.put("deviceCode","999999999");
-					json.put("time","2");
-					plcService.addProject(map, json, false, session);
-					json.put("allTerm","1");
-					json.put("repayPlan","[ { \"status\": \"NORMAL\", \"time\":\"1\" } ]");
-					prpService.addRepayPlan(map, plcService.getProjectNo(), json, session);
-				}
+				historyOrderJson.put("allTerm", historyOrderJson.getInt("loanTerm"));
+				historyOrderJson.put("repayPlan", new JSONArray("[ { \"status\": \"OVERDUE_REPAID\", \"time\": \""+ historyOrderJson.getInt("time") +"\" } ]"));
+				prpService.addRepayPlan(map, plcService.getProjectNo(), historyOrderJson, session);
+			}else if (!new JSONObject(map.get("historyOrder")).getString("repayStatus").trim().isEmpty()){
+				historyOrderJson = new JSONObject(map.get("historyOrder"));
+				historyOrderJson.put("status", "SETTLED");
+				historyOrderJson.put("deviceCode", new JSONObject(map.get("phoneAuth")).getString("mobileSign"));
+				plcService.addProject(map, historyOrderJson, false, delHistoryOrder, session);
+				historyOrderJson.put("allTerm", historyOrderJson.getInt("loanTerm"));
+				historyOrderJson.put("repayPlan", new JSONArray("[ { \"status\": \""+ historyOrderJson.getString("repayStatus") +"\", \"time\":\""+ historyOrderJson.getInt("time") +"\" } ]"));
+				prpService.addRepayPlan(map, plcService.getProjectNo(), historyOrderJson, session);
+			}else {
+				historyOrderJson = new JSONObject(map.get("historyOrder"));
+				historyOrderJson.put("status", "RETURN");
+				historyOrderJson.put("deviceCode", new JSONObject(map.get("phoneAuth")).getString("mobileSign"));
+				plcService.addProject(map, historyOrderJson, false, delHistoryOrder, session);
 			}
 		}
 		return map;

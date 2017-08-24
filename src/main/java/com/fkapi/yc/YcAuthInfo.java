@@ -84,7 +84,7 @@ public class YcAuthInfo {
 		// 创建用户的借款订单
 		if (ycAuthMap.get("借款订单") != null) {
 			json = new JSONObject(ycAuthMap.get("借款订单"));
-			plcService.addProject(userInfoMap, json, true, session);
+			plcService.addProject(userInfoMap, json, true, true, session);
 			ycAuthMap.put("projectNo", plcService.getProjectNo());
 			//添加借款设备，若不添加借款设备则风控审批时会报异常
 			plcraService.addLoanDevice(plcService.getProjectNo(), json.getString("deviceCode"), session);

@@ -7,7 +7,6 @@ import com.fkapi.auth.createVccCustomer;
 import com.fkapi.rule.rule;
 import com.fkapi.utils.CommonUtils;
 import org.apache.ibatis.session.SqlSession;
-import org.json.JSONObject;
 import org.testng.Reporter;
 import com.fkapi.auth.createUserInfo;
 import com.fkapi.utils.ExcelUtils;
@@ -33,8 +32,8 @@ public class CreateVccApplyTestData {
         createUserInfo cui = new createUserInfo();
 
         //创建基础用户信息并获取用户基础信息，并转成map形式存储（userinfo表）
-        setUserInfoMap(cui.create(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, "userInfo",
-                userInfoNo), session, vccSession));
+        setUserInfoMap(cui.create(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.userInfoSheetName,
+                userInfoNo), true, session));
 
         //添加虚拟信用卡用户表信息
         createVccCustomer cvc = new createVccCustomer();

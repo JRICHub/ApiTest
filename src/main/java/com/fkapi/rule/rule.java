@@ -18,7 +18,6 @@ import java.util.Map;
  */
 public class rule {
 
-    JSONObject json;
     p2p_base_customerService pbcService;
     jxl_phone_call_recordsService jxlRecordsService;
     p2p_cust_location_logService pcllService;
@@ -47,9 +46,9 @@ public class rule {
      */
     public void createLastOrder(Map<String, String> userInfoMap, String data, Boolean isCreditOrder, SqlSession session) {
         if (!data.trim().isEmpty()) {
-            json = new JSONObject(data);
+            JSONObject json = new JSONObject(data);
             plcService = new p2p_loan_claimService();
-            plcService.addProject(userInfoMap, json, false, session);
+            plcService.addProject(userInfoMap, json, isCreditOrder, false, session);
         }
     }
 
@@ -62,7 +61,7 @@ public class rule {
      */
     public void createCustList(Map<String, String> userInfoMap, String data, SqlSession session) {
         if (!data.trim().isEmpty()) {
-            json = new JSONObject(data);
+            JSONObject json = new JSONObject(data);
             pcalService = new p2p_cust_addr_listService();
             pcalService.addCustAddrList(userInfoMap.get("oldCustId"), userInfoMap.get("custId"), new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"), json, session);
         }
@@ -106,7 +105,7 @@ public class rule {
             pdService = new p2p_dictionaryService();
             pmaService = new p2p_mobile_addrService();
             pcalService = new p2p_cust_addr_listService();
-            json = new JSONObject(userInfoMap.get("nowAddress"));
+            JSONObject json = new JSONObject(userInfoMap.get("nowAddress"));
             if (data.toUpperCase().equals("Y")) {
                 String cityCode = pdService.getDictCode(json.getString("nowCity"), session);
                 String mobileCode = pmaService.getMobileByAddr(cityCode, session);
@@ -211,7 +210,7 @@ public class rule {
             String mobileCode = null;
             String schoolCityCode;
             JSONObject mobileJson = new JSONObject();
-            json = new JSONObject(data);
+            JSONObject json = new JSONObject(data);
             pccService = new p2p_customer_contactorService();
             pbcService = new p2p_base_customerService();
             pmaService = new p2p_mobile_addrService();
@@ -254,7 +253,7 @@ public class rule {
     public void createVcc_VA_F007(Map<String, String> userInfoMap, String data, SqlSession session) {
         if (!data.trim().isEmpty()) {
             jxlRecordsService = new jxl_phone_call_recordsService();
-            json = new JSONObject(data);
+            JSONObject json = new JSONObject(data);
             jxlRecordsService.addRecordsForVA_F007(userInfoMap, json, session);
         }
     }
@@ -269,7 +268,7 @@ public class rule {
     public void createVcc_VA_F008(Map<String, String> userInfoMap, String data, SqlSession session) {
         if (!data.trim().isEmpty()) {
             jxlRecordsService = new jxl_phone_call_recordsService();
-            json = new JSONObject(data);
+            JSONObject json = new JSONObject(data);
             jxlRecordsService.addCallRecordsForVA_F008(userInfoMap, json, session);
         }
     }
@@ -286,11 +285,21 @@ public class rule {
         if (isVccOrder) {
             if (!data.trim().isEmpty()) {
                 vucmService = new vcc_user_card_mapService();
-                json = new JSONObject(data);
+                JSONObject json = new JSONObject(data);
                 if (json.getString("isApply").toUpperCase().equals("Y")) {
                     vucmService.addVccUserCardMap(userInfoMap, json, false, session, vccSession);
                 } else {
                     vucmService.delVccUserCardMap(new JSONObject(userInfoMap.get("phoneAuth")).getString("mobileSign"), vccSession);
+                }
+            }
+        }else {
+            if (!data.trim().isEmpty()) {
+                JSONObject json = new JSONObject(data);
+                JSONArray orderArray = new JSONArray(json.get("orders").toString());
+                //创建有成功历史订单的用户，并且手机标识码与借款人相同
+                for (int i = 0; i < json.getInt("allCount"); i++) {
+                    cui.create(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.userInfoSheetName,
+                            orderArray.getJSONObject(i).getString("userinfoNo")), false, session);
                 }
             }
         }
@@ -308,18 +317,18 @@ public class rule {
      * @param isVccOrder
      */
     public void createVcc_VA_F011(Map<String, String> userInfoMap, String data, SqlSession session, SqlSession vccSession, Boolean isVccOrder) {
-        if (isVccOrder) {
-            if (!data.trim().isEmpty()) {
+        if (!data.trim().isEmpty()) {
+            JSONObject json = new JSONObject(data);
+            JSONArray jsonArray = json.getJSONArray("addrList");
+            JSONObject addrListJson = jsonArray.getJSONObject(0);
+            pcalService = new p2p_cust_addr_listService();
+            Map<String, String> otherUserInfoMap = cui.create(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, "userInfo",
+                    json.getString("userinfoNo")), false, session);
+            pcalService.addCustAddrList(userInfoMap.get("oldCustId"), otherUserInfoMap.get("custId"), new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"), addrListJson, session);
+            if (isVccOrder) {
                 vucmService = new vcc_user_card_mapService();
-                json = new JSONObject(data);
-                JSONArray jsonArray = json.getJSONArray("addrList");
-                JSONObject addrListJson = jsonArray.getJSONObject(0);
-                pcalService = new p2p_cust_addr_listService();
-                Map<String, String> otherUserInfoMap = cui.create(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, "userInfo",
-                        json.getString("userinfoNo")), session, vccSession);
                 cvc.create(otherUserInfoMap, false, vccSession);
                 vucmService.addVccUserCardMap(otherUserInfoMap, vccSession);
-                pcalService.addCustAddrList(userInfoMap.get("oldCustId"), otherUserInfoMap.get("custId"), new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"), addrListJson, session);
             }
         }
     }
@@ -334,7 +343,7 @@ public class rule {
     public void createVcc_VA_F012(Map<String, String> userInfoMap, String data, SqlSession session) {
         if (!data.trim().isEmpty()) {
             pcllService = new p2p_cust_location_logService();
-            json = new JSONObject(data);
+            JSONObject json = new JSONObject(data);
             pcllService.addCustLocationLog(userInfoMap, json, session, "VA_F012");
         }
     }
@@ -348,7 +357,7 @@ public class rule {
     public void createVcc_VA_F013(Map<String, String> userInfoMap, String data, SqlSession session) {
         if (!data.trim().isEmpty()) {
             pbcService = new p2p_base_customerService();
-            json = new JSONObject();
+            JSONObject json = new JSONObject();
             json.put("custName", data);
             json.put("idNo", new JSONObject(userInfoMap.get("certAuth")).getString("idNo"));
             json.put("certAuthStatus", "AS");
@@ -366,7 +375,7 @@ public class rule {
     public void createVcc_VA_F014(Map<String, String> userInfoMap, String data, SqlSession session) {
         if (!data.trim().isEmpty()) {
             pcllService = new p2p_cust_location_logService();
-            json = new JSONObject(data);
+            JSONObject json = new JSONObject(data);
             pcllService.addCustLocationLog(userInfoMap, json, session, "VA_F014");
         }
     }
@@ -389,7 +398,7 @@ public class rule {
                     JSONObject userJson = jsonArray.getJSONObject(i);
                     //创建用户信息
                     Map<String, String> classmateUserInfoMap = cui.create(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, "userInfo",
-                            userJson.getString("userinfoNo")), session, vccSession);
+                            userJson.getString("userinfoNo")), false, session);
                     if (userJson.getString("inAddrListNum").equals("1")) {
                         pcalService.addCustAddrListForAddress(userInfoMap.get("oldCustId"), classmateUserInfoMap.get("custId"), new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"), session);
                     }
@@ -412,7 +421,7 @@ public class rule {
         if (!data.trim().isEmpty()) {
             pbcService = new p2p_base_customerService();
             pcaService = new p2p_cert_authService();
-            json = new JSONObject();
+            JSONObject json = new JSONObject();
             json.put("certNo", CommonUtils.creteIdCardByAge(userInfoMap.get("custId"), data, session));
             pbcService.update(userInfoMap.get("custId"), json, "age", session);
             pcaService.update(userInfoMap.get("custId"), CommonUtils.creteIdCardByAge(userInfoMap.get("custId"), data, session), session);
@@ -443,6 +452,7 @@ public class rule {
      * @param session
      */
     public void createOutBlackList(Map<String, String> userInfoMap, String data, SqlSession session){
+        JSONObject json = null;
         if (!data.trim().isEmpty()) {
             pbsService = new p2p_blacklist_storeService();
             JSONObject inputJson = null;
@@ -476,6 +486,7 @@ public class rule {
      * @param session
      */
     public void createDeviceBlackList(Map<String, String> userInfoMap, String deviceData, String orderData, SqlSession session){
+        JSONObject json = null;
         if (!deviceData.trim().isEmpty()) {
             pbdService = new p2p_black_deviceService();
             try {
@@ -489,5 +500,9 @@ public class rule {
                 pbdService.addBlackDevice(json, session);
             }
         }
+    }
+
+    public void createNDKAF013(Map<String, String> userInfoMap, String data, SqlSession session){
+
     }
 }

@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Random;
+import java.util.*;
 
 import org.apache.ibatis.session.SqlSession;
 import org.testng.Reporter;
@@ -249,15 +246,12 @@ public class CommonUtils {
 	 * @return
 	 */
 	public static String getProjectNo(){
-		Random ranom = new Random();
 		String projectNo = "JKM";
-		return projectNo+String.valueOf(System.currentTimeMillis()).substring(4)+"A"+ranom.nextInt(10);
+		return projectNo + UUID.randomUUID().toString().replace("-","");
 	}
 	
 	@Test
 	public void f() throws ParseException{
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		String value="2017-10-17 10:08:00";
-		System.out.println(df.parse(value).getTime());
+		System.out.println(UUID.randomUUID().toString().replace("-",""));
 	}
 }

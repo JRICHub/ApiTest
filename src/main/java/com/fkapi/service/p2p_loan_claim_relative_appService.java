@@ -5,6 +5,9 @@ package com.fkapi.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fkapi.utils.ExcelUtils;
+import com.fkapi.utils.MybatisUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
@@ -28,7 +31,7 @@ public class p2p_loan_claim_relative_appService {
 		
 		plcra.setProjectNo(proJectNo);
 		plcra.setMobileSign(deviceCode);
-		plcra.setCreateTime(CommonUtils.getCurDate("day"));
+		plcra.setCreateTime(CommonUtils.getCurDate("second"));
 		list.add(plcra);
 		try {
 			plcraMapper.insert(list);
@@ -39,9 +42,19 @@ public class p2p_loan_claim_relative_appService {
 			log.info("添加借款设备时发生异常，添加失败" + e.getMessage());
 		}
 	}
+
+	public void delLoanDevice(String deviceCode, SqlSession session){
+		plcraMapper = session.getMapper(p2p_loan_claim_relative_appMapper.class);
+		try{
+			plcraMapper.deleteByMobileSign(deviceCode);
+		}catch (Exception e){
+			Reporter.log("删除deviceCode为：" + deviceCode + "的借款设备时发生异常，添加失败" + e.getMessage());
+		}
+	}
 	
 	@Test
 	public void test(){
-		
+		SqlSession session = MybatisUtils.getFactory().openSession(true);
+		delLoanDevice("999999999", session);
 	}
 }

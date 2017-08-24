@@ -18,9 +18,9 @@
 		from p2p_loan_claim_relative_app
 		where ID = #{id,jdbcType=BIGINT}
 	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+	<delete id="deleteByMobileSign" parameterType="java.lang.String">
 		delete from p2p_loan_claim_relative_app
-		where ID = #{id,jdbcType=BIGINT}
+		where MOBILE_SIGN = #{mobileSign,jdbcType=VARCHAR}
 	</delete>
 	<insert id="insert"
 		parameterType="com.fkapi.datebase.domain.p2p_loan_claim_relative_app">

@@ -22,6 +22,8 @@ public class jxl_phone_call_recordsService {
     jxl_phone_call_recordsMapper jxlRecordMapper ;
     jxl_primary_infoService jpiService ;
     p2p_cust_addr_listService pcalService ;
+    p2p_mobile_addrService pmaService ;
+    p2p_dictionaryService pdService ;
 
     /**
      *  根据VA_F008规则输入的信息添加通话记录
@@ -145,6 +147,88 @@ public class jxl_phone_call_recordsService {
                     jxlRecordMapper.insertVA_F008(list);
                 }
             }
+        }
+    }
+
+    /**
+     * 添加牛大咖AF013中的数据
+     * @param userInfoMap
+     * @param json
+     * @param session
+     */
+    public void addPhoneCallRecordsForAF013(Map<String,String> userInfoMap, JSONObject json, SqlSession session){
+        delCallRecords(userInfoMap.get("oldCustId"), session);
+        jxlRecordMapper = session.getMapper(jxl_phone_call_recordsMapper.class);
+        jpiService = new jxl_primary_infoService();
+        pmaService = new p2p_mobile_addrService();
+        pcalService = new p2p_cust_addr_listService();
+        pdService = new p2p_dictionaryService() ;
+        List<jxl_phone_call_records> list;
+        jxl_phone_call_records jxlRecords ;
+        String homeCityCode = pdService.getDictCode(new JSONObject(userInfoMap.get("nowAddress")).getString("nowCity"), session);
+        //先添加主叫号码的记录
+        JSONArray callingJsonArray = new JSONArray(json.get("calling").toString());
+        JSONArray calledJsonArray = new JSONArray(json.get("called").toString());
+        for (int i = 0; i < callingJsonArray.getJSONObject(0).getInt("homeRecordsNo"); i++) {
+            list = new ArrayList<>();
+            jxlRecords = new jxl_phone_call_records();
+            jxlRecords.setId(UUID.randomUUID().toString().replaceAll("-",""));
+            jxlRecords.setPrimaryId(jpiService.getPrimaryId(userInfoMap.get("custId"), session));
+            jxlRecords.setCellPhone(new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"));
+            jxlRecords.setOtherCellPhone(pmaService.getOtherMobileByAddr(homeCityCode, session) + "111" + i);
+            jxlRecords.setCallPlace(null);
+            jxlRecords.setStartTime(CommonUtils.subMonth(CommonUtils.getCurDate("second"), 1));
+            jxlRecords.setUseTime(10L);
+            jxlRecords.setInitType("主叫");
+            jxlRecords.setUpdateTime(CommonUtils.getCurDate("second"));
+            list.add(jxlRecords);
+            jxlRecordMapper.insertVA_F008(list);
+        }
+        for (int i = 0; i < callingJsonArray.getJSONObject(0).getInt("otherRecordsNo"); i++) {
+            list = new ArrayList<>();
+            jxlRecords = new jxl_phone_call_records();
+            jxlRecords.setId(UUID.randomUUID().toString().replaceAll("-",""));
+            jxlRecords.setPrimaryId(jpiService.getPrimaryId(userInfoMap.get("custId"), session));
+            jxlRecords.setCellPhone(new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"));
+            jxlRecords.setOtherCellPhone(pmaService.getMobileByAddr(homeCityCode, session) + "111" + i);
+            jxlRecords.setCallPlace(null);
+            jxlRecords.setStartTime(CommonUtils.subMonth(CommonUtils.getCurDate("second"), 1));
+            jxlRecords.setUseTime(10L);
+            jxlRecords.setInitType("主叫");
+            jxlRecords.setUpdateTime(CommonUtils.getCurDate("second"));
+            list.add(jxlRecords);
+            jxlRecordMapper.insertVA_F008(list);
+        }
+        //添加被叫号码
+        for (int i = 0; i < calledJsonArray.getJSONObject(0).getInt("homeRecordsNo"); i++) {
+            list = new ArrayList<>();
+            jxlRecords = new jxl_phone_call_records();
+            jxlRecords.setId(UUID.randomUUID().toString().replaceAll("-",""));
+            jxlRecords.setPrimaryId(jpiService.getPrimaryId(userInfoMap.get("custId"), session));
+            jxlRecords.setCellPhone(new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"));
+            jxlRecords.setOtherCellPhone(pmaService.getOtherMobileByAddr(homeCityCode, session) + "111" + i);
+            jxlRecords.setCallPlace(null);
+            jxlRecords.setStartTime(CommonUtils.subMonth(CommonUtils.getCurDate("second"), 1));
+            jxlRecords.setUseTime(10L);
+            jxlRecords.setInitType("被叫");
+            jxlRecords.setUpdateTime(CommonUtils.getCurDate("second"));
+            list.add(jxlRecords);
+            jxlRecordMapper.insertVA_F008(list);
+        }
+        for (int i = 0; i < calledJsonArray.getJSONObject(0).getInt("otherRecordsNo"); i++) {
+            list = new ArrayList<>();
+            jxlRecords = new jxl_phone_call_records();
+            jxlRecords.setId(UUID.randomUUID().toString().replaceAll("-",""));
+            jxlRecords.setPrimaryId(jpiService.getPrimaryId(userInfoMap.get("custId"), session));
+            jxlRecords.setCellPhone(new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"));
+            jxlRecords.setOtherCellPhone(pmaService.getMobileByAddr(homeCityCode, session) + "111" + i);
+            jxlRecords.setCallPlace(null);
+            jxlRecords.setStartTime(CommonUtils.subMonth(CommonUtils.getCurDate("second"), 1));
+            jxlRecords.setUseTime(10L);
+            jxlRecords.setInitType("被叫");
+            jxlRecords.setUpdateTime(CommonUtils.getCurDate("second"));
+            list.add(jxlRecords);
+            jxlRecordMapper.insertVA_F008(list);
         }
     }
 

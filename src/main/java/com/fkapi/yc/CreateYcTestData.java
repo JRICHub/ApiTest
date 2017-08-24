@@ -6,11 +6,9 @@ package com.fkapi.yc;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import org.testng.Reporter;
-
 import com.fkapi.auth.createUserInfo;
 import com.fkapi.service.p2p_base_customerService;
 import com.fkapi.service.p2p_black_deviceService;
@@ -68,7 +66,7 @@ public class CreateYcTestData {
 		try {
 			// 根据userInfoNo创建用户基础信息并获取用户基础信息，并转成map形式存储（userinfo表）
 			setUserInfoMap(cui.create(ExcelUtils.getRowNoByValue(excelPath, "userInfo",
-					userInfoNo), session, vccSession));
+					userInfoNo), true, session));
 			// 根据ycAuthNo创建用户的易才认证信息
 			ycAuthMap = yai.creditYCAuth(
 					ExcelUtils.getRowNoByValue(excelPath, authSheetName, ycAuthNo),
@@ -158,7 +156,7 @@ public class CreateYcTestData {
 		if (!map.get("上笔订单").trim().isEmpty()) {
 			plcService = new p2p_loan_claimService();
 			json = new JSONObject(map.get("上笔订单"));
-			plcService.addProject(userInfoMap, json, false, session);
+			plcService.addProject(userInfoMap, json, false, true, session);
 		}
 	}
 

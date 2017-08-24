@@ -50,7 +50,7 @@ public class p2p_cust_location_logService {
                 for(int i=0;i<json.getInt("loginNum");i++){
                     list = new ArrayList<>();
                     pcll.setCustId(Long.valueOf(userInfoMap.get("custId")));
-                    pcll.setCreateTime(CommonUtils.getCurDate("second"));
+                    pcll.setCreateTime(CommonUtils.subMin(CommonUtils.getCurDate("second"), 5));
                     pcll.setMobileSign("88888888" + i);
                     pcll.setDeviceMac("88888888" + i);
                     list.add(pcll);

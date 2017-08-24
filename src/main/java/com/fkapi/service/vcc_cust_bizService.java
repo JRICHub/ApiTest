@@ -39,7 +39,7 @@ public class vcc_cust_bizService {
             JSONObject orderStatusJson = jsonArray.getJSONObject(i);
             list = new ArrayList<>();
             Map<String,String> map = cui.create(ExcelUtils.getRowNoByValue(
-                    excelPath, "userInfo", orderStatusJson.getString("userinfoNo")), session, vccSession);
+                    excelPath, "userInfo", orderStatusJson.getString("userinfoNo")), false, session);
             cvc.create(map, false, vccSession);
             vcb.setCustId(Long.valueOf(map.get("custId")));
             vcb.setStatus(orderStatusJson.getString("status"));

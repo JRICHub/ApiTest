@@ -156,7 +156,6 @@
 		delete from
 		p2p_loan_claim
 		where CUST_ID = #{item.custId,jdbcType=BIGINT}
-		or BORROWER_NAME = #{item.borrowerName,jdbcType=VARCHAR}
 		</foreach>
 	</delete>
 

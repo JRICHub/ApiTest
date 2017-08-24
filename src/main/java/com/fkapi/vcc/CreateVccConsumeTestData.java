@@ -3,7 +3,6 @@ package com.fkapi.vcc;
 import com.fkapi.auth.createUserInfo;
 import com.fkapi.auth.createVccCustomer;
 import com.fkapi.service.*;
-import com.fkapi.utils.Assertion;
 import com.fkapi.utils.CommonUtils;
 import com.fkapi.utils.ExcelUtils;
 import org.apache.ibatis.session.SqlSession;
@@ -21,8 +20,6 @@ public class CreateVccConsumeTestData {
     vcc_orderService voService;
     vcc_user_card_mapService vucmService;
     vcc_loan_infoService vliService;
-    p2p_nw_blacklistService pnbService;
-    p2p_blacklist_storeService pbsService;
     p2p_black_deviceService pbdService;
     p2p_loan_claimService plcService;
     vcc_repay_planService vrpService ;
@@ -45,7 +42,7 @@ public class CreateVccConsumeTestData {
         //创建基础用户信息，并将基础用户信息保存到userInfoMap中
         createUserInfo cui = new createUserInfo();
         setUserInfoMap(cui.create(ExcelUtils.getRowNoByValue(CommonUtils.excelPath, "userInfo",
-                userInfoNo), session, vccSession));
+                userInfoNo), true, session));
 
         //添加虚拟信用卡用户表信息
         createVccCustomer cvc = new createVccCustomer();
@@ -82,20 +79,16 @@ public class CreateVccConsumeTestData {
                 }
             }
 
-            if (!map.get("现金贷订单").trim().isEmpty()) {
-                json = new JSONObject(map.get("现金贷订单"));
-                plcService = new p2p_loan_claimService();
-                plcService.addProject(userInfoMap, json, false, session);
-            }
+            //添加历史的现金贷订单
+            rule.createLastOrder(userInfoMap, map.get("现金贷订单"), false, session);
 
             if (!map.get("VPT_U005现金贷明细").trim().isEmpty()){
-
                 plcService = new p2p_loan_claimService();
                 prpService = new p2p_repay_planService();
                 JSONObject repayPlanJson = new JSONObject(map.get("VPT_U005现金贷明细"));
                 if (!map.get("现金贷订单").trim().isEmpty()){
                     json = new JSONObject(map.get("现金贷订单"));
-                    plcService.addProject(userInfoMap, json, false, session);
+                    plcService.addProject(userInfoMap, json, false, true, session);
                 }else {
                     json = new JSONObject();
                     json.put("projectName","牛大款");
@@ -104,7 +97,7 @@ public class CreateVccConsumeTestData {
                     json.put("status","WAIT_REPAY");
                     json.put("deviceCode","999999999");
                     json.put("time",0);
-                    plcService.addProject(userInfoMap, json, false, session);
+                    plcService.addProject(userInfoMap, json, false, true, session);
                 }
                 //添加还款明细表，每笔明细均为100元
                 prpService.addRepayPlan(userInfoMap, plcService.getProjectNo(), repayPlanJson, session);
