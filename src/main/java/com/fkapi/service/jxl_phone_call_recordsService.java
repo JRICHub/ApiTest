@@ -169,13 +169,13 @@ public class jxl_phone_call_recordsService {
         //先添加主叫号码的记录
         JSONArray callingJsonArray = new JSONArray(json.get("calling").toString());
         JSONArray calledJsonArray = new JSONArray(json.get("called").toString());
-        for (int i = 0; i < callingJsonArray.getJSONObject(0).getInt("homeRecordsNo"); i++) {
+        for (int i = 0; i < callingJsonArray.getJSONObject(0).getInt("homeRecordsNum"); i++) {
             list = new ArrayList<>();
             jxlRecords = new jxl_phone_call_records();
             jxlRecords.setId(UUID.randomUUID().toString().replaceAll("-",""));
             jxlRecords.setPrimaryId(jpiService.getPrimaryId(userInfoMap.get("custId"), session));
             jxlRecords.setCellPhone(new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"));
-            jxlRecords.setOtherCellPhone(pmaService.getOtherMobileByAddr(homeCityCode, session) + "111" + i);
+            jxlRecords.setOtherCellPhone(pmaService.getMobileByAddr(homeCityCode, session) + "111" + i);
             jxlRecords.setCallPlace(null);
             jxlRecords.setStartTime(CommonUtils.subMonth(CommonUtils.getCurDate("second"), 1));
             jxlRecords.setUseTime(10L);
@@ -184,13 +184,13 @@ public class jxl_phone_call_recordsService {
             list.add(jxlRecords);
             jxlRecordMapper.insertVA_F008(list);
         }
-        for (int i = 0; i < callingJsonArray.getJSONObject(0).getInt("otherRecordsNo"); i++) {
+        for (int i = 0; i < callingJsonArray.getJSONObject(0).getInt("otherRecordsNum"); i++) {
             list = new ArrayList<>();
             jxlRecords = new jxl_phone_call_records();
             jxlRecords.setId(UUID.randomUUID().toString().replaceAll("-",""));
             jxlRecords.setPrimaryId(jpiService.getPrimaryId(userInfoMap.get("custId"), session));
             jxlRecords.setCellPhone(new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"));
-            jxlRecords.setOtherCellPhone(pmaService.getMobileByAddr(homeCityCode, session) + "111" + i);
+            jxlRecords.setOtherCellPhone(pmaService.getOtherMobileByAddr(homeCityCode, session) + "111" + i);
             jxlRecords.setCallPlace(null);
             jxlRecords.setStartTime(CommonUtils.subMonth(CommonUtils.getCurDate("second"), 1));
             jxlRecords.setUseTime(10L);
@@ -200,13 +200,13 @@ public class jxl_phone_call_recordsService {
             jxlRecordMapper.insertVA_F008(list);
         }
         //添加被叫号码
-        for (int i = 0; i < calledJsonArray.getJSONObject(0).getInt("homeRecordsNo"); i++) {
+        for (int i = 0; i < calledJsonArray.getJSONObject(0).getInt("homeRecordsNum"); i++) {
             list = new ArrayList<>();
             jxlRecords = new jxl_phone_call_records();
             jxlRecords.setId(UUID.randomUUID().toString().replaceAll("-",""));
             jxlRecords.setPrimaryId(jpiService.getPrimaryId(userInfoMap.get("custId"), session));
             jxlRecords.setCellPhone(new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"));
-            jxlRecords.setOtherCellPhone(pmaService.getOtherMobileByAddr(homeCityCode, session) + "111" + i);
+            jxlRecords.setOtherCellPhone(pmaService.getMobileByAddr(homeCityCode, session) + "111" + i);
             jxlRecords.setCallPlace(null);
             jxlRecords.setStartTime(CommonUtils.subMonth(CommonUtils.getCurDate("second"), 1));
             jxlRecords.setUseTime(10L);
@@ -215,13 +215,13 @@ public class jxl_phone_call_recordsService {
             list.add(jxlRecords);
             jxlRecordMapper.insertVA_F008(list);
         }
-        for (int i = 0; i < calledJsonArray.getJSONObject(0).getInt("otherRecordsNo"); i++) {
+        for (int i = 0; i < calledJsonArray.getJSONObject(0).getInt("otherRecordsNum"); i++) {
             list = new ArrayList<>();
             jxlRecords = new jxl_phone_call_records();
             jxlRecords.setId(UUID.randomUUID().toString().replaceAll("-",""));
             jxlRecords.setPrimaryId(jpiService.getPrimaryId(userInfoMap.get("custId"), session));
             jxlRecords.setCellPhone(new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"));
-            jxlRecords.setOtherCellPhone(pmaService.getMobileByAddr(homeCityCode, session) + "111" + i);
+            jxlRecords.setOtherCellPhone(pmaService.getOtherMobileByAddr(homeCityCode, session) + "111" + i);
             jxlRecords.setCallPlace(null);
             jxlRecords.setStartTime(CommonUtils.subMonth(CommonUtils.getCurDate("second"), 1));
             jxlRecords.setUseTime(10L);

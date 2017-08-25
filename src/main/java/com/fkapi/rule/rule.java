@@ -33,6 +33,8 @@ public class rule {
     p2p_customer_educationService pceService;
     p2p_loan_claimService plcService;
     p2p_dictionaryService pdService;
+    risk_pingan_grayscale_statService rpgsService ;
+
     createVccCustomer cvc = new createVccCustomer();
     createUserInfo cui = new createUserInfo();
 
@@ -502,7 +504,35 @@ public class rule {
         }
     }
 
+    /**
+     * 对于首次申请的用户，最近一次运营商认证成功的前三个月，
+     * 被叫通话中对方号码的手机号段为申请人住宅所在地号段的被叫次数占总被叫次数的百分比<=20%，则拒绝
+     * @param userInfoMap
+     * @param data
+     * @param session
+     */
     public void createNDKAF013(Map<String, String> userInfoMap, String data, SqlSession session){
+        if (!data.trim().isEmpty()){
+            JSONObject json = new JSONObject(data);
+            jxlRecordsService = new jxl_phone_call_recordsService();
+            jxlRecordsService.addPhoneCallRecordsForAF013(userInfoMap, json, session);
+        }
+    }
 
+    /**
+     * 对于首次申请客户，近一个月主叫催收号码次数>=4次，则拒绝
+     * 对于首次申请的用户，近三个月与几家委外催收机构号码有过联系>=1次，则拒绝
+     * 此规则针对牛大咖用户的AF015和AF016
+     * @param userInfoMap
+     * @param data
+     * @param session
+     */
+    public void createNDKAF014(Map<String, String> userInfoMap, String data, SqlSession session){
+        JSONObject json ;
+        if (!data.trim().isEmpty()){
+            json = new JSONObject(data);
+            rpgsService = new risk_pingan_grayscale_statService();
+            rpgsService.addPinganGrayscaleStat(userInfoMap, json, session);
+        }
     }
 }

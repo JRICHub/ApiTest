@@ -19,7 +19,7 @@ import com.fkapi.utils.CommonUtils;
 public class risk_data_yicai_user_infoService {
 	risk_data_yicai_user_infoMapper rdyMapper = null;
 	
-	public void addRiskDataYCUserInfo(String oldCustId, String custId,JSONObject userInfoJson,JSONObject json, SqlSession session){
+	public void addRiskDataYCUserInfo(String oldCustId, String custId, JSONObject userInfoJson, JSONObject json, SqlSession session){
 		delRiskDataYCUserInfo(oldCustId, session);
 		rdyMapper = session.getMapper(risk_data_yicai_user_infoMapper.class);
 		List<risk_data_yicai_user_info> list = new ArrayList<>();

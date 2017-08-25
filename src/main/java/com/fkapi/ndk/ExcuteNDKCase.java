@@ -1,6 +1,5 @@
 package com.fkapi.ndk;
 
-import com.fkapi.service.p2p_loan_claimService;
 import com.fkapi.service.p2p_loan_claim_auditService;
 import com.fkapi.service.p2p_loan_claim_relative_appService;
 import com.fkapi.utils.*;

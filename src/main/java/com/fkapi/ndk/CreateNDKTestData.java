@@ -46,12 +46,18 @@ public class CreateNDKTestData {
             rule.createHomeCity(userInfoMap, map.get("是否有住宅所在地"), session);
             //添加AF004中对应的测试数据(此规则与虚拟信用卡中的VA_F007相同)
             rule.createVcc_VA_F007(userInfoMap, map.get("AF004"), session);
-
+            //添加AF005/AF006中所需的测试数据
             rule.createVcc_VA_F009(userInfoMap, map.get("AF005/AF006"), session, vccSession, false);
-
+            //添加AF007中所需的测试数据
             rule.createVcc_VA_F011(userInfoMap, map.get("AF007"), session, vccSession, false);
-
+            //添加AF008中所需的测试数据
             rule.createVcc_VA_F012(userInfoMap, map.get("AF008"), session);
+            //添加AF013中所需的测试数据
+            rule.createNDKAF013(userInfoMap, map.get("AF013"), session);
+            //添加AF014中所需的测试数据
+            rule.createVcc_VA_F008(userInfoMap, map.get("AF014"), session);
+            //添加AF015/AF016中所需的测试数据
+            rule.createNDKAF014(userInfoMap, map.get("AF015/AF016"), session);
         }
     }
 
