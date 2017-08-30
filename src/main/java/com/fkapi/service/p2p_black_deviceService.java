@@ -23,7 +23,6 @@ public class p2p_black_deviceService {
 		delBlackDevice(json, session);
 		pbdMapper = session.getMapper(p2p_black_deviceMapper.class);
 		p2p_black_device pbd = new p2p_black_device();
-		
 		pbd.setDeviceCode(json.getString("deviceCode"));
 		pbd.setAddReason("测试添加黑名单");
 		pbd.setAddSource(json.getString("loanSubSrc"));

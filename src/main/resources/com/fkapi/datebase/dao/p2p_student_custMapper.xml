@@ -45,12 +45,13 @@
 		select
 		<include refid="p2p_student_cust" />
 		from p2p_student_cust
-		where CUST_ID = #{custId,jdbcType=BIGINT}
+		where CUST_ID = #{schoolName,jdbcType=BIGINT}
 	</select>
-	<delete id="deleteByCustId" parameterType="java.lang.Long">
+	<delete id="deleteBySchoolAndMajor" parameterType="com.fkapi.datebase.domain.p2p_student_cust">
 		delete from
 		p2p_student_cust
-		where CUST_ID = #{custId,jdbcType=BIGINT}
+		where SCHOOL_NAME = #{custId,jdbcType=VARCHAR}
+		AND MAJOR = #{major,jdbcType=VARCHAR}
 	</delete>
 	<insert id="insert" parameterType="java.util.List">
 		insert into p2p_student_cust (CUST_ID, SIGN_TXT, SCHOOL_NAME,

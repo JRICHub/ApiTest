@@ -5,10 +5,8 @@ import com.fkapi.service.p2p_loan_claim_relative_appService;
 import com.fkapi.utils.*;
 import org.apache.ibatis.session.SqlSession;
 import org.testng.Reporter;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
+
 import java.util.Map;
 
 /**
@@ -84,6 +82,9 @@ public class ExcuteNDKCase {
 
     @BeforeMethod
     public void clearTestData(){
+        //清楚redis中的缓存
+        RedisUtil redisUtil = new RedisUtil();
+        redisUtil.clearRedis();
         SqlSession session = MybatisUtils.getFactory().openSession(true);
         p2p_loan_claim_relative_appService plcraService = new p2p_loan_claim_relative_appService();
         plcraService.delLoanDevice("999999999", session);

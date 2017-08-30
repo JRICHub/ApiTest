@@ -493,11 +493,11 @@ public class rule {
             pbdService = new p2p_black_deviceService();
             try {
                 json = new JSONObject(orderData);
+                pbdService.delBlackDevice(json, session);
             } catch (Exception e) {
                 Reporter.log("参数转json时出错，参数为：" + orderData);
                 Assertion.verifyTure(false);
             }
-            pbdService.delBlackDevice(json, session);
             if (deviceData.equals("Y")) {
                 pbdService.addBlackDevice(json, session);
             }

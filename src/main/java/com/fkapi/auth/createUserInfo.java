@@ -117,7 +117,7 @@ public class createUserInfo {
 			if (json.get("schoolRollAuthStatus") != null
 					&& json.getString("schoolRollAuthStatus").equals("AS")) {
 				pscService = new p2p_student_custService();
-				pscService.addStudentCust(map.get("oldCustId"), map.get("custId"), json, session);
+				pscService.addStudentCust(map.get("custId"), json, session);
 				psiService = new p2p_student_infoService();
 				psiService.addStudentInfo(map.get("oldCustId"), map.get("custId"), json, session);
 				esService = new ex_StudentCreditInfoService();

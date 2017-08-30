@@ -5,7 +5,7 @@ import java.util.List;
 import com.fkapi.datebase.domain.p2p_student_cust;
 
 public interface p2p_student_custMapper {
-    int deleteByCustId(Long custId);
+    int deleteBySchoolAndMajor(p2p_student_cust record);
 
     int insert(List<p2p_student_cust> list);
 

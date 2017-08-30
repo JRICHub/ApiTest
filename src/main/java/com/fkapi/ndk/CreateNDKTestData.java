@@ -58,6 +58,14 @@ public class CreateNDKTestData {
             rule.createVcc_VA_F008(userInfoMap, map.get("AF014"), session);
             //添加AF015/AF016中所需的测试数据
             rule.createNDKAF014(userInfoMap, map.get("AF015/AF016"), session);
+
+            rule.createAge(userInfoMap, map.get("年龄"), session);
+
+            rule.createOutBlackList(userInfoMap, map.get("外部黑名单"), session);
+
+            rule.createInBlackList(userInfoMap, map.get("内部黑名单"), session);
+
+            rule.createDeviceBlackList(userInfoMap, map.get("设备黑名单"), map.get("风控审批订单"), session);
         }
     }
 

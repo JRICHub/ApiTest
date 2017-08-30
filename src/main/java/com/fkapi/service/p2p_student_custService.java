@@ -27,8 +27,8 @@ public class p2p_student_custService {
 	p2p_dictionaryService pdService ;
 	Map<Object,Object> map = new HashMap<>();
 	
-	public void addStudentCust(String oldCustId, String custId, JSONObject schoolRollAuth, SqlSession session){
-		delStudentCust(oldCustId, session);
+	public void addStudentCust(String custId, JSONObject schoolRollAuth, SqlSession session){
+		//delStudentCust(schoolRollAuth, session);
 		pscMapper = session.getMapper(p2p_student_custMapper.class);
 		List<p2p_student_cust> list = new ArrayList<>();
 		ecService = new ex_collegesService();
@@ -54,15 +54,18 @@ public class p2p_student_custService {
 		}
 	}
 	
-	public void delStudentCust(String oldCustId, SqlSession session){
+	public void delStudentCust(SqlSession session){
 		session = MybatisUtils.getFactory().openSession(true);
 		pscMapper = session.getMapper(p2p_student_custMapper.class);
 		pcService = new p2p_customerService();
+		p2p_student_cust psc = new p2p_student_cust();
+		psc.setSchoolName("苏州大学");
+		psc.setMajor("信息与计算科学");
 		try {
-			pscMapper.deleteByCustId(Long.valueOf(oldCustId));
+			pscMapper.deleteBySchoolAndMajor(psc);
 			//Reporter.log("删除custId为：" + custId + "的p2p_student_cust表的数据成功");
 		} catch (Exception e) {
-			Reporter.log("CustId：" + oldCustId + "的p2p_student_cust表的数据时发生异常，删除失败" + e.getMessage());
+			Reporter.log("刪除schoolName：苏州大学 的p2p_student_cust表的数据时发生异常，删除失败" + e.getMessage());
 		}
 	}
 

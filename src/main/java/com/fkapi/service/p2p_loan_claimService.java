@@ -113,7 +113,7 @@ public class p2p_loan_claimService {
 				plc.setReleaseStatus("REJECT_AUDIT");
 				plc.setAuditStatus("SETTLED");
 			}
-			this.setProjectNo("JKM"+System.currentTimeMillis()/10000+"A1");
+			this.setProjectNo(CommonUtils.getProjectNo());
 			plc.setProjectNo(this.getProjectNo());
 			//借款当天也算一天，所以要减去一天
 			plc.setLoanDate(CommonUtils.subDay(CommonUtils.getCurDate("second"), json.getInt("time")));

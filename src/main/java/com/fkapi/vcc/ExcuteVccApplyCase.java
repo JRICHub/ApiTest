@@ -5,16 +5,13 @@ package com.fkapi.vcc;
 
 import java.util.Map;
 
-import com.fkapi.service.p2p_cust_addr_listService;
-import com.fkapi.service.vcc_customerService;
-import com.fkapi.service.vcc_user_card_mapService;
+import com.fkapi.service.*;
 import com.fkapi.utils.*;
 import javafx.geometry.Pos;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import org.testng.Reporter;
 import org.testng.annotations.*;
-import com.fkapi.service.p2p_loan_claim_auditService;
 
 /**
  * @author Administrator
@@ -25,13 +22,14 @@ public class ExcuteVccApplyCase {
 
 	vcc_user_card_mapService vucmService ;
 	vcc_customerService vcService ;
+	Map<String, String> userInfoMap ;
+	CreateVccApplyTestData cvtd = new CreateVccApplyTestData();
 
 	@Test(dataProvider = "getData")
 	public void excute(String caseName, String isRun, String userInfoNo, String dataName,
 			String remark, String expect) {
-		Map<String, String> userInfoMap ;
+
 		p2p_loan_claim_auditService plcaService ;
-		CreateVccApplyTestData cvtd = new CreateVccApplyTestData();
 		SqlSession session = MybatisUtils.getFactory().openSession(true);
 		SqlSession vccSession = VCCMybatisUtils.getFactory().openSession(true);
 		Reporter.log("               ");
@@ -40,7 +38,6 @@ public class ExcuteVccApplyCase {
 		if (!userInfoNo.isEmpty()) {
 			// 创建用户信息
 			cvtd.create(dataName, userInfoNo, session, vccSession);
-
 			// 获取userinfo表的基础信息
 			userInfoMap = cvtd.getUserInfoMap();
 
@@ -103,9 +100,17 @@ public class ExcuteVccApplyCase {
 
 	@BeforeMethod
 	public void clearTestData(){
+		userInfoMap = cvtd.getUserInfoMap();
+		//清楚redis中的缓存
+		RedisUtil redisUtil = new RedisUtil();
+		redisUtil.clearRedis();
 		SqlSession vccSession = VCCMybatisUtils.getFactory().openSession(true);
+		SqlSession session = MybatisUtils.getFactory().openSession(true);
 		vucmService = new vcc_user_card_mapService();
 		vcService = new vcc_customerService();
+
+		p2p_student_custService pscService = new p2p_student_custService();
+		pscService.delStudentCust(session);
 
 		vucmService.delVccUserCardMap("62170010000000002%", vccSession);
 		vcService.delVccCustomerByMobileSign("999999999", vccSession);

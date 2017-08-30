@@ -29,6 +29,8 @@
     <orderEntry type="library" name="Maven: dom4j:dom4j:1.6.1" level="project" />
     <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.18" level="project" />
+    <orderEntry type="library" name="Maven: redis.clients:jedis:2.9.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.4.2" level="project" />
     <orderEntry type="library" name="Maven: org.testng:testng:6.11" level="project" />
     <orderEntry type="library" name="Maven: com.beust:jcommander:1.69" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20160810" level="project" />
