@@ -124,7 +124,6 @@ public class createUserInfo {
 				esService.addExStudentInfo(map.get("oldCustId"), map.get("custId"),
 						new JSONObject(map.get("certAuth")).getString("idNo"),
 						json, session);
-
 				pbcService.update(map.get("custId"), json, "schoolRollAuth",
 						session);
 			} else if (json.getString("schoolRollAuthStatus").equals("AF")) {
