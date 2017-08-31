@@ -2,6 +2,7 @@ package com.fkapi.ndk;
 
 import com.fkapi.service.p2p_loan_claim_auditService;
 import com.fkapi.service.p2p_loan_claim_relative_appService;
+import com.fkapi.service.risk_audit_item_logService;
 import com.fkapi.utils.*;
 import org.apache.ibatis.session.SqlSession;
 import org.testng.Reporter;
@@ -20,7 +21,9 @@ public class ExcuteNDKCase {
 
         Map<String, String> userInfoMap;
         p2p_loan_claim_auditService plcaService;
+        risk_audit_item_logService railService ;
         SqlSession session = MybatisUtils.getFactory().openSession(true);
+        SqlSession riskSession = RiskMybatisUtils.getFactory().openSession(true);
         Reporter.log("               ");
         Reporter.log("************** 当前执行的caseNo为： " + caseName + " **************");
         Reporter.log("               ");
@@ -32,15 +35,17 @@ public class ExcuteNDKCase {
 
             if (remark != null && expect != null) {
                 // 清除风控审批数据
-                plcaService = new p2p_loan_claim_auditService();
-                plcaService.delAuditRe(userInfoMap.get("oldCustId"), session);
+                //plcaService = new p2p_loan_claim_auditService();
+                //plcaService.delAuditRe(userInfoMap.get("oldCustId"), session);
+                railService = new risk_audit_item_logService();
+                railService.delAuditResult(Long.valueOf(userInfoMap.get("oldCustId")), riskSession);
                 //请求牛大咖风控审批接口
                 Post.postNDK(
                         userInfoMap.get("custId"), userInfoMap.get("projectNo"), "NDK_LOAN_AUDIT");
                 //获取最终的审批结果
-                String result = plcaService.getAuditRe(
-                        userInfoMap.get("custId"), remark, session);
-
+                //String result = plcaService.getAuditRe(
+                        //userInfoMap.get("custId"), remark, session);
+                String result = railService.getAuditResult(Long.valueOf(userInfoMap.get("custId")), remark, riskSession);
                 // 向Excel中写入实际结果
                 try {
                     ExcelUtils.setCellData(result,
