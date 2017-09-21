@@ -66,15 +66,27 @@ public class p2p_customerService {
 			log.error("删除loginName为：" + loginName + "的p2p_customer表的数据时失败，删除失败" + e.getMessage());
 		}
 	}
-	
-	//更新手机号
-	public void update(String loginName,JSONObject phoneAuth,String option, SqlSession session){
+
+	/**
+	 * 更新手机号
+	 * @param loginName
+	 * @param json
+	 * @param option
+	 * @param session
+	 */
+	public void update(String loginName, JSONObject json, String option, SqlSession session){
 		pcMapper = session.getMapper(p2p_customerMapper.class);
 		pc = new p2p_customer();
 		pc = pcMapper.selectByLoginName(loginName);
 		if(option.equals("phoneAuth")){
-			if(phoneAuth.getString("mobile") != null){
-				pc.setMobile(phoneAuth.getString("mobile"));
+			if(json.getString("mobile") != null){
+				pc.setMobile(json.getString("mobile"));
+				pcMapper.updateByLoginName(pc);
+			}
+		}
+		if (option.equals("custStatus")){
+			if(json.getString("status") != null){
+				pc.setCustStatus(json.getString("status"));
 				pcMapper.updateByLoginName(pc);
 			}
 		}

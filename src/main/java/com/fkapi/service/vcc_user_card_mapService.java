@@ -45,9 +45,9 @@ public class vcc_user_card_mapService {
             cvc.create(map, false, vccSession);
             vucm.setCustId(Long.valueOf(map.get("custId")));
             vucm.setCardNo(new JSONObject(map.get("certAuth")).getString("cardNo"));
-            vucm.setRelativeTime(CommonUtils.subDay(CommonUtils.getCurDate("second"),orderStatusJson.getInt("time")));
-            vucm.setCreateTime(CommonUtils.subDay(CommonUtils.getCurDate("second"),orderStatusJson.getInt("time")));
-            vucm.setUpdateTime(CommonUtils.subDay(CommonUtils.getCurDate("second"),orderStatusJson.getInt("time")));
+            vucm.setRelativeTime(CommonUtils.subMin(CommonUtils.subDay(CommonUtils.getCurDate("second"),orderStatusJson.getInt("time")), 10));
+            vucm.setCreateTime(CommonUtils.subMin(CommonUtils.subDay(CommonUtils.getCurDate("second"),orderStatusJson.getInt("time")), 10));
+            vucm.setUpdateTime(CommonUtils.subMin(CommonUtils.subDay(CommonUtils.getCurDate("second"),orderStatusJson.getInt("time")), 10));
             list.add(vucm);
             try {
                 vucmMapper.insert(list);

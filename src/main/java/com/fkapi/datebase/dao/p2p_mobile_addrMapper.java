@@ -8,6 +8,10 @@ public interface p2p_mobile_addrMapper {
 
     p2p_mobile_addr selectByCityCode(String cityCode);
 
+    p2p_mobile_addr selectByProvinceCode(String provinceCode);
+
+    p2p_mobile_addr selectByOtherProvinceCode(String provinceCode);
+
     p2p_mobile_addr selectByOtherCityCode(String cityCode);
 
 }

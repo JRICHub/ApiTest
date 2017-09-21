@@ -1,6 +1,7 @@
 package com.fkapi.vcc;
 
 import com.fkapi.service.p2p_loan_claim_auditService;
+import com.fkapi.service.risk_audit_item_logService;
 import com.fkapi.service.risk_virtual_credit_cardService;
 import com.fkapi.utils.*;
 import org.apache.ibatis.session.SqlSession;
@@ -24,6 +25,7 @@ public class ExcuteVccConsumeCase {
                        String remark, String expect){
         Map<String, String> userInfoMap ;
         p2p_loan_claim_auditService plcaService ;
+        risk_audit_item_logService railService ;
         CreateVccConsumeTestData cvctd = new CreateVccConsumeTestData();
         SqlSession session = MybatisUtils.getFactory().openSession(true);
         SqlSession vccSession = VCCMybatisUtils.getFactory().openSession(true);
@@ -41,14 +43,14 @@ public class ExcuteVccConsumeCase {
 
             if (remark != null && expect != null) {
                 // 清除风控审批数据
-                plcaService = new p2p_loan_claim_auditService();
-                plcaService.delAuditRe(userInfoMap.get("oldCustId"), session);
+                //plcaService = new p2p_loan_claim_auditService();
+                //plcaService.delAuditRe(userInfoMap.get("oldCustId"), session);
+                railService = new risk_audit_item_logService();
+                railService.delAuditResult(Long.valueOf(userInfoMap.get("oldCustId")), riskSession);
 
                 // 请求风控审批接口并根据remark获取最终的审批结果
                 Post.postVccConsume(userInfoMap.get("custId"), "000000000");
-                String result = plcaService.getAuditRe(
-                        userInfoMap.get("custId"), remark, session);
-
+                String result = railService.getAuditResult(Long.valueOf(userInfoMap.get("custId")), remark, riskSession);
                 // 向Excel中写入实际结果
                 try {
                     ExcelUtils.setCellData(result, ExcelUtils.getRowNoByValue(

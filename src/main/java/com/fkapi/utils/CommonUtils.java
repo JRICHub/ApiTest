@@ -48,6 +48,12 @@ public class CommonUtils {
 	public static String ndkDataSheetName = "NDK数据生成";
 
 	public static String ndkCaseSheetName = "NDKCase";
+
+	public static String chubaoExcelPath = System.getProperty("user.dir") + "\\CHUBAO.xlsx";
+
+	public static String chubaoDataSheetName = "CHUBAO数据生成";
+
+	public static String chubaoCaseSheetName = "CHUBAOCase";
 	
 	public static String getConfigValue(String key) {
 		Properties props = new Properties();

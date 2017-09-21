@@ -22,6 +22,7 @@ public class p2p_loan_claimService {
 	p2p_loan_claim_relative_appService plcraService ;
 	p2p_loan_claimMapper plcMapper = null;
 	p2p_customerService pcService = null;
+	p2p_loan_claim_extSerivce plceService = null ;
 	private String projectNo = null;
 	
 	public p2p_loan_claimService() {
@@ -62,7 +63,7 @@ public class p2p_loan_claimService {
 		pcService = new p2p_customerService();
 		p2p_loan_claim plc = new p2p_loan_claim();
 		this.setProjectNo(CommonUtils.getProjectNo());
-		userinfoMap.put("projectNo", projectNo);
+
 		//plc.setProjectNo(this.getProjectNo());
 		plc.setProjectName(json.getString("projectName"));
 		if(json.getString("loanSubSrc").equals("YICAI")){
@@ -89,6 +90,7 @@ public class p2p_loan_claimService {
 		}
 		//判断如果是风控审批订单，则借款日期为当天，如果是历史订单则添加相对于的借款时间
 		if(isCreditOrder){
+			userinfoMap.put("projectNo", projectNo);
 			plc.setRepayStatus(null);
 			plc.setReleaseStatus("");
 			plc.setAuditStatus("LOAN");
@@ -132,6 +134,10 @@ public class p2p_loan_claimService {
 			Reporter.log("添加custId为： " + userinfoMap.get("custId") + "的p2p_loan_claim表的数据成功");
 		} catch (Exception e) {
 			Reporter.log("添加custId为： " + userinfoMap.get("custId") + "的p2p_loan_claim表的数据时发生异常,添加失败" + e.getMessage());
+		}
+		if (json.getString("loanSubSrc").equals("CHUBAO")){
+			plceService = new p2p_loan_claim_extSerivce();
+			plceService.addLoanClaimExt(getProjectNo(), "CHUBAO_S", session);
 		}
 		//添加借款订单相关的设备
 		plcraService = new p2p_loan_claim_relative_appService();

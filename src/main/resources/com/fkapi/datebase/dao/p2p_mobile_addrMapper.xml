@@ -27,6 +27,20 @@
     where CITY_CODE = #{cityCode,jdbcType=VARCHAR} limit 1
   </select>
 
+  <select id="selectByProvinceCode" parameterType="java.lang.String" resultMap="p2p_mobile_addrMapper">
+    select
+    <include refid="p2p_mobile_addr" />
+    from p2p_mobile_addr
+    where PROVINCE_CODE = #{provinceCode,jdbcType=VARCHAR} limit 1
+  </select>
+
+  <select id="selectByOtherProvinceCode" parameterType="java.lang.String" resultMap="p2p_mobile_addrMapper">
+    select
+    <include refid="p2p_mobile_addr" />
+    from p2p_mobile_addr
+    where PROVINCE_CODE != #{provinceCode,jdbcType=VARCHAR} limit 1
+  </select>
+
   <select id="selectByOtherCityCode" parameterType="java.lang.String" resultMap="p2p_mobile_addrMapper">
     select
     <include refid="p2p_mobile_addr" />

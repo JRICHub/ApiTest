@@ -6,6 +6,11 @@ package com.fkapi.utils;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+import sun.plugin2.util.SystemUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Administrator
@@ -17,12 +22,7 @@ public class test {
 
 	@Test
 	public void f(){
-		Assertion.verifyTure(true);
-	}
-
-	@Test
-	public void f1(){
-		System.out.print("[ { \"status\": \"OVERDUE_REPAID\", \"time\": \"-1\" } ]");
-		//Assert.assertTrue(false);
+		String a = "3101";
+		System.out.println(a.replaceFirst("1","2"));
 	}
 }

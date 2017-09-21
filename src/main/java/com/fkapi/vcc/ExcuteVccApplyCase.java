@@ -28,10 +28,11 @@ public class ExcuteVccApplyCase {
 	@Test(dataProvider = "getData")
 	public void excute(String caseName, String isRun, String userInfoNo, String dataName,
 			String remark, String expect) {
-
-		p2p_loan_claim_auditService plcaService ;
+		risk_audit_item_logService railService ;
+		//p2p_loan_claim_auditService plcaService ;
 		SqlSession session = MybatisUtils.getFactory().openSession(true);
 		SqlSession vccSession = VCCMybatisUtils.getFactory().openSession(true);
+		SqlSession riskSession = RiskMybatisUtils.getFactory().openSession(true);
 		Reporter.log("               ");
 		Reporter.log("************** 当前执行的caseNo为： "	+ caseName + " **************");
 		Reporter.log("               ");
@@ -43,9 +44,10 @@ public class ExcuteVccApplyCase {
 
 			if (remark != null && expect != null) {
 				// 清除风控审批数据
-				plcaService = new p2p_loan_claim_auditService();
-				plcaService.delAuditRe(userInfoMap.get("oldCustId"), session);
-
+				//plcaService = new p2p_loan_claim_auditService();
+				//plcaService.delAuditRe(userInfoMap.get("oldCustId"), session);
+				railService = new risk_audit_item_logService();
+				railService.delAuditResult(Long.valueOf(userInfoMap.get("oldCustId")), riskSession);
 				// remark中以P开头的为准入前置规则
 				if(remark.startsWith("P")){
 					//请求准入前置规则接口
@@ -56,8 +58,7 @@ public class ExcuteVccApplyCase {
 							userInfoMap.get("custId"), new JSONObject(userInfoMap.get("phoneAuth")).getString("mobileSign"));
 				}
 				//获取最终的审批结果
-				String result = plcaService.getAuditRe(
-						userInfoMap.get("custId"), remark, session);
+				String result = railService.getAuditResult(Long.valueOf(userInfoMap.get("custId")), remark, riskSession);
 
 				// 向Excel中写入实际结果
 				try {

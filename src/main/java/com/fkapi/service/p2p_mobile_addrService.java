@@ -53,6 +53,47 @@ public class p2p_mobile_addrService {
 	}
 
 	/**
+	 *	根据省份编码获取该省份的手机号段
+	 * @param provinceCode
+	 * @param session
+	 * @return
+	 */
+	public String getMobileByProvince(String provinceCode, SqlSession session) {
+		pmaMapper = session.getMapper(p2p_mobile_addrMapper.class);
+		pma = new p2p_mobile_addr();
+		try {
+			pma = pmaMapper.selectByProvinceCode(provinceCode);
+			if (pma == null) {
+				Reporter.log("根据cityCode: " + provinceCode + "未获取到手机号码段");
+				return null;
+			} else {
+				return pma.getMobile();
+			}
+		} catch (Exception e) {
+			Reporter.log("根据cityCode: " + provinceCode + "获取手机号码段时发生异常,获取失败！" + e.getMessage());
+			return null;
+		}
+	}
+	/**
+	 *	根据省份获取除该省份外的其他省份的手机码段
+	 */
+	public String getOtherMobileByProvince(String provinceCode, SqlSession session) {
+		pmaMapper = session.getMapper(p2p_mobile_addrMapper.class);
+		pma = new p2p_mobile_addr();
+		try {
+			pma = pmaMapper.selectByOtherProvinceCode(provinceCode);
+			if (pma == null) {
+				Reporter.log("provinceCode: " + provinceCode + "未获取到手机号码段");
+				return null;
+			} else {
+				return pma.getMobile();
+			}
+		} catch (Exception e) {
+			Reporter.log("provinceCode: " + provinceCode + "获取手机号码段时发生异常,获取失败！" + e.getMessage());
+			return null;
+		}
+	}
+	/**
 	 * select * from p2p_mobile_addr where city_code != ?;
 	 * 查询非输入城市的手机号码段
 	 * @param cityCode

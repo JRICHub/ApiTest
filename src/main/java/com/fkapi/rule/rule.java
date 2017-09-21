@@ -34,6 +34,7 @@ public class rule {
     p2p_loan_claimService plcService;
     p2p_dictionaryService pdService;
     risk_pingan_grayscale_statService rpgsService ;
+    p2p_customerService pcService ;
 
     createVccCustomer cvc = new createVccCustomer();
     createUserInfo cui = new createUserInfo();
@@ -123,7 +124,7 @@ public class rule {
 
     /**
      * 根据是否有户籍所在地中的信息判断，添加相应的数据
-     * 适用于虚拟信用卡VA_F003
+     * 适用于虚拟信用卡VA_F003, 触宝F003
      * @param userInfoMap
      * @param data
      * @param session
@@ -137,11 +138,36 @@ public class rule {
             if (data.toUpperCase().equals("Y")) {
                 String mobileCode = pmaService.getMobileByAddr(cityCode, session);
                 pcalService.addCustAddrListForAddress(userInfoMap.get("oldCustId"), userInfoMap.get("custId"), mobileCode + "0000", session);
-            }
-            if (data.toUpperCase().equals("N")) {
+            } else if (data.toUpperCase().equals("N")) {
                 String mobileCode = pmaService.getOtherMobileByAddr(cityCode, session);
                 pcalService.addCustAddrListForAddress(userInfoMap.get("oldCustId"), userInfoMap.get("custId"), mobileCode + "0000", session);
+            } else {
+                JSONObject json = new JSONObject(data);
+                if (json.getString("IDHaseRelativeNum").equals("Y")){
+                    if (json.getString("ContactsHaseRelativeNum").equals("Y")){
+                        String mobileCode = pmaService.getMobileByAddr(cityCode, session);
+                        pcalService.addCustAddrListForAddress(userInfoMap.get("oldCustId"), userInfoMap.get("custId"), mobileCode + "0000", session);
+                    }
+                    if (json.getString("ContactsHaseRelativeNum").equals("N")){
+                        String mobileCode = pmaService.getOtherMobileByAddr(cityCode, session);
+                        pcalService.addCustAddrListForAddress(userInfoMap.get("oldCustId"), userInfoMap.get("custId"), mobileCode + "0000", session);
+                    }
+                }
+                if (json.getString("IDHaseRelativeNum").equals("N")){
+                    if (json.getString("ContactsHaseRelativeNum").equals("Y")){
+                        String mobileCode = pmaService.getMobileByProvince(cityCode.substring(0,2), session);
+                        pcalService.addCustAddrListForAddress(userInfoMap.get("oldCustId"), userInfoMap.get("custId"), mobileCode + "0000", session);
+                    }
+                    if (json.getString("ContactsHaseRelativeNum").equals("N")){
+                        String mobileCode = pmaService.getOtherMobileByProvince(cityCode.substring(0,2), session);
+                        pcalService.addCustAddrListForAddress(userInfoMap.get("oldCustId"), userInfoMap.get("custId"), mobileCode + "0000", session);
+                    }
+                }
+                if (json.getString("ContactsHaseRelativeNum").trim().isEmpty()){
+                    pcalService.delCustAddrList(userInfoMap.get("oldCustId"), session);
+                }
             }
+
         }
     }
 
@@ -368,6 +394,31 @@ public class rule {
     }
 
     /**
+     * 触宝F007用户填写身份证号/姓名与牛娃系统内已认证身份证号/姓名不完全匹配
+     * @param userInfoMap
+     * @param data
+     * @param session
+     */
+    public void updateIdCardNo(Map<String, String> userInfoMap, String data, SqlSession session){
+        if (!data.trim().isEmpty()) {
+            pbcService = new p2p_base_customerService();
+            JSONObject json = new JSONObject(data);
+            JSONObject dataJson = new JSONObject();
+            if (json.getString("IDMatch").toUpperCase().equals("N")){
+                dataJson.put("idNo", new JSONObject(userInfoMap.get("certAuth")).getString("idNo").replaceFirst("9","8"));
+            }else {
+                dataJson.put("idNo", new JSONObject(userInfoMap.get("certAuth")).getString("idNo"));
+            }
+            if (json.getString("NameMatch").toUpperCase().equals("N")){
+                dataJson.put("custName", new JSONObject(userInfoMap.get("certAuth")).getString("custName") + "1");
+            }else {
+                dataJson.put("custName", new JSONObject(userInfoMap.get("certAuth")).getString("custName"));
+            }
+            pbcService.update(userInfoMap.get("custId"), dataJson, "certAuth", session);
+        }
+    }
+
+    /**
      * 对于首次申请贷款的人，抓取申请前7天的位置信息，位置信息超过15次，且没有一次是在学校/父母所在地（/实习所在城市）。
      * （只有确实抓到经纬度才算一次有效位置信息，如果抓取经纬度为0则不算。）如果之前有成功放款不用判断
      * @param userInfoMap
@@ -533,6 +584,21 @@ public class rule {
             json = new JSONObject(data);
             rpgsService = new risk_pingan_grayscale_statService();
             rpgsService.addPinganGrayscaleStat(userInfoMap, json, session);
+        }
+    }
+
+    /**
+     * 更新用户的账户状态
+     * @param userInfoMap
+     * @param data
+     * @param session
+     */
+    public void createCustStatus(Map<String, String> userInfoMap, String data, SqlSession session){
+        JSONObject json = new JSONObject();
+        if (!data.trim().isEmpty()){
+            json.put("status", data);
+            pcService = new p2p_customerService();
+            pcService.update(userInfoMap.get("loginName"), json, "custStatus", session);
         }
     }
 }

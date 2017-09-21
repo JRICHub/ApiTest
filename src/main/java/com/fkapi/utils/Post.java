@@ -103,6 +103,27 @@ public class Post {
 				"{\"cust_id\": \""+ custId + "\",\"trans_id\":\"" + transId + "\",\"strategy_id\":\"" + strategyId + "\"}");
 	}
 
+	/**
+	 * 请求触宝风控审批接口
+	 */
+	public static void postCHUBAO(String custId, String transId, String strategyId, String data){
+		Reporter.log("请求触宝风控审批接口的custId为： " + custId + "transId ：" + transId + "data：" + data);
+		Reporter.log("请求地址为：http://" + getPostIp()
+				+ CommonUtils.getConfigValue("chubao"));
+		HttpClientUtil.sendHttpPost("http://" + getPostIp() + CommonUtils.getConfigValue("chubao"),
+				"{\"cust_id\": \""+ custId + "\",\"trans_id\":\"" + transId + "\",\"strategy_id\":\"" + strategyId + "\",  \"data\": " +
+						"        {\n" +
+						"            \"realName\": \"王宁\",\n" +
+						"            \"idCardNo\": \"220322199901297363\"\n" +
+						"        }\n" +
+						"    }");
+	}
+
+	/**
+	 * 请求虚拟信用卡额度计算接口
+	 * @param custId
+	 * @return
+	 */
 	public static String postVccLimit(String custId){
 		String response = null ;
 		Reporter.log("请求虚拟信用卡额度接口的custId为： " + custId );
@@ -129,6 +150,9 @@ public class Post {
 		return ip;
 	}
 
+	/**
+	 *
+	 */
 	@Test
 	public void test() {
 		postNDK("330001074","JKM373731253A2","NDK_LOAN_AUDIT");

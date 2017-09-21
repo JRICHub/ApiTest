@@ -247,7 +247,7 @@ public class createUserInfo {
 				prpService.addRepayPlan(map, plcService.getProjectNo(), historyOrderJson, session);
 			}else if (!new JSONObject(map.get("historyOrder")).getString("repayStatus").trim().isEmpty()){
 				historyOrderJson = new JSONObject(map.get("historyOrder"));
-				historyOrderJson.put("status", "SETTLED");
+				historyOrderJson.put("status", "WAIT_REPAY");
 				historyOrderJson.put("deviceCode", new JSONObject(map.get("phoneAuth")).getString("mobileSign"));
 				plcService.addProject(map, historyOrderJson, false, delHistoryOrder, session);
 				historyOrderJson.put("allTerm", historyOrderJson.getInt("loanTerm"));

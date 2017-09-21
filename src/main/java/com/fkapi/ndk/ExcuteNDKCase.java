@@ -34,7 +34,7 @@ public class ExcuteNDKCase {
             userInfoMap = cndktd.getUserInfoMap();
 
             if (remark != null && expect != null) {
-                // 清除风控审批数据
+                // 清除风控审批数据,新风控审批记录在risk中,原风控审批记录在opr中,牛大咖中暂时抽出
                 //plcaService = new p2p_loan_claim_auditService();
                 //plcaService.delAuditRe(userInfoMap.get("oldCustId"), session);
                 railService = new risk_audit_item_logService();
@@ -43,8 +43,7 @@ public class ExcuteNDKCase {
                 Post.postNDK(
                         userInfoMap.get("custId"), userInfoMap.get("projectNo"), "NDK_LOAN_AUDIT");
                 //获取最终的审批结果
-                //String result = plcaService.getAuditRe(
-                        //userInfoMap.get("custId"), remark, session);
+                //String result = plcaService.getAuditRe(userInfoMap.get("custId"), remark, session);
                 String result = railService.getAuditResult(Long.valueOf(userInfoMap.get("custId")), remark, riskSession);
                 // 向Excel中写入实际结果
                 try {

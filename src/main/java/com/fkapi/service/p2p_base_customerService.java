@@ -68,9 +68,16 @@ public class p2p_base_customerService {
 		pdService = new p2p_dictionaryService();
 		p2p_base_customer pbc = pbcMapper.selectByCustId(Long.valueOf(custId));
 		if(option.equals("certAuth")){
-			pbc.setCustName(json.getString("custName"));
-			pbc.setCertNo(json.getString("idNo"));
-			pbc.setCertAuth(json.getString("certAuthStatus"));
+			if (json.has("custName")){
+				pbc.setCustName(json.getString("custName"));
+			}
+			if (json.has("idNo")){
+				pbc.setCertNo(json.getString("idNo"));
+			}
+			if (json.has("certAuthStatus")){
+				pbc.setCertAuth(json.getString("certAuthStatus"));
+			}
+
 			try {
 				pbcMapper.updateByCustId(pbc);
 				Reporter.log("更新certAuth为： "+ json.toString() + "的数据成功");
