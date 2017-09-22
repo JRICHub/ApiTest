@@ -103,19 +103,8 @@ public class CreateVccApplyTestData {
      * @return 返回Excel的二维数据给dataprovider
      */
     public Map<String, String> getVccApplyData(Integer dataNo) {
-        Map<String, String> map;
-        int allColNum = 0;
-        try {
-            allColNum = ExcelUtils.getAllColNum(System.getProperty("user.dir")
-                    + "\\testcase.xlsx", "虚拟信用卡准入数据生成", 0);
-        } catch (IOException e) {
-            Reporter.log("获取Excel的信息失败");
-        }
-        map = new HashMap<>();
-        for (int j = 0; j < allColNum; j++) {
-            map.put(ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.applyDataSheetName, 0, j),
-                    ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.applyDataSheetName, dataNo, j));
-        }
+        CommonUtils commonUtils = new CommonUtils();
+        Map<String, String> map = commonUtils.getTestData(CommonUtils.excelPath, CommonUtils.applyDataSheetName, dataNo);
         return map;
     }
 }

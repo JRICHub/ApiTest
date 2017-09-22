@@ -5,10 +5,7 @@ import com.fkapi.rule.rule;
 import com.fkapi.utils.CommonUtils;
 import com.fkapi.utils.ExcelUtils;
 import org.apache.ibatis.session.SqlSession;
-import org.testng.Reporter;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -37,24 +34,25 @@ public class CreateCHUBAOTestData {
             Map<String, String> map = getCHUBAOTestData(ExcelUtils.getRowNoByValue(CommonUtils.chubaoExcelPath, CommonUtils.chubaoDataSheetName, dataName));
             //添加风控审批订单
             rule.createLastOrder(userInfoMap, map.get("风控审批订单"), true, session);
-
+            //添加用户的上笔订单
             rule.createLastOrder(userInfoMap, map.get("上笔订单"), false, session);
-
+            //更新用户身份信息及联系人信息
             rule.createCertCity(userInfoMap, map.get("F003"), session);
-
+            //添加用户累计借款信息
             rule.createVcc_VA_F009(userInfoMap, map.get("F004/F005"), session, vccSession, false);
-
+            //更新用户身份证信息
             rule.updateIdCardNo(userInfoMap, map.get("F007"), session);
-
+            //更新用户年龄
             rule.createAge(userInfoMap, map.get("年龄"), session);
-
+            //添加外部黑名单
             rule.createOutBlackList(userInfoMap, map.get("外部黑名单"), session);
-
+            //添加内部黑名单
             rule.createInBlackList(userInfoMap, map.get("内部黑名单"), session);
-
+            //添加设备黑名单
             rule.createDeviceBlackList(userInfoMap, map.get("设备黑名单"), map.get("风控审批订单"), session);
-
+            //更新用户的账户状态
             rule.createCustStatus(userInfoMap, map.get("账户状态"), session);
+
         }
     }
 
@@ -64,18 +62,8 @@ public class CreateCHUBAOTestData {
      * @return
      */
     public Map<String, String> getCHUBAOTestData(Integer dataNo) {
-        Map<String, String> map;
-        int allColNum = 0;
-        try {
-            allColNum = ExcelUtils.getAllColNum(CommonUtils.chubaoExcelPath, CommonUtils.chubaoDataSheetName, 0);
-        } catch (IOException e) {
-            Reporter.log("获取Excel的信息失败");
-        }
-        map = new HashMap<>();
-        for (int j = 0; j < allColNum; j++) {
-            map.put(ExcelUtils.getCellDate(CommonUtils.chubaoExcelPath, CommonUtils.chubaoDataSheetName, 0, j),
-                    ExcelUtils.getCellDate(CommonUtils.chubaoExcelPath, CommonUtils.chubaoDataSheetName, dataNo, j));
-        }
+        CommonUtils commonUtils = new CommonUtils();
+        Map<String, String> map = commonUtils.getTestData(CommonUtils.chubaoExcelPath, CommonUtils.chubaoDataSheetName, dataNo);
         return map;
     }
 }

@@ -59,7 +59,7 @@ public class ExcuteNDKCase {
 
                 String finalResult = result.equals(expect) ? "Passed"
                         : "Failed";
-                // //向Excel中写入是否通过
+                // //向Excel中写入是否通过；
                 try {
                     ExcelUtils.setCellData(finalResult,
                             ExcelUtils.getRowNoByValue(CommonUtils.ndkExcelPath, CommonUtils.ndkCaseSheetName, caseName),

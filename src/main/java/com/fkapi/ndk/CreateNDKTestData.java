@@ -16,6 +16,7 @@ import java.util.Map;
  * Created by Administrator on 2017/8/18.
  */
 public class CreateNDKTestData {
+
     private Map<String, String> userInfoMap ;
 
     public Map<String, String> getUserInfoMap() {
@@ -58,30 +59,25 @@ public class CreateNDKTestData {
             rule.createVcc_VA_F008(userInfoMap, map.get("AF014"), session);
             //添加AF015/AF016中所需的测试数据
             rule.createNDKAF014(userInfoMap, map.get("AF015/AF016"), session);
-
+            //更新用户的年龄
             rule.createAge(userInfoMap, map.get("年龄"), session);
-
+            //操作外部黑名单
             rule.createOutBlackList(userInfoMap, map.get("外部黑名单"), session);
-
+            //操作内部黑名单
             rule.createInBlackList(userInfoMap, map.get("内部黑名单"), session);
-
+            //添加设备黑名单
             rule.createDeviceBlackList(userInfoMap, map.get("设备黑名单"), map.get("风控审批订单"), session);
         }
     }
 
+    /**
+     * 获取牛大咖数据生成表中的数据
+     * @param dataNo
+     * @return
+     */
     public Map<String, String> getNDKTestData(Integer dataNo) {
-        Map<String, String> map;
-        int allColNum = 0;
-        try {
-            allColNum = ExcelUtils.getAllColNum(CommonUtils.ndkExcelPath, CommonUtils.ndkDataSheetName, 0);
-        } catch (IOException e) {
-            Reporter.log("获取Excel的信息失败");
-        }
-        map = new HashMap<>();
-        for (int j = 0; j < allColNum; j++) {
-            map.put(ExcelUtils.getCellDate(CommonUtils.ndkExcelPath, CommonUtils.ndkDataSheetName, 0, j),
-                    ExcelUtils.getCellDate(CommonUtils.ndkExcelPath, CommonUtils.ndkDataSheetName, dataNo, j));
-        }
+        CommonUtils commonUtils = new CommonUtils();
+        Map<String, String> map = commonUtils.getTestData(CommonUtils.ndkExcelPath, CommonUtils.ndkDataSheetName, dataNo);
         return map;
     }
 }

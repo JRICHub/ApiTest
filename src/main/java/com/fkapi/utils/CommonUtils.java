@@ -20,12 +20,6 @@ import com.fkapi.service.p2p_cert_authService;
  * 
  */
 public class CommonUtils {
-	/**
-	 * 根据key获取配置文件中的数据
-	 * 
-	 * @param key
-	 * @return
-	 */
 
 	public static String excelPath = System.getProperty("user.dir") + "\\testcase.xlsx";
 
@@ -54,7 +48,12 @@ public class CommonUtils {
 	public static String chubaoDataSheetName = "CHUBAO数据生成";
 
 	public static String chubaoCaseSheetName = "CHUBAOCase";
-	
+
+	/**
+	 * 获取properties中的数据信息
+	 * @param key
+	 * @return
+	 */
 	public static String getConfigValue(String key) {
 		Properties props = new Properties();
 		InputStream in = null;
@@ -134,6 +133,7 @@ public class CommonUtils {
 		short curYear = (short) ca.get(Calendar.YEAR);
 		return (short) (curYear - time);
 	}
+
 	/**
 	 * 日期月份计算
 	 * 
@@ -179,6 +179,7 @@ public class CommonUtils {
 		Date dt1 = rightNow.getTime();
 		return dt1;
 	}
+
 	/**
 	 * 计算天数
 	 * @param date
@@ -202,6 +203,12 @@ public class CommonUtils {
 		return dt1;
 	}
 
+	/**
+	 * 分钟加减
+	 * @param date
+	 * @param min
+	 * @return
+	 */
 	public static Date subMin(Date date, int min) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date dt = null;
@@ -254,6 +261,29 @@ public class CommonUtils {
 	public static String getProjectNo(){
 		String projectNo = "JKM";
 		return projectNo + UUID.randomUUID().toString().replace("-","");
+	}
+
+	/**
+	 * 获取要添加的测试数据信息
+	 * @param excelPath
+	 * @param sheetName
+	 * @param dataNo
+	 * @return
+	 */
+	public Map<String, String> getTestData(String excelPath, String sheetName, Integer dataNo) {
+		Map<String, String> map;
+		int allColNum = 0;
+		try {
+			allColNum = ExcelUtils.getAllColNum(excelPath, sheetName, 0);
+		} catch (IOException e) {
+			Reporter.log("获取Excel的信息失败");
+		}
+		map = new HashMap<>();
+		for (int j = 0; j < allColNum; j++) {
+			map.put(ExcelUtils.getCellDate(excelPath, sheetName, 0, j),
+					ExcelUtils.getCellDate(excelPath, sheetName, dataNo, j));
+		}
+		return map;
 	}
 	
 	@Test
