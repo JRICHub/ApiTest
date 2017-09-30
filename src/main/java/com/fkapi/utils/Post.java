@@ -155,6 +155,6 @@ public class Post {
 	 */
 	@Test
 	public void test() {
-		postNDK("330001074","JKM373731253A2","NDK_LOAN_AUDIT");
+		HttpClientUtil.sendHttpGet("http://www.77tj.org/api/tencent/online");
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.fkapi.service.*;
 import com.fkapi.utils.CommonUtils;
+import com.fkapi.utils.RiskMybatisUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,8 +52,10 @@ public class createUserInfo {
 		jxl_primary_infoService jpiService ;
 		p2p_loan_claimService plcService ;
 		p2p_repay_planService prpService ;
+		risk_education_whiteListService rewService ;
 		JSONObject json ;
 
+		SqlSession riskSession = RiskMybatisUtils.getFactory().openSession(true);
 		setMap(getUserInfoMap(CommonUtils.excelPath, CommonUtils.userInfoSheetName, userInfoNo));
 		pcService = new p2p_customerService();
 		pbcService = new p2p_base_customerService();
@@ -258,6 +261,13 @@ public class createUserInfo {
 				historyOrderJson.put("status", "RETURN");
 				historyOrderJson.put("deviceCode", new JSONObject(map.get("phoneAuth")).getString("mobileSign"));
 				plcService.addProject(map, historyOrderJson, false, delHistoryOrder, session);
+			}
+		}
+		//判断用户是否为学历白名单用户，是则添加
+		if (!map.get("isEducationWhite").trim().isEmpty()){
+			rewService = new risk_education_whiteListService();
+			if (map.get("isEducationWhite").toUpperCase().equals("Y")){
+				rewService.addEducationWhiteList(map, riskSession);
 			}
 		}
 		return map;
