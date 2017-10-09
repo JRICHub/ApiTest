@@ -49,6 +49,12 @@ public class CommonUtils {
 
 	public static String chubaoCaseSheetName = "CHUBAOCase";
 
+	public static String nxbExcelPath = System.getProperty("user.dir") + "\\NXB.xlsx";
+
+	public static String nxbDataSheetName = "NXB数据生成";
+
+	public static String nxbCaseSheetName = "NXBCase";
+
 	/**
 	 * 获取properties中的数据信息
 	 * @param key

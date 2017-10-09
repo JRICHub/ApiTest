@@ -226,7 +226,7 @@
 		'0.00', #{item.auditStatus},
 		#{item.borrowerName}, 'PERSONAL', NULL, NULL, NULL,
 		'36.0000', NULL,
-		'0.00', 'BDF',
+		'0.00', #{item.loanSrc},
 		'47.13', '2018-04-18 13:13:54', '0',
 		'QD50411',
 		'上海昶才资产管理有限公司', NULL,

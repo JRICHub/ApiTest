@@ -68,18 +68,25 @@ public class p2p_loan_claimService {
 		plc.setProjectName(json.getString("projectName"));
 		if(json.getString("loanSubSrc").equals("YICAI")){
 			plc.setProjectChannel("易才");
+			plc.setLoanSrc("APP");
 		}else if (json.getString("loanSubSrc").equals("CHUBAO")){
 			plc.setProjectChannel("触宝");
+			plc.setLoanSrc("BDF");
 		}else if (json.getString("loanSubSrc").equals("LD")){
 			plc.setProjectChannel("朗顿");
+			plc.setLoanSrc("APP");
 		}else if (json.getString("loanSubSrc").contains("YHJ")){
 			plc.setProjectChannel("壹加众达网络科技（北京）有限公司");
+			plc.setLoanSrc("APP");
 		}else if (json.getString("loanSubSrc").contains("NDK")){
 			plc.setProjectChannel("牛大咖");
+			plc.setLoanSrc("APP");
 		}else if (json.getString("loanSubSrc").contains("NXB")){
 			plc.setProjectChannel("牛小宝");
+			plc.setLoanSrc("APP");
 		}else if (json.getString("loanSubSrc").contains("NKK")){
 			plc.setProjectChannel("牛大款");
+			plc.setLoanSrc("APP");
 		}
 		plc.setCreateTime(CommonUtils.subDay(CommonUtils.getCurDate("second"), json.getInt("time")));
 		plc.setLoanTerm(json.getInt("loanTerm"));

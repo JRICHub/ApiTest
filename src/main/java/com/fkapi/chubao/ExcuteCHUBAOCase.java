@@ -2,6 +2,7 @@ package com.fkapi.chubao;
 
 import com.fkapi.service.p2p_loan_claim_auditService;
 import com.fkapi.service.p2p_loan_claim_relative_appService;
+import com.fkapi.service.p2p_student_custService;
 import com.fkapi.service.risk_audit_item_logService;
 import com.fkapi.utils.*;
 import org.apache.ibatis.session.SqlSession;
@@ -93,6 +94,8 @@ public class ExcuteCHUBAOCase {
         p2p_loan_claim_relative_appService plcraService = new p2p_loan_claim_relative_appService();
         plcraService.delLoanDevice("999999999", session);
         plcraService.delLoanDevice("888888888", session);
+        p2p_student_custService pscService = new p2p_student_custService();
+        pscService.delStudentCust(session);
     }
 
     @DataProvider

@@ -71,7 +71,7 @@
 			(#{item.custId}, NULL, #{item.schoolName}, #{item.college}, #{item.major}, #{item.enterYear}, NULL,
 			NULL, NULL,
 			'0', NULL, NULL, #{item.province}, #{item.city}, '0', NULL, 'N', NULL,
-			#{item.lastUpdateTime}, NULL, #{item.schoolId}, NULL,
+			#{item.lastUpdateTime}, NULL, #{item.schoolId}, 1,
 			NULL)
 		</foreach>
 	</insert>

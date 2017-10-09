@@ -28,7 +28,7 @@ public class p2p_student_custService {
 	Map<Object,Object> map = new HashMap<>();
 	
 	public void addStudentCust(String custId, JSONObject schoolRollAuth, SqlSession session){
-		//delStudentCust(schoolRollAuth, session);
+		//delStudentCust(session);
 		pscMapper = session.getMapper(p2p_student_custMapper.class);
 		List<p2p_student_cust> list = new ArrayList<>();
 		ecService = new ex_collegesService();

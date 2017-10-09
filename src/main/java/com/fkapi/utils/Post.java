@@ -104,6 +104,26 @@ public class Post {
 	}
 
 	/**
+	 * 请求牛小宝风控审批接口
+	 * @param custId
+	 * @param transId
+	 * @param strategyId
+	 * @param mod
+	 */
+	public static void postNXB(String custId, String transId, String strategyId, String mod) {
+		Reporter.log("请求牛大咖风控审批接口的custId为： " + custId + "transId ：" + transId);
+		Reporter.log("请求地址为：http://" + getPostIp()
+				+ CommonUtils.getConfigValue("nxb"));
+		HttpClientUtil.sendHttpPost("http://" + getPostIp() + CommonUtils.getConfigValue("ndk"),
+				"{\"cust_id\": \""+ custId + "\",\"trans_id\":\"" + transId + "\",\"strategy_id\":\"" + strategyId + "\",  \"data\": " +
+						"        {\n" +
+						"         \"mod\": \""+ mod +"\"\n" +
+						"        }\n" +
+						"    }"
+		);
+	}
+
+	/**
 	 * 请求触宝风控审批接口
 	 */
 	public static void postCHUBAO(String custId, String transId, String strategyId, String data){

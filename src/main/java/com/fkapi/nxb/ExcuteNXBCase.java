@@ -1,28 +1,32 @@
-package com.fkapi.ndk;
+package com.fkapi.nxb;
 
+import com.fkapi.ndk.CreateNDKTestData;
 import com.fkapi.service.p2p_loan_claim_auditService;
 import com.fkapi.service.p2p_loan_claim_relative_appService;
 import com.fkapi.service.risk_audit_item_logService;
-import com.fkapi.service.risk_education_whiteListService;
 import com.fkapi.utils.*;
 import org.apache.ibatis.session.SqlSession;
 import org.testng.Reporter;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import java.util.Map;
 
 /**
- * Created by Administrator on 2017/8/21.
+ * Created by Administrator on 2017/10/9.
  */
+
 @Listeners({ AssertionListener.class })
-public class ExcuteNDKCase {
+public class ExcuteNXBCase {
     @Test(dataProvider = "getData")
-    public void excute(String caseName, String isRun, String userInfoNo, String dataName,
+    public void excute(String caseName, String isRun, String userInfoNo, String dataName, String mod,
                        String remark, String expect) {
 
         Map<String, String> userInfoMap;
         p2p_loan_claim_auditService plcaService;
-        risk_audit_item_logService railService ;
+        risk_audit_item_logService railService;
         SqlSession session = MybatisUtils.getFactory().openSession(true);
         SqlSession riskSession = RiskMybatisUtils.getFactory().openSession(true);
         Reporter.log("               ");
@@ -30,9 +34,9 @@ public class ExcuteNDKCase {
         Reporter.log("               ");
         if (!userInfoNo.isEmpty()) {
             // 创建用户信息并获取userinfo表的基础信息
-            CreateNDKTestData cndktd = new CreateNDKTestData();
-            cndktd.create(dataName, userInfoNo, session);
-            userInfoMap = cndktd.getUserInfoMap();
+            CreateNXBTestData cnxbtd = new CreateNXBTestData();
+            cnxbtd.create(dataName, userInfoNo, session);
+            userInfoMap = cnxbtd.getUserInfoMap();
 
             if (remark != null && expect != null) {
                 // 清除风控审批数据,新风控审批记录在risk中,原风控审批记录在opr中,牛大咖中暂时抽出
@@ -40,18 +44,18 @@ public class ExcuteNDKCase {
                 //plcaService.delAuditRe(userInfoMap.get("oldCustId"), session);
                 railService = new risk_audit_item_logService();
                 railService.delAuditResult(Long.valueOf(userInfoMap.get("oldCustId")), riskSession);
-                //请求牛大咖风控审批接口
-                Post.postNDK(
-                        userInfoMap.get("custId"), userInfoMap.get("projectNo"), "NDK_LOAN_AUDIT");
+                //请求牛小宝风控审批接口
+                Post.postNXB(
+                        userInfoMap.get("custId"), userInfoMap.get("projectNo"), "NXB_LOAN_AUDIT", mod);
                 //获取最终的审批结果
                 //String result = plcaService.getAuditRe(userInfoMap.get("custId"), remark, session);
                 String result = railService.getAuditResult(Long.valueOf(userInfoMap.get("custId")), remark, riskSession);
                 // 向Excel中写入实际结果
                 try {
                     ExcelUtils.setCellData(result,
-                            ExcelUtils.getRowNoByValue(CommonUtils.ndkExcelPath, CommonUtils.ndkCaseSheetName, caseName),
-                            ExcelUtils.getColNoByValue(CommonUtils.ndkExcelPath, CommonUtils.ndkCaseSheetName, "实际结果"),
-                            CommonUtils.ndkExcelPath, CommonUtils.ndkCaseSheetName);
+                            ExcelUtils.getRowNoByValue(CommonUtils.nxbExcelPath, CommonUtils.nxbCaseSheetName, caseName),
+                            ExcelUtils.getColNoByValue(CommonUtils.nxbExcelPath, CommonUtils.nxbCaseSheetName, "实际结果"),
+                            CommonUtils.nxbExcelPath, CommonUtils.nxbCaseSheetName);
                     Reporter.log("期望结果为：" + expect);
                     Reporter.log("实际结果为：" + result);
                 } catch (Exception e1) {
@@ -63,9 +67,9 @@ public class ExcuteNDKCase {
                 // //向Excel中写入是否通过；
                 try {
                     ExcelUtils.setCellData(finalResult,
-                            ExcelUtils.getRowNoByValue(CommonUtils.ndkExcelPath, CommonUtils.ndkCaseSheetName, caseName),
-                            ExcelUtils.getColNoByValue(CommonUtils.ndkExcelPath, CommonUtils.ndkCaseSheetName, "是否通过"),
-                            CommonUtils.ndkExcelPath, CommonUtils.ndkCaseSheetName);
+                            ExcelUtils.getRowNoByValue(CommonUtils.nxbExcelPath, CommonUtils.nxbCaseSheetName, caseName),
+                            ExcelUtils.getColNoByValue(CommonUtils.nxbExcelPath, CommonUtils.nxbCaseSheetName, "是否通过"),
+                            CommonUtils.nxbExcelPath, CommonUtils.nxbCaseSheetName);
                     Reporter.log("用例执行结果为：" + finalResult);
                 } catch (Exception e) {
                     Reporter.log("插入执行结果时发生异常，插入失败");
@@ -78,7 +82,7 @@ public class ExcuteNDKCase {
                 Reporter.log("               ");
                 Reporter.log("               ");
                 session.close();
-            }else {
+            } else {
                 Reporter.log("请选择要创建的用户信息");
                 Assertion.verifyTure(false);
             }
@@ -86,7 +90,7 @@ public class ExcuteNDKCase {
     }
 
     @BeforeMethod
-    public void clearTestData(){
+    public void clearTestData() {
         //清楚redis中的缓存
         RedisUtil redisUtil = new RedisUtil();
         redisUtil.clearRedis();
@@ -98,6 +102,6 @@ public class ExcuteNDKCase {
 
     @DataProvider
     public Object[][] getData() throws Exception {
-        return ExcelUtils.excelToDateMap(CommonUtils.ndkExcelPath, CommonUtils.ndkCaseSheetName);
+        return ExcelUtils.excelToDateMap(CommonUtils.nxbExcelPath, CommonUtils.nxbCaseSheetName);
     }
 }
