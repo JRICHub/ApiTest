@@ -26,6 +26,50 @@ public class jxl_phone_call_recordsService {
     p2p_dictionaryService pdService ;
 
     /**
+     * 根据NXB_F014规则输入的信息添加通话记录
+     * @param userInfoMap
+     * @param json
+     * @param session
+     */
+    public void addCallRecordsForNXB_F014(Map<String,String> userInfoMap, JSONObject json, SqlSession session){
+        delCallRecords(userInfoMap.get("oldCustId"), session);
+        jxlRecordMapper = session.getMapper(jxl_phone_call_recordsMapper.class);
+        jpiService = new jxl_primary_infoService();
+        List<jxl_phone_call_records> list ;
+        jxl_phone_call_records jxlRecords ;
+        for (int i = 0; i < json.getInt("call"); i++) {
+            list = new ArrayList<>();
+            jxlRecords = new jxl_phone_call_records();
+            jxlRecords.setId(String.valueOf(System.currentTimeMillis()));
+            jxlRecords.setPrimaryId(jpiService.getPrimaryId(userInfoMap.get("custId"), session));
+            jxlRecords.setCellPhone(new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"));
+            jxlRecords.setOtherCellPhone("13333333333");
+            jxlRecords.setCallPlace("江苏");
+            jxlRecords.setStartTime(CommonUtils.subDay(CommonUtils.getCurDate("second"), json.getInt("day")));
+            jxlRecords.setUseTime(10L);
+            jxlRecords.setInitType("主叫");
+            jxlRecords.setUpdateTime(CommonUtils.subDay(CommonUtils.getCurDate("second"), json.getInt("day")));
+            list.add(jxlRecords);
+            jxlRecordMapper.insertVA_F008(list);
+        }
+        for (int i = 0; i < json.getInt("called"); i++){
+            list = new ArrayList<>();
+            jxlRecords = new jxl_phone_call_records();
+            jxlRecords.setId(String.valueOf(System.currentTimeMillis()));
+            jxlRecords.setPrimaryId(jpiService.getPrimaryId(userInfoMap.get("custId"), session));
+            jxlRecords.setCellPhone("13333333333");
+            jxlRecords.setOtherCellPhone(new JSONObject(userInfoMap.get("phoneAuth")).getString("mobile"));
+            jxlRecords.setCallPlace("江苏");
+            jxlRecords.setStartTime(CommonUtils.subDay(CommonUtils.getCurDate("second"), json.getInt("day")));
+            jxlRecords.setUseTime(10L);
+            jxlRecords.setInitType("被叫");
+            jxlRecords.setUpdateTime(CommonUtils.subDay(CommonUtils.getCurDate("second"), json.getInt("day")));
+            list.add(jxlRecords);
+            jxlRecordMapper.insertVA_F008(list);
+        }
+    }
+
+    /**
      *  根据VA_F008规则输入的信息添加通话记录
      * @param userInfoMap 用户基础信息表
      * @param json 要添加的通话记录信息（虚拟信用卡数据生成表中的json）

@@ -65,6 +65,24 @@ public class p2p_student_infoService {
 			Reporter.log("删除custId为：" + oldCustId + "的p2p_student_info表的数据时发生异常，删除失败" + e.getMessage());
 		}
 	}
+
+	/**
+	 * 更新用户的modality
+	 * @param custId
+	 * @param modality
+	 * @param session
+	 */
+	public void updataModality(String custId, String modality, SqlSession session){
+		psiMapper = session.getMapper(p2p_student_infoMapper.class);
+		p2p_student_info psi = psiMapper.selectByCustId(Long.valueOf(custId));
+		psi.setModality(modality);
+		try {
+			psiMapper.updateByCustId(psi);
+			Reporter.log("更新custId为：" + custId + "的p2p_student_info表中的数据成功");
+		}catch (Exception e){
+			Reporter.log("更新custId为：" + custId + "的p2p_student_info表中的数据失败" + e.getMessage());
+		}
+	}
 	@Test
 	public void test(){
 		

@@ -23,7 +23,7 @@ public class p2p_black_deviceService {
 		delBlackDevice(json, session);
 		pbdMapper = session.getMapper(p2p_black_deviceMapper.class);
 		p2p_black_device pbd = new p2p_black_device();
-		pbd.setDeviceCode(json.getString("deviceCode"));
+		pbd.setDeviceCode(json.has("deviceCode") ? json.getString("deviceCode") : "999999999");
 		pbd.setAddReason("测试添加黑名单");
 		pbd.setAddSource(json.getString("loanSubSrc"));
 		pbd.setCreateTime(CommonUtils.getCurDate("second"));
@@ -38,7 +38,7 @@ public class p2p_black_deviceService {
 	public void delBlackDevice(JSONObject json, SqlSession session){
 		pbdMapper = session.getMapper(p2p_black_deviceMapper.class);
 		try {
-			pbdMapper.deleteByDviceCode(json.getString("deviceCode"));
+			pbdMapper.deleteByDviceCode(json.has("deviceCode") ? json.getString("deviceCode") : "999999999");
 			Reporter.log("删除设备黑名单成功，设备号为： " + json.getString("deviceCode"));
 		} catch (Exception e) {
 			Reporter.log("删除设备黑名单时发生异常，删除失败" + e.getMessage());

@@ -11,9 +11,8 @@ public interface ex_StudentCreditInfoMapper {
 
     int insertSelective(ex_StudentCreditInfo record);
 
-    ex_StudentCreditInfo selectByPrimaryKey(Long id);
+    ex_StudentCreditInfo selectByCustId(String custId);
 
-    int updateByPrimaryKeySelective(ex_StudentCreditInfo record);
+    int updateByCustId(ex_StudentCreditInfo record);
 
-    int updateByPrimaryKey(ex_StudentCreditInfo record);
 }

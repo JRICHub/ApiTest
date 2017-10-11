@@ -43,7 +43,7 @@
 		CONVERT_WAIT_REPAY_LOAN,
 		GROUP_SIGN_2
 	</sql>
-	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+	<select id="selectByCustId" parameterType="java.lang.Long"
 		resultMap="p2p_cust_credit_infoMapper">
 		select
 		<include refid="p2p_cust_credit_info" />
@@ -73,4 +73,86 @@
 			'100', '0', 'sample', '5', NULL, NULL, NULL)
 		</foreach>
 	</insert>
+
+	<update id="updateByCustId" parameterType="com.fkapi.datebase.domain.p2p_cust_credit_info">
+	update p2p_cust_credit_info
+	<set>
+		<if test="creditScore != null">
+			CREDIT_SCORE = #{creditScore,jdbcType=INTEGER},
+		</if>
+		<if test="oldCreditScore != null">
+			OLD_CREDIT_SCORE = #{oldCreditScore,jdbcType=INTEGER},
+		</if>
+		<if test="creditAmount != null">
+			CREDIT_AMOUNT = #{creditAmount,jdbcType=DECIMAL},
+		</if>
+		<if test="nxbAmount != null">
+			NXB_AMOUNT = #{nxbAmount,jdbcType=DECIMAL},
+		</if>
+		<if test="oldCreditAmount != null">
+			OLD_CREDIT_AMOUNT = #{oldCreditAmount,jdbcType=DECIMAL},
+		</if>
+		<if test="oldNxbAmount != null">
+			OLD_NXB_AMOUNT = #{oldNxbAmount,jdbcType=DECIMAL},
+		</if>
+		<if test="usedCreditAmount != null">
+			USED_CREDIT_AMOUNT = #{usedCreditAmount,jdbcType=DECIMAL},
+		</if>
+		<if test="isActivity != null">
+			IS_ACTIVITY = #{isActivity,jdbcType=CHAR},
+		</if>
+		<if test="cityLevel != null">
+			CITY_LEVEL = #{cityLevel,jdbcType=INTEGER},
+		</if>
+		<if test="segmentId != null">
+			SEGMENT_ID = #{segmentId,jdbcType=VARCHAR},
+		</if>
+		<if test="createTime != null">
+			CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+		</if>
+		<if test="updateTime != null">
+			UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+		</if>
+		<if test="version != null">
+			VERSION = #{version,jdbcType=BIGINT},
+		</if>
+		<if test="delFlag != null">
+			DEL_FLAG = #{delFlag,jdbcType=CHAR},
+		</if>
+		<if test="oldSegmentId != null">
+			OLD_SEGMENT_ID = #{oldSegmentId,jdbcType=VARCHAR},
+		</if>
+		<if test="itemCfgVal != null">
+			ITEM_CFG_VAL = #{itemCfgVal,jdbcType=INTEGER},
+		</if>
+		<if test="creditAuth != null">
+			CREDIT_AUTH = #{creditAuth,jdbcType=INTEGER},
+		</if>
+		<if test="oldCreditAuth != null">
+			OLD_CREDIT_AUTH = #{oldCreditAuth,jdbcType=INTEGER},
+		</if>
+		<if test="ndkAmount != null">
+			NDK_AMOUNT = #{ndkAmount,jdbcType=DECIMAL},
+		</if>
+		<if test="oldNdkAmount != null">
+			OLD_NDK_AMOUNT = #{oldNdkAmount,jdbcType=DECIMAL},
+		</if>
+		<if test="groupSign != null">
+			GROUP_SIGN = #{groupSign,jdbcType=VARCHAR},
+		</if>
+		<if test="segment != null">
+			SEGMENT = #{segment,jdbcType=INTEGER},
+		</if>
+		<if test="ndkConvertBaseAmount != null">
+			NDK_CONVERT_BASE_AMOUNT = #{ndkConvertBaseAmount,jdbcType=DECIMAL},
+		</if>
+		<if test="convertWaitRepayLoan != null">
+			CONVERT_WAIT_REPAY_LOAN = #{convertWaitRepayLoan,jdbcType=VARCHAR},
+		</if>
+		<if test="groupSign2 != null">
+			GROUP_SIGN_2 = #{groupSign2,jdbcType=VARCHAR},
+		</if>
+	</set>
+	where CUST_ID = #{custId,jdbcType=BIGINT}
+	</update>
 </mapper>

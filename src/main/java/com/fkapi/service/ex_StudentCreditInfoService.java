@@ -6,6 +6,8 @@ package com.fkapi.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fkapi.datebase.dao.p2p_student_infoMapper;
+import com.fkapi.datebase.domain.p2p_student_info;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import org.testng.Reporter;
@@ -78,7 +80,25 @@ public class ex_StudentCreditInfoService {
 			Reporter.log("删除custId为:"+ oldCustId +"的ex_StudentCreditInfo表信息时发生异常，删除失败" + e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * 更新用户的modality
+	 * @param custId
+	 * @param modality
+	 * @param session
+	 */
+	public void updataModality(String custId, String modality, SqlSession session){
+		esMapper = session.getMapper(ex_StudentCreditInfoMapper.class);
+		ex_StudentCreditInfo es = esMapper.selectByCustId(custId);
+		es.setModality(modality);
+		try {
+			esMapper.updateByCustId(es);
+			Reporter.log("更新custId为：" + custId + "的ex_StudentCreditInfo表中的数据成功");
+		}catch (Exception e){
+			Reporter.log("更新custId为：" + custId + "的ex_StudentCreditInfo表中的数据失败" + e.getMessage());
+		}
+	}
+
 	@Test
 	public void test(){
 		//addExStudentInfo();

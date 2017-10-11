@@ -11,9 +11,8 @@ public interface p2p_cust_credit_infoMapper {
 
     int insertSelective(p2p_cust_credit_info record);
 
-    p2p_cust_credit_info selectByPrimaryKey(Long custId);
+    p2p_cust_credit_info selectByCustId(Long custId);
 
-    int updateByPrimaryKeySelective(p2p_cust_credit_info record);
+    int updateByCustId(p2p_cust_credit_info record);
 
-    int updateByPrimaryKey(p2p_cust_credit_info record);
 }

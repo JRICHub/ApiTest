@@ -29,12 +29,12 @@
 		status,
 		createTime
 	</sql>
-	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+	<select id="selectByCustId" parameterType="java.lang.String"
 		resultMap="ex_StudentCreditInfoMapper">
 		select
 		<include refid="ex_StudentCreditInfo" />
 		from ex_StudentCreditInfo
-		where id = #{id,jdbcType=BIGINT}
+		where platFromUserNo = #{platfromuserno,jdbcType=VARCHAR}
 	</select>
 	<delete id="deleteByCustId" parameterType="java.lang.String">
 		delete from ex_StudentCreditInfo
@@ -172,7 +172,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.fkapi.datebase.domain.ex_StudentCreditInfo">
+	<update id="updateByCustId" parameterType="com.fkapi.datebase.domain.ex_StudentCreditInfo">
 		update ex_StudentCreditInfo
 		<set>
 			<if test="platfromuserno != null">
@@ -227,7 +227,7 @@
 				createTime = #{createtime,jdbcType=TIMESTAMP},
 			</if>
 		</set>
-		where id = #{id,jdbcType=BIGINT}
+		where platFromUserNo = #{platfromuserno,jdbcType=VARCHAR}
 	</update>
 	<update id="updateByPrimaryKey" parameterType="com.fkapi.datebase.domain.ex_StudentCreditInfo">
 		update ex_StudentCreditInfo

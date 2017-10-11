@@ -61,12 +61,12 @@
 		MODIFIER, CREATE_TIME,
 		UPDATE_TIME
 	</sql>
-	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+	<select id="selectByCustId" parameterType="java.lang.Long"
 		resultMap="p2p_student_info">
 		select
 		<include refid="p2p_student_info" />
 		from p2p_student_info
-		where ID = #{id,jdbcType=BIGINT}
+		where CUST_ID = #{custId,jdbcType=BIGINT}
 	</select>
 	<delete id="deleteByCustId" parameterType="java.lang.Long">
 		delete from
@@ -350,7 +350,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.fkapi.datebase.domain.p2p_student_info">
+	<update id="updateByCustId" parameterType="com.fkapi.datebase.domain.p2p_student_info">
 		update p2p_student_info
 		<set>
 			<if test="actionType != null">
@@ -472,7 +472,7 @@
 				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
 			</if>
 		</set>
-		where ID = #{id,jdbcType=BIGINT}
+		where CUST_ID = #{custId,jdbcType=BIGINT}
 	</update>
 	<update id="updateByPrimaryKey" parameterType="com.fkapi.datebase.domain.p2p_student_info">
 		update

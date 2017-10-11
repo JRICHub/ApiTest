@@ -265,6 +265,28 @@ public class p2p_cust_addr_listService {
 		}
 	}
 
+	/**
+	 * 更新关键字是否含有“中介”，“办卡”等
+	 */
+	public void updateMobileName(String custId, String hasKeywords, SqlSession session){
+		pcalMapper = session.getMapper(p2p_cust_addr_listMapper.class);
+		pcService = new p2p_customerService();
+		p2p_cust_addr_list pcal ;
+		List<p2p_cust_addr_list> list = getCustAddrListMobile(custId, session);
+		if(list.size() > 0){
+			pcal = list.get(0);
+			if (hasKeywords.toUpperCase().equals("Y")){
+				pcal.setMobileName("中介");
+				try{
+					pcalMapper.updateByCustId(pcal);
+					Reporter.log("更新手机号码成功");
+				}catch (Exception e){
+					Reporter.log("更新手机号码时发生异常：" + e.getMessage());
+				}
+			}
+		}
+	}
+
 	public List<p2p_cust_addr_list> getCustAddrListMobile(String custId, SqlSession session){
 		pcalMapper = session.getMapper(p2p_cust_addr_listMapper.class);
 		pcService = new p2p_customerService();

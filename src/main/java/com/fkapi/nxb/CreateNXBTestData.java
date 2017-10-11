@@ -48,6 +48,30 @@ public class CreateNXBTestData {
             rule.createVcc_VA_F009(userInfoMap, map.get("NXB_F005/F006"), session, vccSession, false);
 
             rule.createVcc_VA_F014(userInfoMap, map.get("NXB_F008"), session);
+
+            rule.createVcc_VA_F011(userInfoMap, map.get("NXB_F009"), session, vccSession, false);
+
+            rule.createVcc_VA_F012(userInfoMap, map.get("NXB_F010"), session);
+
+            rule.updateMobileName(userInfoMap, map.get("NXB_F011"), session);
+
+            rule.createVcc_VA_F015(userInfoMap, map.get("NXB_F012"), session, vccSession);
+
+            rule.createVcc_VA_F013(userInfoMap, map.get("NXB_F013"), session);
+
+            rule.addCallRecordsForNXB(userInfoMap, map.get("NXB_F014"), session);
+
+            rule.updateCreditScore(userInfoMap, map.get("NXB_U001"), session);
+
+            rule.createAge(userInfoMap, map.get("年龄"), session);
+
+            rule.updateModality(userInfoMap, map.get("NXB_U005"), session);
+
+            rule.createOutBlackList(userInfoMap, map.get("NXB_U007"), session);
+
+            rule.createDeviceBlackList(userInfoMap, map.get("NXB_U010"), map.get("风控审批订单"),session);
+
+            rule.createInBlackList(userInfoMap, map.get("NXB_U016"), session);
         }
     }
 

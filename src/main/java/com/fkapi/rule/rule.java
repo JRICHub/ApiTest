@@ -35,6 +35,7 @@ public class rule {
     p2p_dictionaryService pdService;
     risk_pingan_grayscale_statService rpgsService ;
     p2p_customerService pcService ;
+    p2p_cust_credit_infoService pcciService ;
 
     createVccCustomer cvc = new createVccCustomer();
     createUserInfo cui = new createUserInfo();
@@ -599,6 +600,58 @@ public class rule {
             json.put("status", data);
             pcService = new p2p_customerService();
             pcService.update(userInfoMap.get("loginName"), json, "custStatus", session);
+        }
+    }
+
+    /**
+     * NXB_F011(F): 对于通讯录含有关键字（如“中介”， “办卡”等）的用户
+     * @param userInfoMap
+     * @param data
+     * @param session
+     */
+    public void updateMobileName(Map<String, String> userInfoMap, String data, SqlSession session){
+        if (!data.trim().isEmpty()){
+            pcalService = new p2p_cust_addr_listService();
+            pcalService.updateMobileName(userInfoMap.get("custId"), data, session);
+        }
+    }
+
+    /**
+     * NXB_F014/NXB_F015
+     * @param userInfoMap
+     * @param data
+     * @param session
+     */
+    public void addCallRecordsForNXB(Map<String, String> userInfoMap, String data, SqlSession session){
+        if (!data.trim().isEmpty()){
+            jxlRecordsService = new jxl_phone_call_recordsService();
+            jxlRecordsService.addCallRecordsForNXB_F014(userInfoMap, new JSONObject(data), session);
+        }
+    }
+
+    /**
+     * NXB_U001：更新用户的信用分
+     * @param userInfoMap
+     * @param data
+     * @param session
+     */
+    public void updateCreditScore(Map<String, String> userInfoMap, String data, SqlSession session){
+        if (!data.trim().isEmpty()){
+            pcciService = new p2p_cust_credit_infoService();
+            pcciService.updateCreditScore(userInfoMap.get("custId"), Integer.valueOf(data), session);
+        }
+    }
+
+    /**
+     * NXB_U005：更新用户的Modality
+     * @param userInfoMap
+     * @param data
+     * @param session
+     */
+    public void updateModality(Map<String, String> userInfoMap, String data, SqlSession session){
+        if (!data.trim().isEmpty()) {
+            ex_StudentCreditInfoService esService = new ex_StudentCreditInfoService();
+            esService.updataModality(userInfoMap.get("custId"), data, session);
         }
     }
 }

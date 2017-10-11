@@ -11,9 +11,7 @@ public interface p2p_student_infoMapper {
 
     int insertSelective(p2p_student_info record);
 
-    p2p_student_info selectByPrimaryKey(Long id);
+    p2p_student_info selectByCustId(Long id);
 
-    int updateByPrimaryKeySelective(p2p_student_info record);
-
-    int updateByPrimaryKey(p2p_student_info record);
+    int updateByCustId(p2p_student_info record);
 }

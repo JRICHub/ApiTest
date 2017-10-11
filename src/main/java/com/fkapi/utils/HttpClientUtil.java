@@ -36,8 +36,8 @@ import org.testng.annotations.Test;
 @Listeners({AssertionListener.class})
 public class HttpClientUtil {
 	private static Logger logger = Logger.getLogger(HttpClientUtil.class);
-	private static RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(15000).setConnectTimeout(15000)
-			.setConnectionRequestTimeout(15000).build();
+	private static RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000)
+			.setConnectionRequestTimeout(30000).build();
 
 	private static HttpClientUtil instance = null;
 

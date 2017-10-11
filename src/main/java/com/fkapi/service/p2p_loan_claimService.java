@@ -145,8 +145,12 @@ public class p2p_loan_claimService {
 		if (json.getString("loanSubSrc").equals("CHUBAO")){
 			plceService = new p2p_loan_claim_extSerivce();
 			plceService.addLoanClaimExt(getProjectNo(), "CHUBAO_S", session);
+		}else {
+			plceService = new p2p_loan_claim_extSerivce();
+			plceService.addLoanClaimExt(getProjectNo(), "NIUWA", session);
 		}
 		//添加借款订单相关的设备
+
 		plcraService = new p2p_loan_claim_relative_appService();
 		plcraService.addLoanDevice(getProjectNo(), new JSONObject(userinfoMap.get("phoneAuth")).getString("mobileSign"), session);
 	}
