@@ -53,14 +53,19 @@ public class createUserInfo {
 		p2p_loan_claimService plcService ;
 		p2p_repay_planService prpService ;
 		risk_education_whiteListService rewService ;
+		p2p_cooperation_companyService pccompanyService ;
+		p2p_cooperation_employeeService pcemployeeService ;
 		JSONObject json ;
 
 		SqlSession riskSession = RiskMybatisUtils.getFactory().openSession(true);
 		setMap(getUserInfoMap(CommonUtils.excelPath, CommonUtils.userInfoSheetName, userInfoNo));
 		pcService = new p2p_customerService();
 		pbcService = new p2p_base_customerService();
-
-		map.put("oldCustId",String.valueOf(pcService.getCustID(map.get("loginName"), session)));
+		if (delHistoryOrder){
+			map.put("oldCustId",String.valueOf(pcService.getCustID(map.get("loginName"), session)));
+		}else {
+			map.put("oldCustId","");
+		}
 		// 添加p2p_customer表
 		pcService.addCustomer(map.get("loginName"), map.get("platForm"), session);
 		map.put("custId", pcService.getCustID(map.get("loginName"), session).toString());
@@ -231,6 +236,16 @@ public class createUserInfo {
 			}
 		}
 
+		//添加工作认证
+		if (!map.get("工作认证").trim().isEmpty()){
+			map.put("工作认证", ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.dataSheetName, ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.dataSheetName, map.get("工作认证")), 1));
+			json = new JSONObject(map.get("工作认证"));
+			pccompanyService = new p2p_cooperation_companyService();
+			pcemployeeService = new p2p_cooperation_employeeService();
+			pccompanyService.addCustCompany(json, session);
+			pcemployeeService.addCooperationEmployee(map, json, session);
+		}
+
 		//添加用户的历史订单（是否存在逾期的订单）,如果为空则表示用户没有历史订单为首次借款
 		if (!map.get("historyOrder").trim().isEmpty()){
 			map.put("historyOrder", ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.dataSheetName, ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.dataSheetName, map.get("historyOrder")), 1));
@@ -238,29 +253,34 @@ public class createUserInfo {
 			prpService = new p2p_repay_planService();
 			JSONObject historyOrderJson ;
 			//若状态为OVERDUE_REPAID则标识历史订单中有逾期的订单
-			if(new JSONObject(map.get("historyOrder")).getString("repayStatus").equals("OVERDUE_REPAID")){
+			if(new JSONObject(map.get("historyOrder")).getString("repayStatus").equals("OVERDUE")){
 				//构建历史订单数据
  				historyOrderJson = new JSONObject(map.get("historyOrder"));
-				historyOrderJson.put("status","SETTLED");
 				historyOrderJson.put("deviceCode",new JSONObject(map.get("phoneAuth")).getString("mobileSign"));
 				plcService.addProject(map, historyOrderJson, false, delHistoryOrder, session);
 				//构建repay_plan表中的数据
 				historyOrderJson.put("allTerm", historyOrderJson.getInt("loanTerm"));
-				historyOrderJson.put("repayPlan", new JSONArray("[ { \"status\": \"OVERDUE_REPAID\", \"time\": \""+ historyOrderJson.getInt("time") +"\" } ]"));
+				historyOrderJson.put("repayPlan", new JSONArray("[ { \"status\": \"OVERDUE_NO_REPAY\", \"time\": \""+ historyOrderJson.getInt("time") +"\" } ]"));
 				prpService.addRepayPlan(map, plcService.getProjectNo(), historyOrderJson, session);
-			}else if (!new JSONObject(map.get("historyOrder")).getString("repayStatus").trim().isEmpty()){
+			}else if (new JSONObject(map.get("historyOrder")).getString("repayStatus").equals("WAIT_REPAY")){
 				historyOrderJson = new JSONObject(map.get("historyOrder"));
-				historyOrderJson.put("status", "WAIT_REPAY");
 				historyOrderJson.put("deviceCode", new JSONObject(map.get("phoneAuth")).getString("mobileSign"));
 				plcService.addProject(map, historyOrderJson, false, delHistoryOrder, session);
 				historyOrderJson.put("allTerm", historyOrderJson.getInt("loanTerm"));
-				historyOrderJson.put("repayPlan", new JSONArray("[ { \"status\": \""+ historyOrderJson.getString("repayStatus") +"\", \"time\":\""+ historyOrderJson.getInt("time") +"\" } ]"));
+				historyOrderJson.put("repayPlan", new JSONArray("[ { \"status\": \"WAIT_REPAY\", \"time\":\""+ historyOrderJson.getInt("time") +"\" } ]"));
 				prpService.addRepayPlan(map, plcService.getProjectNo(), historyOrderJson, session);
-			}else {
+			}else if (new JSONObject(map.get("historyOrder")).getString("repayStatus").length() < 1){
 				historyOrderJson = new JSONObject(map.get("historyOrder"));
 				historyOrderJson.put("status", "RETURN");
 				historyOrderJson.put("deviceCode", new JSONObject(map.get("phoneAuth")).getString("mobileSign"));
 				plcService.addProject(map, historyOrderJson, false, delHistoryOrder, session);
+			}else if (new JSONObject(map.get("historyOrder")).getString("repayStatus").equals("SETTLED")){
+				historyOrderJson = new JSONObject(map.get("historyOrder"));
+				historyOrderJson.put("deviceCode", new JSONObject(map.get("phoneAuth")).getString("mobileSign"));
+				plcService.addProject(map, historyOrderJson, false, delHistoryOrder, session);
+				historyOrderJson.put("allTerm", historyOrderJson.getInt("loanTerm"));
+				historyOrderJson.put("repayPlan", new JSONArray("[ { \"status\": \"NORMAL\", \"time\":\""+ historyOrderJson.getInt("time") +"\" } ]"));
+				prpService.addRepayPlan(map, plcService.getProjectNo(), historyOrderJson, session);
 			}
 		}
 		//判断用户是否为学历白名单用户，是则添加

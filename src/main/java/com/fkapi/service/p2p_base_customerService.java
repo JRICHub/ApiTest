@@ -102,8 +102,13 @@ public class p2p_base_customerService {
 		if(option.equals("phoneAuth")){
 			pbc.setTel(json.getString("mobile"));
 			pbc.setPhoneAuth(json.getString("phoneAuthStatus"));
-			pbc.setMobileProvince(pmaService.getMobileTable(json.getString("mobile"), session).getProvinceCode());
-			pbc.setMobileCity(pmaService.getMobileTable(json.getString("mobile"), session).getCityCode());
+			if (pmaService.getMobileTable(json.getString("mobile"), session) != null){
+				pbc.setMobileProvince(pmaService.getMobileTable(json.getString("mobile"), session).getProvinceCode());
+				pbc.setMobileCity(pmaService.getMobileTable(json.getString("mobile"), session).getCityCode());
+			}else {
+				pbc.setMobileProvince(null);
+				pbc.setMobileCity(null);
+			}
 			try {
 				pbcMapper.updateByCustId(pbc);
 				Reporter.log("更新phoneAuth为： "+ json.toString() + "的数据成功");

@@ -55,6 +55,12 @@ public class CommonUtils {
 
 	public static String nxbCaseSheetName = "NXBCase";
 
+	public static String fdylExcelPath = System.getProperty("user.dir") + "\\FDYL.xlsx";
+
+	public static String fdylDataSheetName = "复大医疗数据生成";
+
+	public static String fdylCaseSheetName = "复大医疗Case";
+
 	/**
 	 * 获取properties中的数据信息
 	 * @param key
@@ -91,7 +97,8 @@ public class CommonUtils {
 	 */
 	
 	public static Date getCurDate(String option) {
-		Date date = new Date();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
 		SimpleDateFormat sdf = null;
 		if (option.equals("second")) {
 			sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -99,14 +106,11 @@ public class CommonUtils {
 			sdf = new SimpleDateFormat("yyyy-MM-dd");
 		}else if(option.equals("month")){
 			sdf = new SimpleDateFormat("yyyy-MM");
+		}else if (option.equals("year")){
+			sdf = new SimpleDateFormat("yyyy");
 		}
-		try {
-			date = sdf.parse(sdf.format(date));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			Reporter.log("出现异常" + e.getMessage());
-		}
-		return date;
+		System.out.println(StringToDate(sdf.format(calendar.getTime()), option));
+		return StringToDate(sdf.format(calendar.getTime()), option);
 	}
 
 	/**
@@ -125,6 +129,8 @@ public class CommonUtils {
 			sdf = new SimpleDateFormat("yyyy-MM-dd");
 		}else if(option.equals("month")){
 			sdf = new SimpleDateFormat("yyyy-MM");
+		}else if(option.equals("year")){
+			sdf = new SimpleDateFormat("yyyy");
 		}
 		try {
 			return sdf.parse(date);
@@ -149,16 +155,8 @@ public class CommonUtils {
 	 * @throws ParseException
 	 */
 	public static Date subMonth(Date date, int month) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date dt = null;
-		try {
-			dt = sdf.parse(sdf.format(getNextDay(date)));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			Reporter.log("出现异常" + e.getMessage());
-		}
 		Calendar rightNow = Calendar.getInstance();
-		rightNow.setTime(dt);
+		rightNow.setTime(date);
 		rightNow.add(Calendar.MONTH, -month);
 		Date dt1 = rightNow.getTime();
 		return dt1;
@@ -243,6 +241,29 @@ public class CommonUtils {
         date = calendar.getTime();  
         return date;  
     }
+
+	/**
+	 * 获取当前月份的第一天
+	 */
+	public static Date getFirstDay(){
+		//SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MONTH, 0);
+		c.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天
+		return c.getTime();
+	}
+
+	/**
+	 * 获取指定日期的月份的最后一天
+	 * @return
+	 */
+	public static Date getLastDay(Date date){
+		//SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.set(Calendar.DATE, c.getActualMaximum(Calendar.DATE));
+		return c.getTime();
+	}
 	/**
 	 * 根据身份证及年龄生成新的身份证号
 	 * @param custId
@@ -294,6 +315,7 @@ public class CommonUtils {
 	
 	@Test
 	public void f() throws ParseException{
-		System.out.println(UUID.randomUUID().toString().replace("-",""));
+		System.out.println(getLastDay(getCurDate("second")));
 	}
+
 }

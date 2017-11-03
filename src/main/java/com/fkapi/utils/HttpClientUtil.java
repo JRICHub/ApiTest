@@ -395,7 +395,7 @@ public class HttpClientUtil {
 	/**
 	 * 发送Put请求
 	 * 
-	 * @param httpPost
+	 * @param httpPut
 	 * @return
 	 */
 	private static String sendHttpPut(HttpPut httpPut) {

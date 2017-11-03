@@ -61,6 +61,8 @@ public class CreateNDKTestData {
             rule.createNDKAF014(userInfoMap, map.get("AF015/AF016"), session);
             //更新用户的年龄
             rule.createAge(userInfoMap, map.get("年龄"), session);
+            //更新用户学历信息
+            rule.updateEducation(userInfoMap, map.get("学历信息"), session);
             //操作外部黑名单
             rule.createOutBlackList(userInfoMap, map.get("外部黑名单"), session);
             //操作内部黑名单

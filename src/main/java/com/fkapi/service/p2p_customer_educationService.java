@@ -87,6 +87,49 @@ public class p2p_customer_educationService {
 			return null;
 		}
 	}
+
+	/**
+	 * 更新用户学历信息
+	 * @param custId
+	 * @param session
+	 * @param option
+	 */
+	public void update(Long custId, SqlSession session, String option){
+		pceMapper = session.getMapper(p2p_customer_educationMapper.class);
+		p2p_customer_education pce = pceMapper.selectByCustId(custId);
+		if (option.equals("school")){
+			pce.setSchoolName("测试");
+			try {
+				pceMapper.updateByCustId(pce);
+			}catch (Exception e){
+				Reporter.log("更新学历信息失败" + e.getMessage());
+			}
+		}
+		if (option.equals("degree")){
+			pce.setEducation("博士研究生");
+			try {
+				pceMapper.updateByCustId(pce);
+			}catch (Exception e){
+				Reporter.log("更新学历信息失败" + e.getMessage());
+			}
+		}
+		if (option.equals("entertime")){
+			pce.setEntranceTime(CommonUtils.StringToDate("1000-10-19", "day"));
+			try {
+				pceMapper.updateByCustId(pce);
+			}catch (Exception e){
+				Reporter.log("更新学历信息失败" + e.getMessage());
+			}
+		}
+		if (option.equals("graduatetime")){
+			pce.setGraduationTime(CommonUtils.StringToDate("1000-10-19", "day"));
+			try {
+				pceMapper.updateByCustId(pce);
+			}catch (Exception e){
+				Reporter.log("更新学历信息失败" + e.getMessage());
+			}
+		}
+	}
 	
 	@Test
 	public void test(){

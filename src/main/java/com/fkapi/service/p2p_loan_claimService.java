@@ -63,7 +63,7 @@ public class p2p_loan_claimService {
 		pcService = new p2p_customerService();
 		p2p_loan_claim plc = new p2p_loan_claim();
 		this.setProjectNo(CommonUtils.getProjectNo());
-
+		userinfoMap.put("time",json.getString("time"));
 		//plc.setProjectNo(this.getProjectNo());
 		plc.setProjectName(json.getString("projectName"));
 		if(json.getString("loanSubSrc").equals("YICAI")){
@@ -87,6 +87,9 @@ public class p2p_loan_claimService {
 		}else if (json.getString("loanSubSrc").contains("NKK")){
 			plc.setProjectChannel("牛大款");
 			plc.setLoanSrc("APP");
+		}else if (json.getString("loanSubSrc").contains("FD")) {
+			plc.setProjectChannel("测试复大医疗");
+			plc.setLoanSrc("BDF");
 		}
 		plc.setCreateTime(CommonUtils.subDay(CommonUtils.getCurDate("second"), json.getInt("time")));
 		plc.setLoanTerm(json.getInt("loanTerm"));
@@ -105,23 +108,15 @@ public class p2p_loan_claimService {
 			plc.setLoanDate(CommonUtils.getCurDate("second"));
 			plc.setNextRepayDate(CommonUtils.subMonth(CommonUtils.getCurDate("second"),1));
 		}else {
-			if(json.getString("status").toUpperCase().equals("SETTLED")){
-				plc.setRepayStatus("SETTLED");
+			if(json.getString("auditStatus").toUpperCase().equals("LOANED")){
 				plc.setReleaseStatus("MATCHED");
 				plc.setAuditStatus("LOANED");
-			}else if(json.getString("status").toUpperCase().equals("OVERDUE")){
-				plc.setRepayStatus("OVERDUE");
-				plc.setReleaseStatus("MATCHED");
-				plc.setAuditStatus("LOANED");
-			}else if(json.getString("status").toUpperCase().equals("RETURN")){
-				plc.setRepayStatus(null);
+			}else if(json.getString("auditStatus").toUpperCase().equals("RETURN")){
 				plc.setReleaseStatus("REJECT_AUDIT");
-				plc.setAuditStatus("SETTLED");
-			}else if(json.getString("status").toUpperCase().equals("WAIT_REPAY")){
-				plc.setRepayStatus("WAIT_REPAY");
-				plc.setReleaseStatus("REJECT_AUDIT");
-				plc.setAuditStatus("SETTLED");
+				plc.setAuditStatus("RETURN");
 			}
+
+			plc.setRepayStatus(json.getString("repayStatus"));
 			this.setProjectNo(CommonUtils.getProjectNo());
 			plc.setProjectNo(this.getProjectNo());
 			//借款当天也算一天，所以要减去一天
@@ -145,6 +140,9 @@ public class p2p_loan_claimService {
 		if (json.getString("loanSubSrc").equals("CHUBAO")){
 			plceService = new p2p_loan_claim_extSerivce();
 			plceService.addLoanClaimExt(getProjectNo(), "CHUBAO_S", session);
+		}else if (json.getString("loanSubSrc").equals("FD")) {
+			plceService = new p2p_loan_claim_extSerivce();
+			plceService.addLoanClaimExt(getProjectNo(), "BDF_PRJ_TYPE", session);
 		}else {
 			plceService = new p2p_loan_claim_extSerivce();
 			plceService.addLoanClaimExt(getProjectNo(), "NIUWA", session);
@@ -153,6 +151,11 @@ public class p2p_loan_claimService {
 
 		plcraService = new p2p_loan_claim_relative_appService();
 		plcraService.addLoanDevice(getProjectNo(), new JSONObject(userinfoMap.get("phoneAuth")).getString("mobileSign"), session);
+		//添加借款快照表
+		if (json.getString("loanSubSrc").contains("FD")){
+			p2p_loan_claim_snapshootService plcsService = new p2p_loan_claim_snapshootService();
+			plcsService.addLoanClaimSnapshoot(userinfoMap, getProjectNo(), session);
+		}
 	}
 	
 

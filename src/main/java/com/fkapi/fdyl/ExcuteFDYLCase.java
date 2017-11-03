@@ -1,9 +1,7 @@
-package com.fkapi.chubao;
+package com.fkapi.fdyl;
 
-import com.fkapi.service.p2p_loan_claim_auditService;
-import com.fkapi.service.p2p_loan_claim_relative_appService;
-import com.fkapi.service.p2p_student_custService;
-import com.fkapi.service.risk_audit_item_logService;
+import com.fkapi.ndk.CreateNDKTestData;
+import com.fkapi.service.*;
 import com.fkapi.utils.*;
 import org.apache.ibatis.session.SqlSession;
 import org.testng.Reporter;
@@ -15,13 +13,14 @@ import org.testng.annotations.Test;
 import java.util.Map;
 
 /**
- * Created by Administrator on 2017/9/18.
+ * Created by Administrator on 2017/11/1.
  */
 @Listeners({ AssertionListener.class })
-public class ExcuteCHUBAOCase {
+public class ExcuteFDYLCase {
     @Test(dataProvider = "getData")
     public void excute(String caseName, String isRun, String userInfoNo, String dataName,
                        String remark, String expect) {
+
         Map<String, String> userInfoMap;
         p2p_loan_claim_auditService plcaService;
         risk_audit_item_logService railService ;
@@ -31,27 +30,29 @@ public class ExcuteCHUBAOCase {
         Reporter.log("************** 当前执行的caseNo为： " + caseName + " **************");
         Reporter.log("               ");
         if (!userInfoNo.isEmpty()) {
-            CreateCHUBAOTestData ccbtd = new CreateCHUBAOTestData();
-            ccbtd.create(dataName, userInfoNo, session);
-            userInfoMap = ccbtd.getUserInfoMap();
+            // 创建用户信息并获取userinfo表的基础信息
+            CreateFDYLTestData cfdyltd = new CreateFDYLTestData();
+            cfdyltd.create(dataName, userInfoNo, session);
+            userInfoMap = cfdyltd.getUserInfoMap();
+
             if (remark != null && expect != null) {
                 // 清除风控审批数据,新风控审批记录在risk中,原风控审批记录在opr中,牛大咖中暂时抽出
                 //plcaService = new p2p_loan_claim_auditService();
                 //plcaService.delAuditRe(userInfoMap.get("oldCustId"), session);
                 railService = new risk_audit_item_logService();
                 railService.delAuditResult(Long.valueOf(userInfoMap.get("oldCustId")), riskSession);
-                //请求触宝风控审0接口
-                Post.postCHUBAO(
-                        userInfoMap.get("custId"), userInfoMap.get("projectNo"), "CHUBAO_S_LOAN_AUDIT","{\"realName\":\"王宁\",\"idCardNo\":\"220322199901297363\"}");
+                //请求复大医疗风控审批接口
+                Post.postFDYL(
+                        userInfoMap.get("custId"), userInfoMap.get("projectNo"), "BDF_LOAN_AUDIT_GENERAL_1");
                 //获取最终的审批结果
                 //String result = plcaService.getAuditRe(userInfoMap.get("custId"), remark, session);
                 String result = railService.getAuditResult(Long.valueOf(userInfoMap.get("custId")), remark, riskSession);
                 // 向Excel中写入实际结果
                 try {
                     ExcelUtils.setCellData(result,
-                            ExcelUtils.getRowNoByValue(CommonUtils.chubaoExcelPath, CommonUtils.chubaoCaseSheetName, caseName),
-                            ExcelUtils.getColNoByValue(CommonUtils.chubaoExcelPath, CommonUtils.chubaoCaseSheetName, "实际结果"),
-                            CommonUtils.chubaoExcelPath, CommonUtils.chubaoCaseSheetName);
+                            ExcelUtils.getRowNoByValue(CommonUtils.fdylExcelPath, CommonUtils.fdylCaseSheetName, caseName),
+                            ExcelUtils.getColNoByValue(CommonUtils.fdylExcelPath, CommonUtils.fdylCaseSheetName, "实际结果"),
+                            CommonUtils.fdylExcelPath, CommonUtils.fdylCaseSheetName);
                     Reporter.log("期望结果为：" + expect);
                     Reporter.log("实际结果为：" + result);
                 } catch (Exception e1) {
@@ -60,12 +61,12 @@ public class ExcuteCHUBAOCase {
 
                 String finalResult = result.equals(expect) ? "Passed"
                         : "Failed";
-                // //向Excel中写入是否通过
+                // //向Excel中写入是否通过;
                 try {
                     ExcelUtils.setCellData(finalResult,
-                            ExcelUtils.getRowNoByValue(CommonUtils.chubaoExcelPath, CommonUtils.chubaoCaseSheetName, caseName),
-                            ExcelUtils.getColNoByValue(CommonUtils.chubaoExcelPath, CommonUtils.chubaoCaseSheetName, "是否通过"),
-                            CommonUtils.chubaoExcelPath, CommonUtils.chubaoCaseSheetName);
+                            ExcelUtils.getRowNoByValue(CommonUtils.fdylExcelPath, CommonUtils.fdylCaseSheetName, caseName),
+                            ExcelUtils.getColNoByValue(CommonUtils.fdylExcelPath, CommonUtils.fdylCaseSheetName, "是否通过"),
+                            CommonUtils.fdylExcelPath, CommonUtils.fdylCaseSheetName);
                     Reporter.log("用例执行结果为：" + finalResult);
                 } catch (Exception e) {
                     Reporter.log("插入执行结果时发生异常，插入失败");
@@ -94,12 +95,17 @@ public class ExcuteCHUBAOCase {
         p2p_loan_claim_relative_appService plcraService = new p2p_loan_claim_relative_appService();
         plcraService.delLoanDevice("999999999", session);
         plcraService.delLoanDevice("888888888", session);
-        p2p_student_custService pscService = new p2p_student_custService();
-        pscService.delStudentCust(session);
+        p2p_loan_claim_snapshootService plcsService = new p2p_loan_claim_snapshootService();
+        plcsService.delLoanClaimSnapshoot("999999999", session);
+        plcsService.delLoanClaimSnapshoot("888888888", session);
+        p2p_cooperation_companyService pccService = new p2p_cooperation_companyService();
+        pccService.delCustCompany("测试公司", session);
+        p2p_cooperation_employeeService pceService = new p2p_cooperation_employeeService();
+        pceService.delCooperationEmployee(999L, session);
     }
 
     @DataProvider
     public Object[][] getData() throws Exception {
-        return ExcelUtils.excelToDateMap(CommonUtils.chubaoExcelPath, CommonUtils.chubaoCaseSheetName);
+        return ExcelUtils.excelToDateMap(CommonUtils.fdylExcelPath, CommonUtils.fdylCaseSheetName);
     }
 }

@@ -13,7 +13,7 @@ public interface p2p_customer_educationMapper {
 
     p2p_customer_education selectByCustId(Long custId);
 
-    int updateByPrimaryKeySelective(p2p_customer_education record);
+    int updateByCustId(p2p_customer_education record);
 
     int updateByPrimaryKey(p2p_customer_education record);
 }

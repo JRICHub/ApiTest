@@ -3,7 +3,9 @@
  */
 package com.fkapi.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
@@ -31,11 +33,12 @@ public class py_educationService {
 		pe.setReqName(reqName == null?"":reqName);
 		pe.setReqDocumentNo(reqDocumentNo == null?"":reqDocumentNo);
 		pe.setCollege(json.getString("collegeName") == null?"":json.getString("collegeName"));
-		pe.setGraduateTime(CommonUtils.subYear(CommonUtils.getCurDate("day"), json.getInt("graduateTime")).toString());
+		System.out.println(CommonUtils.subYear(CommonUtils.getCurDate("day"), json.getInt("graduateTime")).toString());
+		pe.setGraduateTime(new SimpleDateFormat("yyyy").format(new Date(CommonUtils.subYear(CommonUtils.getCurDate("day"), json.getInt("graduateTime")).toString())));
 		if(json.getString("clogLevel") != null && json.getString("clogLevel").equals("本科")){
-			pe.setStartTime(CommonUtils.subYear(CommonUtils.subYear(CommonUtils.getCurDate("day"), json.getInt("graduateTime")), 4).toString());
+			pe.setStartTime(new SimpleDateFormat("yyyy").format(new Date(CommonUtils.subYear(CommonUtils.subYear(CommonUtils.getCurDate("day"), json.getInt("graduateTime")), 4).toString())));
 		}else if(json.getString("clogLevel") != null && json.getString("clogLevel").equals("专科")){
-			pe.setStartTime(CommonUtils.subYear(CommonUtils.subYear(CommonUtils.getCurDate("day"), json.getInt("graduateTime")), 3).toString());
+			pe.setStartTime(new SimpleDateFormat("yyyy").format(new Date(CommonUtils.subYear(CommonUtils.subYear(CommonUtils.getCurDate("day"), json.getInt("graduateTime")), 3).toString())));
 		}else{
 			pe.setStartTime(null);
 		}

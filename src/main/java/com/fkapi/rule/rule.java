@@ -36,6 +36,7 @@ public class rule {
     risk_pingan_grayscale_statService rpgsService ;
     p2p_customerService pcService ;
     p2p_cust_credit_infoService pcciService ;
+    p2p_cooperation_companyService pccompanyService ;
 
     createVccCustomer cvc = new createVccCustomer();
     createUserInfo cui = new createUserInfo();
@@ -305,7 +306,8 @@ public class rule {
     /**
      * 1、同一个手机标识码1天内第二个及以上注册用户申请到Virtual Credit Card/牛大咖资格（无法抓取手机标志码算通过）
      * 2、同一个手机标识码累计第三个及以上注册用户申请到Virtual Credit Card资格（无法抓取手机标志码算通过）
-     *
+     * 复大医疗：
+     * F009（F, S, T）：同一个cookie 1天内第二个及以上注册用户申请到贷款（无法抓取cookie算通过）。 (跨同渠道产品)
      * @param userInfoMap
      * @param data
      * @param session
@@ -395,7 +397,7 @@ public class rule {
     }
 
     /**
-     * 触宝F007用户填写身份证号/姓名与牛娃系统内已认证身份证号/姓名不完全匹配
+     * 触宝F007:用户填写身份证号/姓名与牛娃系统内已认证身份证号/姓名不完全匹配
      * @param userInfoMap
      * @param data
      * @param session
@@ -652,6 +654,228 @@ public class rule {
         if (!data.trim().isEmpty()) {
             ex_StudentCreditInfoService esService = new ex_StudentCreditInfoService();
             esService.updataModality(userInfoMap.get("custId"), data, session);
+        }
+    }
+
+    /**
+     * 更新用户学历信息
+     * @param userInfoMap
+     * @param data
+     * @param session
+     */
+    public void updateEducation(Map<String, String> userInfoMap, String data, SqlSession session){
+        p2p_customer_educationService pceService = new p2p_customer_educationService();
+        if (!data.trim().isEmpty()) {
+            JSONObject json = new JSONObject(data);
+            if (json.getString("hasEduInfo").toUpperCase().equals("N")){
+                pceService.delCustomerEducation(userInfoMap.get("custId"), session);
+            }
+            if (json.getString("schoolSame").toUpperCase().equals("N")){
+                pceService.update(Long.valueOf(userInfoMap.get("custId")), session, "school");
+            }
+            if (json.getString("degreeSame").toUpperCase().equals("N")){
+                pceService.update(Long.valueOf(userInfoMap.get("custId")), session, "degree");
+            }
+            if (json.getString("enterTimeSame").toUpperCase().equals("N")){
+                pceService.update(Long.valueOf(userInfoMap.get("custId")), session, "entertime");
+            }
+            if (json.getString("graduateTimeSame").toUpperCase().equals("N")){
+                pceService.update(Long.valueOf(userInfoMap.get("custId")), session, "graduatetime");
+            }
+        }
+    }
+
+    /**
+     * 复大医疗：
+     * F001（F, S, T）：手机号使用时间>=3个自然月， 否则拒绝。
+     * 即运营商认证时抓取到的最早一条通话记录的时间距离申请时间>=3个月，否则拒绝
+     * 牛大咖：
+     * AU009：手机状态为正常在用，且手机在网时间大于三个月，否则拒绝
+     * @param userInfoMap
+     * @param date
+     * @param session
+     */
+    public void updateCallRecordsforFDYL_F001(Map<String, String> userInfoMap, String date, SqlSession session){
+        jxl_phone_call_recordsService jpcrService = new jxl_phone_call_recordsService();
+        if (date.length() > 0){
+            jpcrService.addPhoneCallRecordsForF001(userInfoMap, Integer.valueOf(date), session);
+        }
+    }
+
+    /**
+     * 复大医疗：
+     * F002（F）：以最近一次通过运营商认证为时间节点的过去三个月中，每个月联系的distinct 手机号>=3个， 否则拒绝
+     * @param userInfoMap
+     * @param date
+     * @param session
+     */
+    public void updateCallRecordsforFDYL_F002(Map<String, String> userInfoMap, String date, SqlSession session){
+        jxl_phone_call_recordsService jpcrService = new jxl_phone_call_recordsService();
+        if (date.length() > 0){
+            JSONObject json = new JSONObject(date);
+            jpcrService.addPhoneCallRecordsForF002(userInfoMap, json, session);
+        }
+    }
+
+
+    /**
+     * 复大医疗：
+     * F003（F）：以最近一次通过运营商认证为时间节点的过去三个月中， 每月主叫总时长必须>=1分钟，否则拒绝
+     * @param userInfoMap
+     * @param date
+     * @param session
+     */
+    public void updateCallRecordsforFDYL_F003(Map<String, String> userInfoMap, String date, SqlSession session){
+        jxl_phone_call_recordsService jpcrService = new jxl_phone_call_recordsService();
+        if (date.length() > 0){
+            JSONObject json = new JSONObject(date);
+            jpcrService.addPhoneCallRecordsForF003(userInfoMap, json, session);
+        }
+    }
+
+    /**
+     * 复大医疗：
+     * F004（F）：以最近一次通过运营商认证为时间节点的过去三个月中， 每月至少有>=4天有主叫，否则拒绝
+     * @param userInfoMap
+     * @param date
+     * @param session
+     */
+    public void updateCallRecordsforFDYL_F004(Map<String, String> userInfoMap, String date, SqlSession session){
+        jxl_phone_call_recordsService jpcrService = new jxl_phone_call_recordsService();
+        if (date.length() > 0){
+            JSONObject json = new JSONObject(date);
+            jpcrService.addPhoneCallRecordsForF004(userInfoMap, json, session);
+        }
+    }
+
+    /**
+     * 复大医疗：
+     * F005（F, S, T）：以最近一次通过运营商认证为时间节点的过去三个月中， 每月的主叫号码中，
+     * 至少有>=1个手机号码的手机号段为住宅所在地或者工作地点所在城市号段，否则拒绝；（精确到城市）
+     * @param userInfoMap
+     * @param date
+     * @param session
+     */
+    public void updateCallRecordsforFDYL_F005(Map<String, String> userInfoMap, String date, SqlSession session){
+        jxl_phone_call_recordsService jpcrService = new jxl_phone_call_recordsService();
+        if (date.length() > 0){
+            JSONObject json = new JSONObject(date);
+            jpcrService.addPhoneCallRecordsForF005(userInfoMap, json, session);
+        }
+    }
+
+    /**
+     * 复大医疗
+     * F007（F, S, T）：以最近一次通过运营商认证为时间节点的过去三个月中，至少联系过一次紧急联系人（任一紧急联系人）；
+     * @param userInfoMap
+     * @param date
+     * @param session
+     */
+    public void updateCallRecordsforFDYL_F007(Map<String, String> userInfoMap, String date, SqlSession session){
+        jxl_phone_call_recordsService jpcrService = new jxl_phone_call_recordsService();
+        if (date.length() > 0){
+            JSONObject json = new JSONObject(date);
+            jpcrService.addPhoneCallRecordsForF007(userInfoMap, json, session);
+        }
+    }
+
+    /**
+     * 复大医疗
+     * F008（F, S, T）：借款人手机号段必须为户籍所在城市或住宅所在城市或工作地点所在城市号段，否则拒绝；
+     * 如果借款人手机号段未匹配到城市，则拒绝
+     * @param userInfoMap
+     * @param date
+     * @param session
+     */
+    public void updateCustMobile(Map<String, String> userInfoMap, String date, SqlSession session){
+        if (date.length() > 0){
+            String mobileCode = null ;
+            JSONObject json = new JSONObject(date);
+            pdService = new p2p_dictionaryService();
+            pmaService = new p2p_mobile_addrService();
+            pccompanyService = new p2p_cooperation_companyService();
+            json.put("phoneAuthStatus","AS");
+            JSONObject homeCityCodeJson = new JSONObject(userInfoMap.get("nowAddress"));
+            JSONObject registerCityCodeJson = new JSONObject(userInfoMap.get("certAuth"));
+            String cityCode = pdService.getDictCode(homeCityCodeJson.getString("nowCity"), session);
+            String registerCode = registerCityCodeJson.getString("idNo").substring(0,4);
+            String workCode = pccompanyService.getCompanyInfo(new JSONObject(userInfoMap.get("工作认证")).getLong("companyId"), session).getCompanyCityCode();
+            pbcService = new p2p_base_customerService();
+            if (json.getString("IsMatch").toUpperCase().equals("Y")){
+                if (json.getString("IsRegister").toUpperCase().equals("Y")){
+                    mobileCode = pmaService.getMobileByAddr(registerCode, session);
+                }
+                if (json.getString("IsRegister").toUpperCase().equals("N")){
+                    mobileCode = pmaService.getOtherMobileByAddr(registerCode, session);
+                }
+                if (json.getString("IsHome").toUpperCase().equals("Y")){
+                    mobileCode = pmaService.getMobileByAddr(cityCode, session);
+                }
+                if (json.getString("IsHome").toUpperCase().equals("N")){
+                    mobileCode = pmaService.getOtherMobileByAddr(cityCode, session);
+                }
+                if (json.getString("IsWork").toUpperCase().equals("Y")){
+                    mobileCode = pmaService.getMobileByAddr(workCode, session);
+                }
+                if (json.getString("IsWork").toUpperCase().equals("N")){
+                    mobileCode = pmaService.getOtherMobileByAddr(workCode, session);
+                }
+                json.put("mobile", mobileCode + "0000");
+                pbcService.update(userInfoMap.get("custId"), json, "phoneAuth", session);
+            }else if (json.getString("IsMatch").toUpperCase().equals("N")){
+                json.put("mobile", "10000000000");
+                pbcService.update(userInfoMap.get("custId"), json, "phoneAuth", session);
+            }
+        }
+    }
+
+    /**
+     * 复大医疗：
+     * F015（F, S, T）：以最近一次通过运营商认证为时间节点的过去一个月中，被叫挂断（通话时间为0）
+     * 的被叫次数占总被叫次数的百分比大于90%，则拒绝
+     * @param userInfoMap
+     * @param date
+     * @param session
+     */
+    public void updateCallRecordsforFDYL_F015(Map<String, String> userInfoMap, String date, SqlSession session){
+        jxl_phone_call_recordsService jpcrService = new jxl_phone_call_recordsService();
+        if (date.length() > 0){
+            JSONObject json = new JSONObject(date);
+            jpcrService.addPhoneCallRecordsForF015(userInfoMap, json, session);
+        }
+    }
+
+    /**
+     * 复大医疗：
+     * U005（F, S, T）：入职时间距申请时间>4个自然月，否则拒绝
+     * U006（F, S, T）：劳动关系如果是临时，则拒绝
+     * U009（F, S, T）：工作状态必须为正常或试用，否则拒绝
+     * U010（F, S, T）：如果是正式员工，月薪范围的最高值（如果为10000+，则按15000计算）必须为月均还款额的2倍及以上，否则拒绝；如果是试用员工，
+     *                 月薪范围的最高值*0.8（如果为10000+，则按15000*0.8计算）必须为月均还款额的2倍及以上，否则拒绝
+     * @param userInfoMap
+     * @param data
+     * @param session
+     */
+    public void updateWorkInfo(Map<String, String> userInfoMap, String data, SqlSession session, String option){
+        if (data.length() > 0) {
+            p2p_cooperation_employeeService pceService = new p2p_cooperation_employeeService();
+            pceService.update(userInfoMap, data, session, option);
+        }
+    }
+
+    /**
+     * 复大医疗
+     * F014（F, S, T）：同一个公司，如有10%*A个人还未还款，则拒绝。其中，A为公司规模抓取到的最大值。比如，抓取的公司规模为100-500人，
+     * 则A=500，即，如果在申请时，同个公司有10%*500=50个人还未还款，则拒绝
+     * @param userInfoMap
+     * @param data
+     * @param session
+     * @param option
+     */
+    public void updateCompanyInfo(Map<String, String> userInfoMap, String data, SqlSession session, String option){
+        if (data.length() > 0) {
+            p2p_cooperation_companyService pccService = new p2p_cooperation_companyService();
+            pccService.updateCooperationCompany(userInfoMap, data, session, option);
         }
     }
 }
