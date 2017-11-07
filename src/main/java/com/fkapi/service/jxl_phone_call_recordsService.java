@@ -517,7 +517,7 @@ public class jxl_phone_call_recordsService {
                 jxlRecords.setCallPlace(null);
                 jxlRecords.setStartTime(CommonUtils.subDay(CommonUtils.getLastDay(CommonUtils.subMonth(CommonUtils.getCurDate("second"), jsonObject.getInt("Month"))), j+1));
                 jxlRecords.setUseTime(10L);
-                jxlRecords.setInitType("主叫");
+                jxlRecords.setInitType(jsonObject.getString("CallType"));
                 jxlRecords.setUpdateTime(CommonUtils.getCurDate("second"));
                 list.add(jxlRecords);
                 jxlRecordMapper.insertVA_F008(list);

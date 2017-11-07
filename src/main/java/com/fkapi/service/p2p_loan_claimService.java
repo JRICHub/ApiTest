@@ -142,7 +142,7 @@ public class p2p_loan_claimService {
 			plceService.addLoanClaimExt(getProjectNo(), "CHUBAO_S", session);
 		}else if (json.getString("loanSubSrc").equals("FD")) {
 			plceService = new p2p_loan_claim_extSerivce();
-			plceService.addLoanClaimExt(getProjectNo(), "BDF_PRJ_TYPE", session);
+			plceService.addLoanClaimExt(getProjectNo(), "FDD", session);
 		}else {
 			plceService = new p2p_loan_claim_extSerivce();
 			plceService.addLoanClaimExt(getProjectNo(), "NIUWA", session);

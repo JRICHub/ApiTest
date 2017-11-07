@@ -211,7 +211,7 @@
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
 		 (#{item.projectNo}, #{item.projectName}, #{item.projectChannel}, NULL, NULL, NULL,
-		'1047.13', NULL,
+		'1000', NULL,
 		#{item.loanTerm},
 		'0', #{item.timeType}, '10.8000', #{item.loanDate},
 		NULL, NULL,
