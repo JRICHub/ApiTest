@@ -4,10 +4,8 @@
 package com.fkapi.vcc;
 
 import java.util.Map;
-
 import com.fkapi.service.*;
 import com.fkapi.utils.*;
-import javafx.geometry.Pos;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import org.testng.Reporter;

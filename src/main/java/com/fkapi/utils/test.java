@@ -23,6 +23,6 @@ public class test {
 	@Test
 	public void f(){
 		String a = "31011111";
-		System.out.println(a.substring(0,4));
+		System.out.println(System.currentTimeMillis());
 	}
 }
