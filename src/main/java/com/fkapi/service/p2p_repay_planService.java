@@ -58,8 +58,11 @@ public class p2p_repay_planService {
 			prp.setRepayDate(CommonUtils.subMonth(CommonUtils.getCurDate("second"), -(i+1)));
 			if(!repayPlanJson.getString("time").isEmpty()){
 				prp.setActualPayTime(CommonUtils.subDay(CommonUtils.subMonth(CommonUtils.getCurDate("second"), -(i+1)), repayPlanJson.getInt("time")));
+				prp.setRepayStatus("OVERDUE_REPAID");
+			}else {
+				prp.setRepayStatus("OVERDUE_NO_REPAY");
 			}
-			prp.setRepayStatus(repayPlanJson.getString("status"));
+
 			prpList.add(prp);
 			try{
 				prpMapper.insert(prpList);

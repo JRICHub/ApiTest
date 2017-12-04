@@ -100,11 +100,11 @@ public class Post {
 		Reporter.log("请求地址为：http://" + getPostIp()
 				+ CommonUtils.getConfigValue("ndk"));
 		HttpClientUtil.sendHttpPost("http://" + getPostIp() + CommonUtils.getConfigValue("ndk"),
-				"{\"cust_id\": \""+ custId + "\",\"trans_id\":\"" + transId + "\",\"strategy_id\":\"" + strategyId + "\"}");
+				"{\"cust_id\": \""+ custId + "\",\"trans_id\":\"" + transId + "\",\"strategy_id\":\"" + strategyId + "\",\"loan_product\":\"NDK\"}");
 	}
 
 	/**
-	 * 请求牛大咖风控审批接口
+	 * 请求复大医疗风控审批接口
 	 * @param custId
 	 * @param transId
 	 */
@@ -113,7 +113,7 @@ public class Post {
 		Reporter.log("请求地址为：http://" + getPostIp()
 				+ CommonUtils.getConfigValue("fdyl"));
 		HttpClientUtil.sendHttpPost("http://" + getPostIp() + CommonUtils.getConfigValue("ndk"),
-				"{\"cust_id\": \""+ custId + "\",\"trans_id\":\"" + transId + "\",\"strategy_id\":\"" + strategyId + "\"}");
+				"{\"cust_id\": \""+ custId + "\",\"trans_id\":\"" + transId + "\",\"strategy_id\":\"" + strategyId + "\",\"loan_product\":\"FDD\"}");
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class Post {
 						"        {\n" +
 						"         \"mod\": \""+ mod +"\"\n" +
 						"        }\n" +
-						"    }"
+						"    ,\"loan_product\":\"NXB\"}"
 		);
 	}
 
@@ -149,7 +149,7 @@ public class Post {
 						"            \"realName\": \"王宁\",\n" +
 						"            \"idCardNo\": \"220322199901297363\"\n" +
 						"        }\n" +
-						"    }");
+						"    ,\"loan_product\":\"CHUBAO_S\"}");
 	}
 
 	/**
@@ -189,9 +189,9 @@ public class Post {
 	@Test
 	public void test() {
 		//postNXB("330002729", "JKM95d8e11a4e8d48eaa83c05d8e92d8f63", "NXB_LOAN_AUDIT", "");
-		//postNDK("330001946", "JKM17111803FA0", "NDK_LOAN_AUDIT");
+		//postNDK("330003369", "JKM540dda895e084a72b2a4ceee04c72f2a", "NDK_LOAN_AUDIT");
 		//postCHUBAO("330002730", "JKM80dd2a628f164e7bb234c91df03963e2", "CHUBAO_S_LOAN_AUDIT","{\"realName\":\"王宁\",\"idCardNo\":\"220322199901297363\"}");
 		//postVccConsume("330002738","000000000");
-		postFDYL("330003060", "JKMe4c99df1ef87425faf900a3808aff063" ,"BDF_LOAN_AUDIT_GENERAL_1");
+		//postFDYL("330003060", "JKMe4c99df1ef87425faf900a3808aff063" ,"BDF_LOAN_AUDIT_GENERAL_1");
 	}
 }

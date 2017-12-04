@@ -16,7 +16,8 @@ public class RedisUtil {
         GetExcelConfig getExcelConfig = new GetExcelConfig();
         Map<String, String> map = getExcelConfig.getConfigData(CommonUtils.excelPath, CommonUtils.configSheetName, "common");
         //连接redis服务器，192.168.0.100:6379
-        jedis = new Jedis(map.get("ip"), 6379);
+        //jedis = new Jedis(map.get("ip"), 6379);
+        jedis = new Jedis("192.168.101.203", 6379);
         jedis.auth("testredis");
         jedis.flushDB();
     }

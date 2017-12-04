@@ -92,7 +92,7 @@ public class CreateVccApplyTestData {
             rule.createOutBlackList(userInfoMap, map.get("外部黑名单"), session);
 
             // 根据输入的信息判断是否将设备加入到黑名单
-            rule.createDeviceBlackList(userInfoMap, map.get("设备黑名单"), map.get("上笔订单"), session);
+            rule.createDeviceBlackList(userInfoMap, map.get("设备黑名单"), userInfoMap.get("phoneAuth"), session);
         }
     }
 

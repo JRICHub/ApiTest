@@ -6,7 +6,7 @@ package com.fkapi.utils;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+import org.testng.asserts.*;
 import sun.plugin2.util.SystemUtil;
 
 import java.util.HashMap;
@@ -23,6 +23,7 @@ public class test {
 	@Test
 	public void f(){
 		String a = "31011111";
-		System.out.println(System.currentTimeMillis());
+		SoftAssert softAssert = new SoftAssert();
+
 	}
 }

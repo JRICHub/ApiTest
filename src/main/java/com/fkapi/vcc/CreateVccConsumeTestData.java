@@ -66,15 +66,15 @@ public class CreateVccConsumeTestData {
                     }else {
                         vliService.addVccLoanInfo(userInfoMap, json, "N", vccSession);
                     }
-                    voService.addVccOrder(userInfoMap, json, vccSession);
+                    voService.addVccOrder(userInfoMap, json, vccJson, vccSession);
                     vrpService.addVccRepalyPlan(userInfoMap, vccJson, false, vccSession);
                 }else {
                     vliService.addVccLoanInfo(userInfoMap, json, "N", vccSession);
-                    voService.addVccOrder(userInfoMap, json, vccSession);
                     vccJson = new JSONObject();
                     vccJson.put("repayStatus","WAIT_REPAY");
                     vccJson.put("billOutFlag","N");
                     vccJson.put("delFlag","N");
+                    voService.addVccOrder(userInfoMap, json, vccJson, vccSession);
                     vrpService.addVccRepalyPlan(userInfoMap, vccJson, true, vccSession);
                 }
             }
@@ -83,24 +83,10 @@ public class CreateVccConsumeTestData {
             rule.createLastOrder(userInfoMap, map.get("现金贷订单"), false, session);
 
             if (!map.get("VPT_U005现金贷明细").trim().isEmpty()){
-                plcService = new p2p_loan_claimService();
                 prpService = new p2p_repay_planService();
                 JSONObject repayPlanJson = new JSONObject(map.get("VPT_U005现金贷明细"));
-                if (!map.get("现金贷订单").trim().isEmpty()){
-                    json = new JSONObject(map.get("现金贷订单"));
-                    plcService.addProject(userInfoMap, json, false, true, session);
-                }else {
-                    json = new JSONObject();
-                    json.put("projectName","牛大款");
-                    json.put("loanSubSrc","NKK");
-                    json.put("loanTerm",repayPlanJson.getInt("allTerm"));
-                    json.put("status","WAIT_REPAY");
-                    json.put("deviceCode","999999999");
-                    json.put("time",0);
-                    plcService.addProject(userInfoMap, json, false, true, session);
-                }
                 //添加还款明细表，每笔明细均为100元
-                prpService.addRepayPlan(userInfoMap, plcService.getProjectNo(), repayPlanJson, session);
+                prpService.addRepayPlan(userInfoMap, userInfoMap.get("projectNo"), repayPlanJson, session);
             }
 
             // 根据输入的信息判断是否将用户添加进黑名单
@@ -109,6 +95,7 @@ public class CreateVccConsumeTestData {
             // 将用户输入的身份信息加入到黑名单中
             rule.createOutBlackList(userInfoMap, map.get("外部黑名单"), session);
 
+            //rule.createDeviceBlackList();
             // 根据输入的信息判断是否将设备加入到黑名单
             if (!map.get("设备黑名单").trim().isEmpty()) {
                 pbdService = new p2p_black_deviceService();

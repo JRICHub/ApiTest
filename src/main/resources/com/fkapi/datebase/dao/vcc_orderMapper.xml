@@ -61,7 +61,7 @@
     values
     <foreach collection="list" item="item" index="index"
              separator=",">
-    (#{item.orderNo}, #{item.merchantNo}, #{item.cardNo}, #{item.submitTime}, '100', NULL, #{item.transTime},
+    (#{item.orderNo}, #{item.merchantNo}, #{item.cardNo}, #{item.submitTime}, '100', #{item.returnAmount}, #{item.transTime},
       NULL, #{item.orderStatus}, NULL, NULL, #{item.createTime}, #{item.updateTime}, '1')
     </foreach>
   </insert>

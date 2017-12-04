@@ -246,7 +246,7 @@ public class createUserInfo {
 			pcemployeeService.addCooperationEmployee(map, json, session);
 		}
 
-		//添加用户的历史订单（是否存在逾期的订单）,如果为空则表示用户没有历史订单为首次借款
+		//添加用户的历史订单（是否存在逾期的订单）,如果为空则表示用户没有历史订单，用户为首次借款
 		if (!map.get("historyOrder").trim().isEmpty()){
 			map.put("historyOrder", ExcelUtils.getCellDate(CommonUtils.excelPath, CommonUtils.dataSheetName, ExcelUtils.getRowNoByValue(CommonUtils.excelPath, CommonUtils.dataSheetName, map.get("historyOrder")), 1));
 			plcService = new p2p_loan_claimService();
@@ -260,7 +260,7 @@ public class createUserInfo {
 				plcService.addProject(map, historyOrderJson, false, delHistoryOrder, session);
 				//构建repay_plan表中的数据
 				historyOrderJson.put("allTerm", historyOrderJson.getInt("loanTerm"));
-				historyOrderJson.put("repayPlan", new JSONArray("[ { \"status\": \"OVERDUE_NO_REPAY\", \"time\": \""+ historyOrderJson.getInt("time") +"\" } ]"));
+				historyOrderJson.put("repayPlan", new JSONArray("[ {\"time\": \""+ historyOrderJson.getInt("time") +"\" } ]"));
 				prpService.addRepayPlan(map, plcService.getProjectNo(), historyOrderJson, session);
 			}else if (new JSONObject(map.get("historyOrder")).getString("repayStatus").equals("WAIT_REPAY")){
 				historyOrderJson = new JSONObject(map.get("historyOrder"));

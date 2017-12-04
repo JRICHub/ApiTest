@@ -62,8 +62,9 @@ public class p2p_loan_claimService {
 		List<p2p_loan_claim> list = new ArrayList<>();
 		pcService = new p2p_customerService();
 		p2p_loan_claim plc = new p2p_loan_claim();
-		this.setProjectNo(CommonUtils.getProjectNo());
+		//this.setProjectNo(CommonUtils.getProjectNo());
 		userinfoMap.put("time",json.getString("time"));
+		userinfoMap.put("projectNo", CommonUtils.getProjectNo());
 		//plc.setProjectNo(this.getProjectNo());
 		plc.setProjectName(json.getString("projectName"));
 		if(json.getString("loanSubSrc").equals("YICAI")){
@@ -99,12 +100,14 @@ public class p2p_loan_claimService {
 			plc.setTimeType("M");
 		}
 		//判断如果是风控审批订单，则借款日期为当天，如果是历史订单则添加相对于的借款时间
+
 		if(isCreditOrder){
-			userinfoMap.put("projectNo", projectNo);
 			plc.setRepayStatus(null);
+			plc.setIsOverdue("N");
+			plc.setOverdueDays(null);
 			plc.setReleaseStatus("");
 			plc.setAuditStatus("LOAN");
-			plc.setProjectNo(this.getProjectNo());
+			plc.setProjectNo(userinfoMap.get("projectNo"));
 			plc.setLoanDate(CommonUtils.getCurDate("second"));
 			plc.setNextRepayDate(CommonUtils.subMonth(CommonUtils.getCurDate("second"),1));
 		}else {
@@ -117,8 +120,15 @@ public class p2p_loan_claimService {
 			}
 
 			plc.setRepayStatus(json.getString("repayStatus"));
-			this.setProjectNo(CommonUtils.getProjectNo());
-			plc.setProjectNo(this.getProjectNo());
+			if (json.getString("repayStatus").equals("OVERDUE")){
+				plc.setIsOverdue("Y");
+				plc.setOverdueDays(json.getInt("time"));
+			}else {
+				plc.setIsOverdue("N");
+				plc.setOverdueDays(null);
+			}
+			//this.setProjectNo(CommonUtils.getProjectNo());
+			plc.setProjectNo(userinfoMap.get("projectNo"));
 			//借款当天也算一天，所以要减去一天
 			plc.setLoanDate(CommonUtils.subDay(CommonUtils.getCurDate("second"), json.getInt("time")));
 			plc.setNextRepayDate(CommonUtils.subMonth(CommonUtils.subDay(CommonUtils.getCurDate("second"), json.getInt("time")-1),1));
@@ -147,8 +157,8 @@ public class p2p_loan_claimService {
 			plceService = new p2p_loan_claim_extSerivce();
 			plceService.addLoanClaimExt(getProjectNo(), "NIUWA", session);
 		}
-		//添加借款订单相关的设备
 
+		//添加借款订单相关的设备
 		plcraService = new p2p_loan_claim_relative_appService();
 		plcraService.addLoanDevice(getProjectNo(), new JSONObject(userinfoMap.get("phoneAuth")).getString("mobileSign"), session);
 		//添加借款快照表

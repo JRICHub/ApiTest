@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import org.testng.Reporter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class vcc_orderService {
     vcc_orderMapper voMapper;
     vcc_loan_infoService vliService ;
 
-    public void addVccOrder(Map<String,String> userInfoMap, JSONObject json, SqlSession vccSession) {
+    public void addVccOrder(Map<String,String> userInfoMap, JSONObject json, JSONObject vccJson, SqlSession vccSession) {
         voMapper = vccSession.getMapper(vcc_orderMapper.class);
         List<vcc_order> list;
         vcc_order vo = new vcc_order();
@@ -37,6 +38,11 @@ public class vcc_orderService {
             }
             vo.setOrderNo(successOrderNoList.get(i).getOrderNo());
             vo.setCardNo(new JSONObject(userInfoMap.get("certAuth")).getString("cardNo"));
+            if (vccJson.getString("delFlag").toUpperCase().equals("N")){
+                vo.setReturnAmount(BigDecimal.valueOf(0));
+            }else {
+                vo.setReturnAmount(BigDecimal.valueOf(100));
+            }
             if (json.getString("isSameTime").toUpperCase().equals("Y")) {
                 vo.setSubmitTime(CommonUtils.getCurDate("second"));
                 vo.setTransTime(CommonUtils.subMin(CommonUtils.getCurDate("second"), 10));
@@ -76,6 +82,11 @@ public class vcc_orderService {
                 }
                 vo.setOrderNo(UUID.randomUUID().toString().replace("-",""));
                 vo.setCardNo(new JSONObject(userInfoMap.get("certAuth")).getString("cardNo"));
+                if (vccJson.getBoolean("delFlag")){
+                    vo.setReturnAmount(BigDecimal.valueOf(0));
+                }else {
+                    vo.setReturnAmount(BigDecimal.valueOf(100));
+                }
                 if (json.getString("isSameTime").toUpperCase().equals("Y")) {
                     vo.setSubmitTime(CommonUtils.getCurDate("second"));
                     vo.setTransTime(CommonUtils.getCurDate("second"));

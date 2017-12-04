@@ -23,13 +23,13 @@ public class p2p_black_deviceService {
 		delBlackDevice(json, session);
 		pbdMapper = session.getMapper(p2p_black_deviceMapper.class);
 		p2p_black_device pbd = new p2p_black_device();
-		pbd.setDeviceCode(json.has("deviceCode") ? json.getString("deviceCode") : "999999999");
+		pbd.setDeviceCode(json.has("mobileSign") ? json.getString("mobileSign") : "999999999");
 		pbd.setAddReason("测试添加黑名单");
-		pbd.setAddSource(json.getString("loanSubSrc"));
+		pbd.setAddSource("VCC");
 		pbd.setCreateTime(CommonUtils.getCurDate("second"));
 		try {
 			pbdMapper.insert(pbd);
-			Reporter.log("添加设备黑名单成功，设备号为： " + json.getString("deviceCode"));
+			Reporter.log("添加设备黑名单成功，设备号为： " + json.getString("mobileSign"));
 		} catch (Exception e) {
 			Reporter.log("添加设备黑名单时发生异常，添加失败" + e.getMessage());
 		}
@@ -38,8 +38,8 @@ public class p2p_black_deviceService {
 	public void delBlackDevice(JSONObject json, SqlSession session){
 		pbdMapper = session.getMapper(p2p_black_deviceMapper.class);
 		try {
-			pbdMapper.deleteByDviceCode(json.has("deviceCode") ? json.getString("deviceCode") : "999999999");
-			Reporter.log("删除设备黑名单成功，设备号为： " + json.getString("deviceCode"));
+			pbdMapper.deleteByDviceCode(json.has("mobileSign") ? json.getString("mobileSign") : "999999999");
+			Reporter.log("删除设备黑名单成功，设备号为： " + json.getString("mobileSign"));
 		} catch (Exception e) {
 			Reporter.log("删除设备黑名单时发生异常，删除失败" + e.getMessage());
 		}
